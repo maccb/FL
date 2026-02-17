@@ -268,7 +268,7 @@ def make_new_tmdb_list(params):
 	external_creation = params.get('external_creation', 'false') == 'true'
 	if not external_creation and kodi_utils.confirm_dialog(heading='TMDb Lists', text='Import a Trakt List to populate this new list?',
 																				ok_label='Yes', cancel_label='No'):
-		from apis.trakt_api import get_trakt_list_selection
+		from apis.flicklist_api import get_trakt_list_selection
 		chosen_list = get_trakt_list_selection(['default', 'personal'])
 		if chosen_list == None: return
 		suggested_list_name = chosen_list.get('name')
@@ -362,7 +362,7 @@ def cache_delete_list_tmdb(params):
 
 def import_trakt_list_tmdb(params):
 	if not list_change_warning(params['list_name']): return None
-	from apis.trakt_api import get_trakt_list_selection
+	from apis.flicklist_api import get_trakt_list_selection
 	list_id = params.get('list_id', '')
 	chosen_list = get_trakt_list_selection(['default', 'personal'])
 	if chosen_list == None: return None
@@ -376,7 +376,7 @@ def import_trakt_list_tmdb(params):
 	kodi_utils.notification('Success. Items added' if success else 'Error adding items', 2000)
 
 def process_trakt_list(chosen_list):
-	from apis.trakt_api import trakt_fetch_collection_watchlist, get_trakt_list_contents
+	from apis.flicklist_api import trakt_fetch_collection_watchlist, get_trakt_list_contents
 	tmdb_media_converter = {'movie': 'movie', 'tvshow': 'tv', 'show': 'tv'}
 	media_type_check = {'movie': 'movie', 'show': 'tvshow', 'tvshow': 'tvshow'}
 	new_contents = []

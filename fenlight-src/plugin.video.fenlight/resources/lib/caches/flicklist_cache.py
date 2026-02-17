@@ -1,8 +1,14 @@
+"""
+FlickList Cache — Drop-in replacement for trakt_cache.py
+
+Uses the same SQLite database ('trakt_db') and table schema.
+All function signatures match trakt_cache.py for seamless import swap.
+"""
 from threading import Thread
 from caches.base_cache import connect_database
 from modules.kodi_utils import sleep, confirm_dialog, close_all_dialog
 
-class TraktCache:	
+class TraktCache:
 	def get(self, string):
 		result = None
 		try:
@@ -275,4 +281,3 @@ def default_activities():
 				'updated_at': '2020-01-01T00:00:01.000Z'
 				}
 			}
-	

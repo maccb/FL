@@ -126,7 +126,7 @@ class RandomLists():
 		self.make_directory()
 
 	def random_trakt_collection_watchlist(self):
-		from apis.trakt_api import trakt_collection_lists, trakt_watchlist_lists
+		from apis.flicklist_api import trakt_collection_lists, trakt_watchlist_lists
 		random_list, cache_to_memory = get_persistent_content(self.database, '%s_%s' % (self.menu_type, self.action), self.is_external)
 		if not random_list:
 			function = trakt_collection_lists if self.action == 'trakt_collection_lists' else trakt_watchlist_lists
@@ -143,7 +143,7 @@ class RandomLists():
 	def random_because_you_watched(self):
 		from apis.tmdb_api import tmdb_movies_recommendations, tmdb_tv_recommendations
 		from apis.imdb_api import imdb_more_like_this
-		from apis.trakt_api import trakt_movies_related, trakt_tv_related
+		from apis.flicklist_api import trakt_movies_related, trakt_tv_related
 		from apis.ai_api import ai_similar
 		from modules.episode_tools import single_last_watched_episodes
 		from modules.settings import tmdb_api_key, mpaa_region, recommend_service, recommend_seed
@@ -184,7 +184,7 @@ class RandomLists():
 		self.make_directory()
 
 	def random_trakt_lists(self):
-		from apis.trakt_api import trakt_get_lists, get_trakt_list_contents
+		from apis.flicklist_api import trakt_get_lists, get_trakt_list_contents
 		from indexers.trakt_lists import build_trakt_list
 		list_type = self.params.get('list_type')
 		list_type_name = 'Trakt My Lists' if list_type == 'my_lists' else 'Trakt Liked Lists' if list_type == 'liked_lists' else 'Trakt User Lists'
@@ -262,7 +262,7 @@ class RandomLists():
 		self.make_directory()
 
 	def trakt_lists_contents(self):
-		from apis.trakt_api import get_trakt_list_contents
+		from apis.flicklist_api import get_trakt_list_contents
 		from indexers.trakt_lists import build_trakt_list
 		list_name, list_type = self.params.get('list_name'), self.params.get('list_type')
 		list_type_name = 'Trakt My Lists' if list_type == 'my_lists' else 'Trakt Liked Lists' if list_type == 'liked_lists' else 'Trakt User Lists'

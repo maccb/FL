@@ -10,8 +10,8 @@ from modules import kodi_utils
 pause_services_prop = 'fenlight.pause_services'
 firstrun_update_prop = 'fenlight.firstrun_update'
 current_skin_prop = 'fenlight.current_skin'
-trakt_service_string = 'TraktMonitor Service Update %s - %s'
-trakt_success_line_dict = {'success': 'Trakt Update Performed', 'no account': '(Unauthorized) Trakt Update Performed'}
+trakt_service_string = 'FlickListMonitor Service Update %s - %s'
+trakt_success_line_dict = {'success': 'FlickList Update Performed', 'no account': '(Unauthorized) FlickList Update Performed'}
 update_string = 'Next Update in %s minutes...'
 
 class SetAddonConstants:
@@ -80,10 +80,10 @@ class CustomFonts:
 		except: pass
 		return kodi_utils.logger('Fen Light', 'CustomFonts Service Finished')
 
-class TraktMonitor:
+class FlickListMonitor:
 	def run(self):
-		kodi_utils.logger('Fen Light', 'TraktMonitor Service Starting')
-		from apis.trakt_api import trakt_sync_activities
+		kodi_utils.logger('Fen Light', 'FlickListMonitor Service Starting')
+		from apis.flicklist_api import trakt_sync_activities
 		from modules.settings import trakt_sync_interval
 		monitor, player = kodi_utils.kodi_monitor(), kodi_utils.kodi_player()
 		wait_for_abort, is_playing = monitor.waitForAbort, player.isPlayingVideo
@@ -94,7 +94,7 @@ class TraktMonitor:
 				sync_interval, wait_time = trakt_sync_interval()
 				next_update_string = update_string % sync_interval
 				status = trakt_sync_activities()
-				if status == 'failed': kodi_utils.logger('Fen Light', trakt_service_string % ('Failed. Error from Trakt', next_update_string))
+				if status == 'failed': kodi_utils.logger('Fen Light', trakt_service_string % ('Failed. Error from FlickList', next_update_string))
 				else:
 					if status in ('success', 'no account'): kodi_utils.logger('Fen Light', trakt_service_string % ('Success. %s' % trakt_success_line_dict[status], next_update_string))
 					else: kodi_utils.logger('Fen Light', trakt_service_string % ('Success. No Changes Needed', next_update_string))
@@ -105,7 +105,7 @@ class TraktMonitor:
 		except: pass
 		try: del player
 		except: pass
-		return kodi_utils.logger('Fen Light', 'TraktMonitor Service Finished')
+		return kodi_utils.logger('Fen Light', 'FlickListMonitor Service Finished')
 
 class UpdateCheck:
 	def run(self):
@@ -229,7 +229,7 @@ class FenLightMonitor(Monitor):
 		OnUpdateChanges().run()
 		AddonXMLCheck().run()
 		Thread(target=CustomFonts().run).start()
-		Thread(target=TraktMonitor().run).start()
+		Thread(target=FlickListMonitor().run).start()
 		Thread(target=UpdateCheck().run).start()
 		Thread(target=WidgetRefresher().run).start()
 		AutoStart().run()

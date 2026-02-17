@@ -3,8 +3,8 @@ import sys
 import json
 from random import shuffle
 from threading import Thread
-from apis.trakt_api import trakt_get_lists, trakt_search_lists, get_trakt_list_contents, trakt_lists_with_media
-from caches.trakt_cache import get_all_lists_custom_sort, set_list_custom_sort, delete_list_custom_sort
+from apis.flicklist_api import trakt_get_lists, trakt_search_lists, get_trakt_list_contents, trakt_lists_with_media
+from caches.flicklist_cache import get_all_lists_custom_sort, set_list_custom_sort, delete_list_custom_sort
 from indexers.movies import Movies
 from indexers.tvshows import TVShows
 from indexers.seasons import single_seasons
@@ -299,7 +299,7 @@ def make_custom_artwork(params):
 	kodi_utils.kodi_refresh()
 
 def trakt_image_maker(list_name, list_type, list_id, image_type, user, slug, custom_image, shuffle_sort_order):
-	from caches.trakt_cache import get_list_custom_sort
+	from caches.flicklist_cache import get_list_custom_sort
 	from modules import metadata
 	from modules.utils import make_image
 	kodi_utils.show_busy_dialog()
@@ -342,7 +342,7 @@ def set_list_custom_sort(params):
 	sort_by = kodi_utils.select_dialog([i[0] for i in choices], **kwargs)
 	if sort_by == None: return
 	if sort_by == 'default':
-		from caches.trakt_cache import delete_list_custom_sort
+		from caches.flicklist_cache import delete_list_custom_sort
 		success = delete_list_custom_sort(list_id)
 		if success:
 			kodi_utils.ok_dialog('Trakt List Custom Sort', 'Success')
@@ -356,7 +356,7 @@ def set_list_custom_sort(params):
 		kwargs = {'items': json.dumps(list_items), 'heading': 'Trakt List Custom Sort How', 'narrow_window': 'true'}
 		sort_how = kodi_utils.select_dialog([i[0] for i in choices], **kwargs)
 		if sort_how == None: return
-	from caches.trakt_cache import set_list_custom_sort
+	from caches.flicklist_cache import set_list_custom_sort
 	success = set_list_custom_sort(list_id, {'list_id': list_id, 'sort_by': sort_by, 'sort_how': sort_how})
 	if success:
 		kodi_utils.ok_dialog('Trakt List Custom Sort', 'Success')

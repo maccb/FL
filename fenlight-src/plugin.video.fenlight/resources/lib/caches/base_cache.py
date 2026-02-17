@@ -184,7 +184,7 @@ def clear_cache(cache_type, silent=False):
 		for item in (external_cache, debrid_cache): results.append(item.clear_cache())
 		success = False not in results
 	elif cache_type == 'trakt':
-		from caches.trakt_cache import clear_all_trakt_cache_data
+		from caches.flicklist_cache import clear_all_trakt_cache_data
 		success = clear_all_trakt_cache_data(silent=silent)
 	elif cache_type == 'imdb':
 		if not _confirm(): return

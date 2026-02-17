@@ -5,13 +5,19 @@ def tmdb_api_key():
 	return get_setting('fenlight.tmdb_api', '')
 
 def trakt_client():
-	return get_setting('fenlight.trakt.client', '')
+	return flicklist_client_id()
 
 def trakt_secret():
-	return get_setting('fenlight.trakt.secret', '')
+	return ''
 
 def trakt_user_active():
-	return get_setting('fenlight.trakt.user', 'empty_setting') not in (None, 'empty_setting', '')
+	return flicklist_user_active()
+
+def flicklist_client_id():
+	return 'flicklist_kodi_addon'
+
+def flicklist_user_active():
+	return get_setting('fenlight.flicklist.user', 'empty_setting') not in (None, 'empty_setting', '')
 
 def tmdblist_user_active():
 	return get_setting('fenlight.tmdb.account_id', 'empty_setting') not in (None, 'empty_setting', '')
@@ -175,7 +181,10 @@ def ignore_results_filter():
 	return int(get_setting('fenlight.results.ignore_filter', '0'))
 
 def trakt_sync_interval():
-	setting = get_setting('fenlight.trakt.sync_interval', '60')
+	return flicklist_sync_interval()
+
+def flicklist_sync_interval():
+	setting = get_setting('fenlight.flicklist.sync_interval', '60')
 	interval = int(setting) * 60
 	return setting, interval
 
@@ -360,7 +369,7 @@ def widget_hide_watched():
 	return get_setting('fenlight.widget_hide_watched', 'false') == 'true'
 
 def calendar_sort_order():
-	return int(get_setting('fenlight.trakt.calendar_sort_order', '0'))
+	return int(get_setting('fenlight.flicklist.calendar_sort_order', '0'))
 
 def ignore_articles():
 	return get_setting('fenlight.ignore_articles', 'false') == 'true'
@@ -375,11 +384,11 @@ def media_open_action(media_type):
 	return int(get_setting('fenlight.media_open_action_%s' % media_type, '0'))
 
 def watched_indicators():
-	if not trakt_user_active(): return 0
+	if not flicklist_user_active(): return 0
 	return int(get_setting('fenlight.watched_indicators', '0'))
 
 def flatten_episodes():
-	return get_setting('fenlight.trakt.flatten_episodes', 'false') == 'true'
+	return get_setting('fenlight.flicklist.flatten_episodes', 'false') == 'true'
 
 def nextep_method():
 	return int(get_setting('fenlight.nextep.method', '0'))

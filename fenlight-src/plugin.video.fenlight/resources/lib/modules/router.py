@@ -39,7 +39,7 @@ def routing(sys):
 			from indexers import trakt_lists
 			exec('trakt_lists.%s(params)' % mode.split('.')[2])
 		else:
-			from apis import trakt_api
+			from apis import flicklist_api as trakt_api
 			exec('trakt_api.%s(params)' % mode.split('.')[1])
 	elif 'build' in mode:
 		if mode == 'build_movie_list':

@@ -457,7 +457,7 @@ def trakt_manager_choice(params):
 	kwargs = {'items': json.dumps(list_items), 'heading': 'Trakt Lists Manager'}
 	choice = kodi_utils.select_dialog([i[1] for i in choices], **kwargs)
 	if choice == None: return
-	from apis import trakt_api
+	from apis import flicklist_api as trakt_api
 	if media_type == 'movie': key, media_key, media_id = ('movies', 'tmdb', int(tmdb_id))
 	else:
 		key = 'shows'

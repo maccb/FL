@@ -1,7 +1,7 @@
 import xbmc
 import json
 from threading import Thread
-from apis.trakt_api import make_trakt_slug
+from apis.flicklist_api import make_trakt_slug, scrobble_start, scrobble_stop, scrobble_heartbeat
 from caches.settings_cache import get_setting
 from modules import kodi_utils as ku, settings as st, watched_status as ws
 
@@ -58,7 +58,7 @@ class FenLightPlayer(xbmc.Player):
 
 	def monitor(self):
 		try:
-			ensure_dialog_dead, total_check_time = False, 0
+			ensure_dialog_dead, total_check_time, heartbeat_counter = False, 0, 0
 			if self.media_type == 'episode':
 				play_random_continual = self.sources_object.random_continual
 				play_random = self.sources_object.random
@@ -75,6 +75,9 @@ class FenLightPlayer(xbmc.Player):
 			ku.hide_busy_dialog()
 			ku.sleep(1000)
 			if st.auto_enable_subs(): self.showSubtitles(True)
+			if st.watched_indicators() == 1:
+				try: Thread(target=scrobble_start, args=(self.media_type, self.tmdb_id, self.season, self.episode, self.total_time if hasattr(self, 'total_time') else None)).start()
+				except: pass
 			while self.isPlayingVideo():
 				try:
 					if not ensure_dialog_dead:
@@ -84,6 +87,10 @@ class FenLightPlayer(xbmc.Player):
 					try: self.total_time, self.curr_time = self.getTotalTime(), self.getTime()
 					except: ku.sleep(250); continue
 					self.current_point = round(float(self.curr_time/self.total_time * 100), 1)
+					heartbeat_counter += 1
+					if heartbeat_counter % 30 == 0 and st.watched_indicators() == 1:
+						try: Thread(target=scrobble_heartbeat, args=(self.media_type, self.tmdb_id, self.current_point, self.curr_time, self.total_time, self.season, self.episode)).start()
+						except: pass
 					if self.current_point >= 90:
 						if play_random_continual: self.run_random_continual(); break
 						if not self.media_marked: self.media_watched_marker()
@@ -97,6 +104,9 @@ class FenLightPlayer(xbmc.Player):
 				except: pass
 			ku.hide_busy_dialog()
 			if not self.media_marked: self.media_watched_marker()
+			if st.watched_indicators() == 1:
+				try: Thread(target=scrobble_stop, args=(self.media_type, self.tmdb_id, self.current_point if hasattr(self, 'current_point') else 0, self.season, self.episode)).start()
+				except: pass
 			self.clear_playback_properties()
 		except:
 			ku.hide_busy_dialog()
@@ -241,13 +251,13 @@ class FenLightPlayer(xbmc.Player):
 		try:
 			trakt_ids = {'tmdb': self.tmdb_id, 'imdb': self.imdb_id, 'slug': make_trakt_slug(self.title)}
 			if self.media_type == 'episode': trakt_ids['tvdb'] = self.tvdb_id
-			ku.set_property('script.trakt.ids', json.dumps(trakt_ids))
+			ku.set_property('script.flicklist.ids', json.dumps(trakt_ids))
 			if self.playing_filename: ku.set_property('subs.player_filename', self.playing_filename)
 		except: pass
 
 	def clear_playback_properties(self):
 		ku.clear_property('fenlight.window_stack')
-		ku.clear_property('script.trakt.ids')
+		ku.clear_property('script.flicklist.ids')
 		ku.clear_property('subs.player_filename')
 
 	def run_error(self):
