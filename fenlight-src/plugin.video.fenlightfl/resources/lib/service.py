@@ -155,7 +155,7 @@ class FlickListMonitor:
 				else:
 					if status in ('success', 'no account'): kodi_utils.logger('FL', trakt_service_string % ('Success. %s' % trakt_success_line_dict[status], next_update_string))
 					else: kodi_utils.logger('FL', trakt_service_string % ('Success. No Changes Needed', next_update_string))
-					if status == 'success' and get_setting('fenlightfl.trakt.refresh_widgets', 'false') == 'true': kodi_utils.run_plugin({'mode': 'kodi_refresh'})
+					if status == 'success' and get_setting('fenlightfl.flicklist.refresh_widgets', 'false') == 'true': kodi_utils.run_plugin({'mode': 'kodi_refresh'})
 			except Exception as e: kodi_utils.logger('FL', trakt_service_string % ('Failed', 'The following Error Occured: %s' % str(e)))
 			wait_for_abort(wait_time)
 		try: del monitor
