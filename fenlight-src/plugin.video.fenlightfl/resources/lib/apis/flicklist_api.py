@@ -1076,9 +1076,9 @@ def scrobble_heartbeat(media_type, tmdb_id, progress, current_time=None, duratio
 	if episode is not None:
 		data['episode'] = int(episode)
 	if current_time is not None:
-		data['current_time'] = float(current_time)
+		data['current_time'] = int(current_time)
 	if duration is not None:
-		data['duration'] = float(duration)
+		data['duration'] = int(duration)
 	try:
 		call_flicklist('/scrobble/event', data=data)
 	except:
