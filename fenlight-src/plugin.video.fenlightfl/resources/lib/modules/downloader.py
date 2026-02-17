@@ -59,8 +59,8 @@ def download_threads_manager(multi_downloads, image):
 		item[0].start()
 		started_downloads_append(item)
 		remaining_downloads = [x[1] for x in multi_downloads if not x in started_downloads]
-		kodi_utils.set_property('fenlight.active_queued_downloads', json.dumps(remaining_downloads))
-	kodi_utils.clear_property('fenlight.active_queued_downloads')
+		kodi_utils.set_property('fenlightfl.active_queued_downloads', json.dumps(remaining_downloads))
+	kodi_utils.clear_property('fenlightfl.active_queued_downloads')
 
 def select_pack_item(pack_choices, icon):
 	list_items = [{'line1': '%.2f GB | %s' % (float(item['pack_files']['size'])/1073741824, clean_file_name(item['pack_files']['filename']).upper()), 'icon': icon} \
@@ -126,31 +126,31 @@ class Downloader:
 		self.start_download()
 
 	def get_active_downloads(self):
-		return json.loads(kodi_utils.get_property('fenlight.active_downloads') or '[]')
+		return json.loads(kodi_utils.get_property('fenlightfl.active_downloads') or '[]')
 
 	def add_active_download(self):
 		if self.action == 'image': return
 		active_downloads = self.get_active_downloads()
 		active_downloads.append(self.final_name)
-		kodi_utils.set_property('fenlight.active_downloads', json.dumps(active_downloads))
+		kodi_utils.set_property('fenlightfl.active_downloads', json.dumps(active_downloads))
 
 	def remove_active_download(self):
 		if self.action == 'image': return
 		active_downloads = self.get_active_downloads()
 		try: active_downloads.remove(self.final_name)
 		except: pass
-		if active_downloads: kodi_utils.set_property('fenlight.active_downloads', json.dumps(active_downloads))
+		if active_downloads: kodi_utils.set_property('fenlightfl.active_downloads', json.dumps(active_downloads))
 		else: self.clear_active_downloads()
 
 	def clear_active_downloads(self):
-		kodi_utils.clear_property('fenlight.active_downloads')
+		kodi_utils.clear_property('fenlightfl.active_downloads')
 
 	def set_percent_property(self, percent):
-		kodi_utils.set_property('fenlight.%s' % self.final_name, str(percent))
+		kodi_utils.set_property('fenlightfl.%s' % self.final_name, str(percent))
 
 	def check_status(self):
-		status = kodi_utils.get_property('fenlight.download_status.%s' % self.final_name)
-		if status in ('unpaused', 'cancelled'): kodi_utils.clear_property('fenlight.download_status.%s' % self.final_name)
+		status = kodi_utils.get_property('fenlightfl.download_status.%s' % self.final_name)
+		if status in ('unpaused', 'cancelled'): kodi_utils.clear_property('fenlightfl.download_status.%s' % self.final_name)
 		return status
 
 	def get_url_and_headers(self):

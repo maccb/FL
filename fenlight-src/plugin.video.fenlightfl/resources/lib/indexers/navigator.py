@@ -197,10 +197,10 @@ class Navigator:
 
 	def tools(self):
 		self.add({'mode': 'open_settings', 'isFolder': 'false'}, 'Settings', 'settings')
-		if get_setting('fenlight.external_scraper.module') not in ('empty_setting', ''):
+		if get_setting('fenlightfl.external_scraper.module') not in ('empty_setting', ''):
 			self.add({'mode': 'open_external_scraper_settings', 'isFolder': 'false'}, 'External Scraper Settings', 'settings')
 		self.add({'mode': 'navigator.tips'}, 'Tips for Use', 'settings2')
-		if get_setting('fenlight.use_viewtypes', 'true') == 'true' and not get_setting('fenlight.manual_viewtypes', 'false') == 'true':
+		if get_setting('fenlightfl.use_viewtypes', 'true') == 'true' and not get_setting('fenlightfl.manual_viewtypes', 'false') == 'true':
 			self.add({'mode': 'navigator.set_view_modes'}, 'Set Views', 'settings2')
 		self.add({'mode': 'navigator.changelog_utils'}, 'Changelog & Log Utils', 'settings2')
 		self.add({'mode': 'build_next_episode_manager'}, 'TV Shows Progress Manager', 'settings2')
@@ -478,7 +478,7 @@ class Navigator:
 			k.container_refresh()
 
 	def exit_media_menu(self):
-		params = k.get_property('fenlight.exit_params')
+		params = k.get_property('fenlightfl.exit_params')
 		if params: return k.container_refresh_input(params)
 
 	def tips(self):

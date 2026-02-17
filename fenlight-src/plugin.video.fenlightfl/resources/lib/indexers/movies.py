@@ -44,7 +44,7 @@ class Movies:
 			else: var_module, import_function = 'apis.%s_api' % self.action.split('_')[0], self.action
 			try: function = manual_function_import(var_module, import_function)
 			except: pass
-			if page_no == 1 and not self.is_external: kodi_utils.set_property('fenlight.exit_params', kodi_utils.folder_path())
+			if page_no == 1 and not self.is_external: kodi_utils.set_property('fenlightfl.exit_params', kodi_utils.folder_path())
 			if self.action in self.main:
 				data = function(page_no)
 				results = data['results']
@@ -232,19 +232,19 @@ class Movies:
 			listitem.setArt({'poster': poster, 'fanart': fanart, 'icon': poster, 'clearlogo': clearlogo, 'landscape': landscape, 'thumb': thumb})
 			set_properties({
 				'belongs_to_collection': belongs_to_movieset,
-				'fenlight.extras_params': extras_params,
-				'fenlight.options_params': options_params,
-				'fenlight.playback_options_params': playback_options_params,
-				'fenlight.browse_movie_set_params': browse_movie_set_params,
-				'fenlight.browse_recommended_params': browse_recommended_params,
-				'fenlight.browse_related_params': browse_related_params,
-				'fenlight.browse_more_like_this_params': browse_more_like_this_params,
-				'fenlight.browse_similar_params': browse_similar_params,
-				'fenlight.browse_in_trakt_list_params': browse_in_trakt_list_params,
-				'fenlight.trakt_manager_params': trakt_manager_params,
-				'fenlight.personal_manager_params': personal_manager_params,
-				'fenlight.tmdb_manager_params': tmdb_manager_params,
-				'fenlight.favorites_manager_params': favorites_manager_params
+				'fenlightfl.extras_params': extras_params,
+				'fenlightfl.options_params': options_params,
+				'fenlightfl.playback_options_params': playback_options_params,
+				'fenlightfl.browse_movie_set_params': browse_movie_set_params,
+				'fenlightfl.browse_recommended_params': browse_recommended_params,
+				'fenlightfl.browse_related_params': browse_related_params,
+				'fenlightfl.browse_more_like_this_params': browse_more_like_this_params,
+				'fenlightfl.browse_similar_params': browse_similar_params,
+				'fenlightfl.browse_in_trakt_list_params': browse_in_trakt_list_params,
+				'fenlightfl.trakt_manager_params': trakt_manager_params,
+				'fenlightfl.personal_manager_params': personal_manager_params,
+				'fenlightfl.tmdb_manager_params': tmdb_manager_params,
+				'fenlightfl.favorites_manager_params': favorites_manager_params
 				})
 			self.append(((url_params, listitem, False), _position))
 		except: pass

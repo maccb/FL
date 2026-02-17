@@ -91,7 +91,7 @@ def call_flicklist(path, params=None, data=None, is_delete=False, with_auth=True
 	url = '%s%s' % (API_BASE, path)
 	headers = {'Content-Type': 'application/json'}
 	if with_auth:
-		token = get_setting('fenlight.flicklist.token')
+		token = get_setting('fenlightfl.flicklist.token')
 		if token and token not in ('0', 'empty_setting', ''):
 			headers['Authorization'] = 'Bearer %s' % token
 	if pagination:
@@ -218,7 +218,7 @@ def trakt_get_device_token(device_codes):
 def trakt_refresh_token():
 	"""FlickList tokens are long-lived. Check validity and re-auth if needed."""
 	try:
-		token = get_setting('fenlight.flicklist.token')
+		token = get_setting('fenlightfl.flicklist.token')
 		if not token or token in ('0', 'empty_setting', ''):
 			return
 		response = call_flicklist('/auth/me', with_auth=True)
@@ -993,8 +993,8 @@ def trakt_calendar_days(recently_aired, current_date):
 		start = (current_date - timedelta(days=14)).strftime('%Y-%m-%d')
 		finish = '14'
 	else:
-		previous_days = int(get_setting('fenlight.flicklist.calendar_previous_days', '7'))
-		future_days = int(get_setting('fenlight.flicklist.calendar_future_days', '7'))
+		previous_days = int(get_setting('fenlightfl.flicklist.calendar_previous_days', '7'))
+		future_days = int(get_setting('fenlightfl.flicklist.calendar_future_days', '7'))
 		start = (current_date - timedelta(days=previous_days)).strftime('%Y-%m-%d')
 		finish = str(previous_days + future_days)
 	return start, finish
@@ -1106,7 +1106,7 @@ def trakt_sync_activities(force_update=False):
 			result = True
 		return result
 	def _check_daily_expiry():
-		return int(time.time()) >= int(get_setting('fenlight.flicklist.next_daily_clear', '0'))
+		return int(time.time()) >= int(get_setting('fenlightfl.flicklist.next_daily_clear', '0'))
 	trakt_refresh_token()
 	if force_update:
 		flicklist_cache.clear_all_trakt_cache_data(silent=True, refresh=False)

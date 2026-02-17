@@ -9,7 +9,7 @@ session = make_session('https://api.torbox.app/v1/api/')
 
 class TorBoxAPI:
 	def __init__(self):
-		self.token = get_setting('fenlight.tb.token')
+		self.token = get_setting('fenlightfl.tb.token')
 
 	def _get(self, url, data={}):
 		if self.token in ('empty_setting', ''): return None

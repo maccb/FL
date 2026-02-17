@@ -676,14 +676,14 @@ class Extras(BaseDialog):
 		dialogs.playback_choice(params)
 
 	def assign_buttons(self):
-		setting_id_base = 'fenlight.extras.%s.button' % self.media_type
+		setting_id_base = 'fenlightfl.extras.%s.button' % self.media_type
 		for item in Extras.button_ids[:-1]:
 			setting_id = setting_id_base + str(item)
 			try:
 				button_action = self.get_setting(setting_id)
 				button_label = self.button_label_values[self.media_type][button_action]
 			except:
-				self.restore_setting_default({'setting_id': setting_id.replace('fenlight.', ''), 'silent': 'true'})
+				self.restore_setting_default({'setting_id': setting_id.replace('fenlightfl.', ''), 'silent': 'true'})
 				button_action = self.get_setting(setting_id)
 				button_label = self.button_label_values[self.media_type][button_action]
 			self.setProperty('button%s.label' % item, button_label)
@@ -786,7 +786,7 @@ class Extras(BaseDialog):
 		return True
 
 	def close_all(self):
-		kodi_utils.clear_property('fenlight.window_stack')
+		kodi_utils.clear_property('fenlightfl.window_stack')
 		kodi_utils.close_all_dialog()
 
 class ShowTextMedia(BaseDialog):

@@ -6,7 +6,7 @@ class SettingsCache:
 	def get(self, setting_id):
 		try:
 			dbcon = connect_database('settings_db')
-			setting_id = setting_id.replace('fenlight.', '')
+			setting_id = setting_id.replace('fenlightfl.', '')
 			setting_value = dbcon.execute('SELECT setting_value from settings WHERE setting_id = ?', (setting_id,)).fetchone()[0]
 			self.set_memory_cache(setting_id, setting_value)
 		except: setting_value = None
@@ -50,10 +50,10 @@ class SettingsCache:
 		for item in settings_list: self.set_memory_cache(item[0], item[3] or item[2])
 
 	def set_memory_cache(self, setting_id, setting_value):
-		kodi_utils.set_property('fenlight.%s' % setting_id, setting_value)
+		kodi_utils.set_property('fenlightfl.%s' % setting_id, setting_value)
 
 	def delete_memory_cache(self, setting_id):
-		clear_property('fenlight.%s' % setting_id)
+		clear_property('fenlightfl.%s' % setting_id)
 
 	def setting_info(self, setting_id):
 		d_settings = default_settings()
@@ -118,10 +118,10 @@ def set_default(setting_ids):
 def set_boolean(params):
 	boolean_dict = {'true': 'false', 'false': 'true'}
 	setting = params['setting_id']
-	set_setting(setting, boolean_dict[get_setting('fenlight.%s' % setting)])
+	set_setting(setting, boolean_dict[get_setting('fenlightfl.%s' % setting)])
 
 def set_string(params):
-	current_value = get_setting('fenlight.%s' % params['setting_id'])
+	current_value = get_setting('fenlightfl.%s' % params['setting_id'])
 	current_value = current_value.replace('empty_setting', '')
 	new_value = kodi_utils.kodi_dialog().input('', defaultt=current_value)
 	if not new_value and not kodi_utils.confirm_dialog(text='Enter Blank Value?', ok_label='Yes', cancel_label='Re-Enter Value', default_control=11):
@@ -151,7 +151,7 @@ def set_numeric(params):
 def set_path(params):
 	setting_id = params['setting_id']
 	browse_mode = int(default_setting_values(setting_id)['browse_mode'])
-	new_value = kodi_utils.kodi_dialog().browse(browse_mode, '', '', defaultt=get_setting('fenlight.%s' % setting_id))
+	new_value = kodi_utils.kodi_dialog().browse(browse_mode, '', '', defaultt=get_setting('fenlightfl.%s' % setting_id))
 	set_setting(setting_id, new_value)
 
 def set_from_list(params):
@@ -165,7 +165,7 @@ def set_from_list(params):
 
 def set_source_folder_path(params):
 	setting_id = params['setting_id']
-	current_setting = get_setting('fenlight.%s' % setting_id)
+	current_setting = get_setting('fenlightfl.%s' % setting_id)
 	if current_setting not in (None, 'None', ''):
 		if kodi_utils.confirm_dialog(text='Enter Blank Value?', ok_label='Yes', cancel_label='Re-Enter Value', default_control=11):
 			return set_setting(setting_id, 'None')
@@ -182,7 +182,7 @@ def restore_setting_default(params):
 		if not silent: kodi_utils.ok_dialog(text='Error restoring default setting')
 
 def default_setting_values(setting_id):
-	if 'fenlight.' in setting_id: setting_id = setting_id.replace('fenlight.', '')
+	if 'fenlightfl.' in setting_id: setting_id = setting_id.replace('fenlightfl.', '')
 	d_settings = default_settings()
 	return next((i for i in d_settings if i['setting_id'] == setting_id), None)
 

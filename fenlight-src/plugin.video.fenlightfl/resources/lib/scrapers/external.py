@@ -23,7 +23,7 @@ class source:
 		self.internal_scrapers, self.prescrape_sources = internal_scrapers, prescrape_sources
 		self.internal_activated, self.internal_prescraped = len(self.internal_scrapers) > 0, len(self.prescrape_sources) > 0
 		self.processed_prescrape, self.threads_completed = False, False
-		self.timeout = 60 if disabled_ext_ignored else int(get_setting('fenlight.results.timeout', '20'))
+		self.timeout = 60 if disabled_ext_ignored else int(get_setting('fenlightfl.results.timeout', '20'))
 		self.sources_total = self.sources_4k = self.sources_1080p = self.sources_720p = self.sources_sd = 0
 		self.final_total = self.final_4k = self.final_1080p = self.final_720p = self.final_sd = 0
 		self.count_tuple = (('sources_4k', '4K', self._quality_length), ('sources_1080p', '1080p', self._quality_length), ('sources_720p', '720p', self._quality_length),
@@ -250,11 +250,11 @@ class source:
 			self.process_quality_count(self.prescrape_sources)
 			self.processed_prescrape = True
 		for i in self.internal_scrapers:
-			win_property = kodi_utils.get_property('fenlight.internal_results.%s' % i)
+			win_property = kodi_utils.get_property('fenlightfl.internal_results.%s' % i)
 			if win_property in ('checked', '', None): continue
 			try: internal_sources = json.loads(win_property)
 			except: continue
-			kodi_utils.set_property('fenlight.internal_results.%s' % i, 'checked')
+			kodi_utils.set_property('fenlightfl.internal_results.%s' % i, 'checked')
 			self.all_internal_sources += internal_sources
 			self.processed_internal_scrapers_append(i)
 			self.process_quality_count(internal_sources)

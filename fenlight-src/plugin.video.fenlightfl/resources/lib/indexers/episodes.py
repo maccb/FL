@@ -78,8 +78,8 @@ def build_episode_list(params):
 				listitem.setArt({'poster': show_poster, 'fanart': show_fanart, 'thumb': thumb, 'icon':thumb, 'clearlogo': show_clearlogo, 'landscape': show_landscape,
 								'season.poster': season_poster, 'tvshow.poster': show_poster, 'tvshow.clearlogo': show_clearlogo})
 				set_properties({
-					'episode_type': episode_type, 'fenlight.extras_params': extras_params, 'fenlight.options_params': options_params,
-					'fenlight.playback_options_params': playback_options_params
+					'episode_type': episode_type, 'fenlightfl.extras_params': extras_params, 'fenlightfl.options_params': options_params,
+					'fenlightfl.playback_options_params': playback_options_params
 					})
 				yield (play_params, listitem, False)
 			except: pass
@@ -281,8 +281,8 @@ def build_single_episode(list_type, params={}):
 			listitem.setArt({'poster': show_poster, 'fanart': show_fanart, 'thumb': thumb, 'icon':thumb, 'clearlogo': show_clearlogo, 'landscape': show_landscape,
 							'season.poster': season_poster, 'tvshow.poster': show_poster, 'tvshow.clearlogo': show_clearlogo})
 			set_properties({
-				'episode_type': episode_type, 'fenlight.extras_params': extras_params, 'fenlight.options_params': options_params,
-				'fenlight.playback_options_params': playback_options_params
+				'episode_type': episode_type, 'fenlightfl.extras_params': extras_params, 'fenlightfl.options_params': options_params,
+				'fenlightfl.playback_options_params': playback_options_params
 				})
 			item_list_append({'list_items': (play_params, listitem, False), 'first_aired': premiered, 'name': '%s - %sx%s' % (title, str_season_zfill2, str_episode_zfill2),
 							'unaired': unaired, 'last_played': ep_data_get('last_played', resinsert), 'sort_order': _position, 'unwatched': ep_data_get('unwatched')})

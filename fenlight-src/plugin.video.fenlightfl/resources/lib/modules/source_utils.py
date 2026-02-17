@@ -59,7 +59,7 @@ def make_alias_dict(meta, title):
 	return aliases
 
 def internal_results(provider, sources):
-	set_property('fenlight.internal_results.%s' % provider, json.dumps(sources))
+	set_property('fenlightfl.internal_results.%s' % provider, json.dumps(sources))
 
 def normalize(title):
 	import unicodedata
@@ -458,8 +458,8 @@ def get_external_cache_status(debrid, unchecked_hashes, data, active_debrid):
 	try:
 		results = []
 		imdb_id = data['imdb']
-		debrid_name, services, token = {'Real-Debrid': ('realdebrid', ['torrentio'], get_setting('fenlight.rd.token')),
-										'AllDebrid': ('alldebrid', ['mediafusion'], get_setting('fenlight.ad.token'))}[debrid]
+		debrid_name, services, token = {'Real-Debrid': ('realdebrid', ['torrentio'], get_setting('fenlightfl.rd.token')),
+										'AllDebrid': ('alldebrid', ['mediafusion'], get_setting('fenlightfl.ad.token'))}[debrid]
 		threads = [Thread(target=_process, args=(item, unchecked_hashes)) for item in services]
 		[i.start() for i in threads]
 		[i.join() for i in threads]

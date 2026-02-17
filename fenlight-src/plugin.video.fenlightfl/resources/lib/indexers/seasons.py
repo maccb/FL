@@ -54,7 +54,7 @@ def build_season_list(params):
 														'title': show_title, 'tmdb_id': tmdb_id, 'tvdb_id': tvdb_id, 'season': season_number}))])
 				set_properties({'watchedepisodes': str(watched), 'unwatchedepisodes': str(unwatched)})
 				set_properties({'totalepisodes': str(aired_eps), 'watchedprogress': str(visible_progress),
-								'fenlight.extras_params': extras_params, 'fenlight.options_params': options_params})
+								'fenlightfl.extras_params': extras_params, 'fenlightfl.options_params': options_params})
 				if is_external:
 					cm.extend([['refresh', ('[B]Refresh Widgets[/B]', 'RunPlugin(%s)' % build_url({'mode': 'refresh_widgets'}))],
 							['reload', ('[B]Reload Widgets[/B]', 'RunPlugin(%s)' % build_url({'mode': 'kodi_refresh'}))]])
