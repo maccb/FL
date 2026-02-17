@@ -141,7 +141,7 @@ def build_single_episode(list_type, params={}):
 			cat_name = {'episode.progress': 'In Progress Episodes',
 						'episode.recently_watched': 'Recently Watched Episodes',
 						'episode.next_trakt': 'Next Episodes', 'episode.next_fenlight': 'Next Episodes',
-						'episode.trakt': {'true': 'Recently Aired Episodes', None: 'Trakt Calendar'}}[list_type]
+						'episode.trakt': {'true': 'Recently Aired Episodes', None: 'FL Calendar'}}[list_type]
 			if isinstance(cat_name, dict): cat_name = cat_name[params.get('recently_aired')]
 		except: cat_name = 'Episodes'
 		return cat_name

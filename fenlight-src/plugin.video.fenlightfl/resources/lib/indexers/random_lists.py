@@ -187,7 +187,7 @@ class RandomLists():
 		from apis.flicklist_api import trakt_get_lists, get_trakt_list_contents
 		from indexers.trakt_lists import build_trakt_list
 		list_type = self.params.get('list_type')
-		list_type_name = 'Trakt My Lists' if list_type == 'my_lists' else 'Trakt Liked Lists' if list_type == 'liked_lists' else 'Trakt User Lists'
+		list_type_name = 'FL My Lists' if list_type == 'my_lists' else 'FL Liked Lists' if list_type == 'liked_lists' else 'FL User Lists'
 		random_list, cache_to_memory = get_persistent_content(self.database, '%s_%s' % (self.mode, list_type), self.is_external)
 		if not random_list:
 			if list_type == 'my_lists': self.random_results = [i for i in trakt_get_lists(list_type) if i['item_count']]
@@ -265,7 +265,7 @@ class RandomLists():
 		from apis.flicklist_api import get_trakt_list_contents
 		from indexers.trakt_lists import build_trakt_list
 		list_name, list_type = self.params.get('list_name'), self.params.get('list_type')
-		list_type_name = 'Trakt My Lists' if list_type == 'my_lists' else 'Trakt Liked Lists' if list_type == 'liked_lists' else 'Trakt User Lists'
+		list_type_name = 'FL My Lists' if list_type == 'my_lists' else 'FL Liked Lists' if list_type == 'liked_lists' else 'FL User Lists'
 		random_list, cache_to_memory = get_persistent_content(self.database, '%s_%s' % (list_type, list_name), self.is_external)
 		if not random_list:
 			user, slug, list_id = self.params_get('user'), self.params_get('slug'), self.params_get('list_id')

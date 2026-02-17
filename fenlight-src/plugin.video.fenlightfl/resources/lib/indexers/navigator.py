@@ -7,7 +7,7 @@ class Navigator:
 	def __init__(self, params):
 		self.params = params
 		self.params_get = self.params.get
-		self.category_name = self.params_get('name', 'Fen Light')
+		self.category_name = self.params_get('name', 'FL')
 		self.list_name = self.params_get('action', 'RootList')
 		self.is_external = k.external()
 		self.make_listitem = k.make_listitem
@@ -132,8 +132,8 @@ class Navigator:
 		if s.tmdblist_user_active(): self.add({'mode': 'navigator.build_random_lists', 'menu_type': 'tmdb_lists'}, 'Random TMDb Lists', 'tmdb')
 		self.add({'mode': 'navigator.build_random_lists', 'menu_type': 'personal_lists'}, 'Random Personal Lists', 'lists')
 		if s.trakt_user_active():
-			self.add({'mode': 'navigator.build_random_lists', 'menu_type': 'trakt_personal'}, 'Random Trakt Lists (Personal)', 'trakt')
-			self.add({'mode': 'navigator.build_random_lists', 'menu_type': 'trakt_public'}, 'Random Trakt Lists (Public)', 'trakt')
+			self.add({'mode': 'navigator.build_random_lists', 'menu_type': 'trakt_personal'}, 'Random FL Lists (Personal)', 'trakt')
+			self.add({'mode': 'navigator.build_random_lists', 'menu_type': 'trakt_public'}, 'Random FL Lists (Public)', 'trakt')
 		self.end_directory()
 
 	def trakt_collections(self):
@@ -181,7 +181,7 @@ class Navigator:
 		self.add({'mode': 'navigator.search_history', 'action': 'people', 'name': 'Search History People'}, 'People', 'people')
 		self.add({'mode': 'navigator.search_history', 'action': 'tmdb_keyword_movie', 'name': 'Search History Keywords (Movies)'}, 'Keywords (Movies)', 'tmdb')
 		self.add({'mode': 'navigator.search_history', 'action': 'tmdb_keyword_tvshow', 'name': 'Search History Keywords (TV Shows)'}, 'Keywords (TV Shows)', 'tmdb')
-		self.add({'mode': 'navigator.search_history', 'action': 'trakt_lists'}, 'Search Trakt User Lists', 'trakt')
+		self.add({'mode': 'navigator.search_history', 'action': 'trakt_lists'}, 'Search FL User Lists', 'trakt')
 		if s.easynews_authorized():
 			self.add({'mode': 'navigator.search_history', 'action': 'easynews_video'}, 'Search Easynews Videos', 'easynews')
 			self.add({'mode': 'navigator.search_history', 'action': 'easynews_image'}, 'Search Easynews Images', 'easynews')
@@ -222,7 +222,7 @@ class Navigator:
 		self.add({'mode': 'clear_cache', 'cache': 'list', 'isFolder': 'false'}, 'Clear Lists Cache', 'settings')
 		self.add({'mode': 'clear_cache', 'cache': 'ai_functions', 'isFolder': 'false'}, 'Clear AI Data Cache', 'settings')
 		self.add({'mode': 'clear_cache', 'cache': 'tmdb_list', 'isFolder': 'false'}, 'Clear TMDb Personal List Cache', 'settings')
-		self.add({'mode': 'clear_cache', 'cache': 'trakt', 'isFolder': 'false'}, 'Clear Trakt Cache', 'settings')
+		self.add({'mode': 'clear_cache', 'cache': 'trakt', 'isFolder': 'false'}, 'Clear FL Cache', 'settings')
 		self.add({'mode': 'clear_cache', 'cache': 'imdb', 'isFolder': 'false'}, 'Clear IMDb Cache', 'settings')
 		self.add({'mode': 'clear_cache', 'cache': 'internal_scrapers', 'isFolder': 'false'}, 'Clear Internal Scrapers Cache', 'settings')
 		self.add({'mode': 'clear_cache', 'cache': 'external_scrapers', 'isFolder': 'false'}, 'Clear External Scrapers Cache', 'settings')
@@ -532,8 +532,8 @@ class Navigator:
 		'because_you_watched': ('Random Because You Watched Lists', nc.random_because_you_watched_lists),
 		'tmdb_lists': ('Random TMDb Lists', nc.random_tmdb_lists),
 		'personal_lists': ('Random Personal Lists', nc.random_personal_lists),
-		'trakt_personal': ('Random Trakt Lists (Personal)', nc.random_trakt_lists_personal),
-		'trakt_public': ('Random Trakt Lists (Public)', nc.random_trakt_lists_public)}
+		'trakt_personal': ('Random FL Lists (Personal)', nc.random_trakt_lists_personal),
+		'trakt_public': ('Random FL Lists (Public)', nc.random_trakt_lists_public)}
 		self.category_name, function = random_list_dict[self.params_get('menu_type')]
 		func = function()
 		for item in func: self.add(item, item['name'], item['iconImage'])

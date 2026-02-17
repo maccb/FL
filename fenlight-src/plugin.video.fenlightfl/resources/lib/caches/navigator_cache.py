@@ -209,10 +209,10 @@ class NavigatorCache:
 
 	def random_trakt_lists_personal(self):
 		return [
-			{'mode': 'random.build_movie_list', 'action': 'trakt_collection_lists', 'name': 'Random Trakt Movie Collection', 'iconImage': 'movies', 'random': 'true'},
-			{'mode': 'random.build_tvshow_list', 'action': 'trakt_collection_lists', 'name': 'Random Trakt TV Show Collection', 'iconImage': 'tv', 'random': 'true'},
-			{'mode': 'random.build_movie_list', 'action': 'trakt_watchlist_lists', 'name': 'Random Trakt Movie Watchlist', 'iconImage': 'movies', 'random': 'true'},
-			{'mode': 'random.build_tvshow_list', 'action': 'trakt_watchlist_lists', 'name': 'Random Trakt TV Show Watchlist', 'iconImage': 'tv', 'random': 'true'},
+			{'mode': 'random.build_movie_list', 'action': 'trakt_collection_lists', 'name': 'Random FL Movie Collection', 'iconImage': 'movies', 'random': 'true'},
+			{'mode': 'random.build_tvshow_list', 'action': 'trakt_collection_lists', 'name': 'Random FL TV Show Collection', 'iconImage': 'tv', 'random': 'true'},
+			{'mode': 'random.build_movie_list', 'action': 'trakt_watchlist_lists', 'name': 'Random FL Movie Watchlist', 'iconImage': 'movies', 'random': 'true'},
+			{'mode': 'random.build_tvshow_list', 'action': 'trakt_watchlist_lists', 'name': 'Random FL TV Show Watchlist', 'iconImage': 'tv', 'random': 'true'},
 			{'mode': 'random.build_movie_list', 'action': 'trakt_recommendations', 'new_page': 'movies', 'name': 'Random Trakt Recommended Movies',
 			'iconImage': 'movies', 'random': 'true'},
 			{'mode': 'random.build_tvshow_list', 'action': 'trakt_recommendations', 'new_page': 'shows', 'name': 'Random Trakt Recommended TV Shows',

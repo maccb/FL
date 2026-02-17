@@ -16,7 +16,7 @@
         </control>
         <control type="group">
             <animation effect="fade" end="100" time="200" delay="400">WindowOpen</animation>
-            <!-- Fen Light Logo and Tips/Clock & Date --> 
+            <!-- FL Logo and Tips/Clock & Date --> 
             <control type="group">
                 <left>5</left>
                 <control type="image">
@@ -1095,7 +1095,7 @@
                         </control>
                     </control>
                 </control>
-                <!-- Trakt Comments 2057 -->
+                <!-- FL Comments 2057 -->
                 <control type="group">
                     <visible>Integer.IsGreater(Container(2057).NumItems,0)</visible>
                     <height>760</height>
@@ -1477,7 +1477,7 @@
                         </control>
                     </control>
                 </control>
-                <!-- In Trakt Lists 2061-->
+                <!-- In FL Lists 2061-->
                 <control type="group">
                     <visible>Integer.IsGreater(Container(2061).NumItems,0)</visible>
                     <height>760</height>
@@ -1489,7 +1489,7 @@
                             <textcolor>FFCCCCCC</textcolor>
                             <align>left</align>
                             <aligny>bottom</aligny>
-                            <label>[B]In Trakt Lists $INFO[Window.Property(trakt_in_lists.number)][/B]</label>
+                            <label>[B]In FL Lists $INFO[Window.Property(trakt_in_lists.number)][/B]</label>
                         </control>
                         <control type="fixedlist" id="2061">
                             <animation effect="slide" end="-472,0" time="0" condition="Integer.IsEqual(Container(2061).NumItems,1) | Integer.IsEqual(Container(2061).NumItems,2)">Conditional</animation>
