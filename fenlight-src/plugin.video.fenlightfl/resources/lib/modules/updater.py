@@ -66,7 +66,7 @@ def rollback_check():
 	kodi_utils.hide_busy_dialog()
 	if results.status_code != 200: return kodi_utils.ok_dialog(heading='Fen Light Updater', text='Error rolling back.[CR]Please install rollback manually')
 	results = results.json()
-	results = [i['name'].split('-')[1].replace('.zip', '') for i in results if 'plugin.video.fenlight' in i['name'] \
+	results = [i['name'].split('-')[1].replace('.zip', '') for i in results if 'plugin.video.fenlightfl' in i['name'] \
 				and not i['name'].split('-')[1].replace('.zip', '') == current_version]
 	if not results: return kodi_utils.ok_dialog(heading='Fen Light Updater', text='No previous versions found.[CR]Please install rollback manually')
 	results.sort(reverse=True)
@@ -83,7 +83,7 @@ def update_addon(new_version, action, show_after_action=True):
 	kodi_utils.close_all_dialog()
 	kodi_utils.execute_builtin('ActivateWindow(Home)', True)
 	kodi_utils.notification('Fen Light Performing Rollback' if action == 5 else 'Fen Light Performing Update', icon=kodi_utils.get_icon('downloads'))
-	zip_name = 'plugin.video.fenlight-%s.zip' % new_version
+	zip_name = 'plugin.video.fenlightfl-%s.zip' % new_version
 	url = get_location('%s') % zip_name
 	kodi_utils.show_busy_dialog()
 	result = requests.get(url, stream=True)
@@ -91,8 +91,8 @@ def update_addon(new_version, action, show_after_action=True):
 	if result.status_code != 200: return kodi_utils.ok_dialog(heading='Fen Light Updater', text='Error Updating.[CR]Please install new update manually')
 	zip_location = path.join(kodi_utils.translate_path('special://home/addons/packages/'), zip_name)
 	with open(zip_location, 'wb') as f: shutil.copyfileobj(result.raw, f)
-	shutil.rmtree(path.join(kodi_utils.translate_path('special://home/addons/'), 'plugin.video.fenlight'))
-	success = unzip(zip_location, kodi_utils.translate_path('special://home/addons/'), kodi_utils.translate_path('special://home/addons/plugin.video.fenlight/'))
+	shutil.rmtree(path.join(kodi_utils.translate_path('special://home/addons/'), 'plugin.video.fenlightfl'))
+	success = unzip(zip_location, kodi_utils.translate_path('special://home/addons/'), kodi_utils.translate_path('special://home/addons/plugin.video.fenlightfl/'))
 	kodi_utils.delete_file(zip_location)
 	if not success: return kodi_utils.ok_dialog(heading='Fen Light Updater', text='Error Updating.[CR]Please install new update manually')
 	if action == 5:
@@ -102,7 +102,7 @@ def update_addon(new_version, action, show_after_action=True):
 		if show_after_action:
 			if kodi_utils.confirm_dialog(heading='Fen Light Updater', text='[CR]Success.[CR]Fen Light updated to version [B]%s[/B]' % new_version,
 										ok_label='Changelog', cancel_label='Exit', default_control=10) != False:
-				kodi_utils.show_text('Changelog', file=kodi_utils.translate_path('special://home/addons/plugin.video.fenlight/resources/text/changelog.txt'), font_size='large')
+				kodi_utils.show_text('Changelog', file=kodi_utils.translate_path('special://home/addons/plugin.video.fenlightfl/resources/text/changelog.txt'), font_size='large')
 		else:
 			kodi_utils.ok_dialog(heading='Fen Light Updater', text='[CR]Success.[CR]Fen Light updated to version [B]%s[/B]' % new_version)
 	kodi_utils.update_local_addons()

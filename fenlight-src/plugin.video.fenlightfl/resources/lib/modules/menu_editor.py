@@ -205,7 +205,7 @@ class MenuEditor:
 		return kodi_utils.select_dialog(index_list, **kwargs)
 
 	def _icon_select(self, default_icon=''):
-		if default_icon.startswith('http') or 'plugin.video.fenlight' in default_icon: return default_icon
+		if default_icon.startswith('http') or 'plugin.video.fenlightfl' in default_icon: return default_icon
 		all_icons = kodi_utils.get_all_icons()
 		if default_icon:
 			try:
@@ -244,12 +244,12 @@ class MenuEditor:
 		kodi_utils.sleep(500)
 		if refresh: kodi_utils.kodi_refresh()
 
-	def _path_browser(self, label='', file='plugin://plugin.video.fenlight?mode=navigator.main&full_list=true', thumbnail=''):
+	def _path_browser(self, label='', file='plugin://plugin.video.fenlightfl?mode=navigator.main&full_list=true', thumbnail=''):
 		kodi_utils.show_busy_dialog()
 		results = kodi_utils.jsonrpc_get_directory(file)
 		kodi_utils.hide_busy_dialog()
 		list_items, function_items = [], []
-		if file != 'plugin://plugin.video.fenlight?mode=navigator.main&full_list=true':
+		if file != 'plugin://plugin.video.fenlightfl?mode=navigator.main&full_list=true':
 			list_items.append({'line1': 'Use [B]%s[/B] As Path' % label, 'icon': thumbnail})
 			function_items.append(json.dumps({'label': label, 'file': file, 'thumbnail': thumbnail}))
 		list_items.extend([{'line1': '%s >>' % i['label'], 'icon': i['thumbnail']} for i in results])
@@ -263,7 +263,7 @@ class MenuEditor:
 		else: return self._path_browser(**choice)
 
 	def _get_menu_item(self, path):
-		return dict(parse_qsl(path.replace('plugin://plugin.video.fenlight/?','')))
+		return dict(parse_qsl(path.replace('plugin://plugin.video.fenlightfl/?','')))
 
 	def _get_icon_var(self, icon_path):
 		import os

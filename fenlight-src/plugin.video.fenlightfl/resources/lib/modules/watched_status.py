@@ -196,7 +196,7 @@ def get_resume_seconds(progress, duration):
 def clear_local_bookmarks():
 	try:
 		dbcon = database.connect(get_video_database_path())
-		file_ids = dbcon.execute("SELECT idFile FROM files WHERE strFilename LIKE 'plugin.video.fenlight%'").fetchall()
+		file_ids = dbcon.execute("SELECT idFile FROM files WHERE strFilename LIKE 'plugin.video.fenlightfl%'").fetchall()
 		for i in ('bookmark', 'streamdetails', 'files'): dbcon.executemany("DELETE FROM %s WHERE idFile=?" % i, file_ids)
 	except: pass
 
