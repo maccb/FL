@@ -491,7 +491,7 @@ def trakt_progress(action, media, media_id, percent, season=None, episode=None, 
 				data['season'] = int(season)
 			if episode is not None:
 				data['episode'] = int(episode)
-			call_flicklist('/scrobble', data=data)
+			call_flicklist('/scrobble/event', data=data)
 		if refresh_trakt:
 			trakt_sync_activities()
 	except Exception as e:
@@ -1021,7 +1021,7 @@ def scrobble_start(media_type, tmdb_id, season=None, episode=None, duration=None
 	if duration is not None:
 		data['duration'] = int(duration)
 	try:
-		call_flicklist('/scrobble', data=data)
+		call_flicklist('/scrobble/event', data=data)
 	except:
 		pass
 
@@ -1039,7 +1039,7 @@ def scrobble_pause(media_type, tmdb_id, progress, season=None, episode=None):
 	if episode is not None:
 		data['episode'] = int(episode)
 	try:
-		call_flicklist('/scrobble', data=data)
+		call_flicklist('/scrobble/event', data=data)
 	except:
 		pass
 
@@ -1057,7 +1057,7 @@ def scrobble_stop(media_type, tmdb_id, progress, season=None, episode=None):
 	if episode is not None:
 		data['episode'] = int(episode)
 	try:
-		call_flicklist('/scrobble', data=data)
+		call_flicklist('/scrobble/event', data=data)
 	except:
 		pass
 
@@ -1080,7 +1080,7 @@ def scrobble_heartbeat(media_type, tmdb_id, progress, current_time=None, duratio
 	if duration is not None:
 		data['duration'] = float(duration)
 	try:
-		call_flicklist('/scrobble', data=data)
+		call_flicklist('/scrobble/event', data=data)
 	except:
 		pass
 

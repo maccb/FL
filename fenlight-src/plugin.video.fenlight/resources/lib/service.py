@@ -44,6 +44,61 @@ class SyncSettings:
 		sync_settings()
 		return kodi_utils.logger('Fen Light', 'SyncSettings Service Finished')
 
+class ImportSetupConfig:
+	SEARCH_PATHS = [
+		'/storage/emulated/0/Download',
+		'/sdcard/Download',
+		'/storage/emulated/0/Downloads',
+	]
+
+	def run(self):
+		kodi_utils.logger('Fen Light', 'ImportSetupConfig Service Starting')
+		existing_token = get_setting('fenlight.flicklist.token', '')
+		if existing_token:
+			return kodi_utils.logger('Fen Light', 'ImportSetupConfig Service Skipped (token exists)')
+		config = self._find_config()
+		if not config:
+			return kodi_utils.logger('Fen Light', 'ImportSetupConfig Service Finished (no config found)')
+		try:
+			data = config.get('data', config)
+			token = data.get('token', '')
+			username = data.get('username', '')
+			if token:
+				set_setting('flicklist.token', token)
+				kodi_utils.logger('Fen Light', 'ImportSetupConfig: token imported')
+			if username:
+				set_setting('flicklist.username', username)
+				kodi_utils.logger('Fen Light', 'ImportSetupConfig: username=%s' % username)
+			scrapers = data.get('scrapers', {})
+			if scrapers.get('cocoscrapers'):
+				set_setting('provider.external', 'CocoScrapers')
+				kodi_utils.logger('Fen Light', 'ImportSetupConfig: CocoScrapers enabled')
+			kodi_utils.notification('FlickList account configured')
+		except Exception as e:
+			kodi_utils.logger('Fen Light', 'ImportSetupConfig Error: %s' % str(e))
+		self._cleanup()
+		return kodi_utils.logger('Fen Light', 'ImportSetupConfig Service Finished')
+
+	def _find_config(self):
+		for base in self.SEARCH_PATHS:
+			path = os.path.join(base, 'fl_setup.json')
+			if os.path.isfile(path):
+				try:
+					with open(path, 'r') as f:
+						self._config_path = path
+						return json.load(f)
+				except Exception as e:
+					kodi_utils.logger('Fen Light', 'ImportSetupConfig: failed to read %s: %s' % (path, str(e)))
+		return None
+
+	def _cleanup(self):
+		try:
+			if hasattr(self, '_config_path') and os.path.isfile(self._config_path):
+				os.remove(self._config_path)
+				kodi_utils.logger('Fen Light', 'ImportSetupConfig: deleted %s' % self._config_path)
+		except Exception as e:
+			kodi_utils.logger('Fen Light', 'ImportSetupConfig: cleanup failed: %s' % str(e))
+
 class OnUpdateChanges:
 	def run(self):
 		kodi_utils.logger('Fen Light', 'OnUpdateChanges Service Starting')
@@ -226,6 +281,7 @@ class FenLightMonitor(Monitor):
 		SetAddonConstants().run()
 		DatabaseMaintenance().run()
 		SyncSettings().run()
+		ImportSetupConfig().run()
 		OnUpdateChanges().run()
 		AddonXMLCheck().run()
 		Thread(target=CustomFonts().run).start()
