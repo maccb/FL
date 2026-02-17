@@ -281,7 +281,7 @@ def default_settings():
 
 
 {'setting_id': 'flicklist.user', 'setting_type': 'string', 'setting_default': 'empty_setting'},
-{'setting_id': 'flicklist.api_url', 'setting_type': 'string', 'setting_default': 'https://flicklist.tv/api'},
+{'setting_id': 'flicklist.api_url', 'setting_type': 'string', 'setting_default': 'https://beta.flicklist.tv/api'},
 {'setting_id': 'flicklist.client_id', 'setting_type': 'string', 'setting_default': 'flicklist_kodi_addon'},
 {'setting_id': 'tmdb_api', 'setting_type': 'string', 'setting_default': 'b370b60447737762ca38457bd77579b3'},
 {'setting_id': 'tmdb.token', 'setting_type': 'string', 'setting_default': 'empty_setting'},
