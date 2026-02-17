@@ -9,7 +9,6 @@ class NavigatorCache:
 	{'name': 'People', 'mode': 'navigator.people', 'iconImage': 'empty_person'},
 	{'name': 'Search', 'mode': 'navigator.search', 'iconImage': 'search'},
 	{'name': 'Discover', 'mode': 'navigator.discover', 'iconImage': 'discover'},
-	{'name': 'Random Lists', 'mode': 'navigator.random_lists', 'iconImage': 'random'},
 	{'name': 'My Lists', 'mode': 'navigator.my_content', 'iconImage': 'lists'},
 	{'name': 'My Services', 'mode': 'navigator.premium', 'iconImage': 'premium'},
 	{'name': 'Favorites', 'mode': 'navigator.favorites', 'iconImage': 'favorites'},
@@ -165,7 +164,7 @@ class NavigatorCache:
 		for list_name, list_contents in main_items: self.set_list(list_name, 'default', list_contents)
 
 	def _get_list_prop(self, list_type):
-		return {'default': 'fenlight_%s_default', 'edited': 'fenlight_%s_edited', 'shortcut_folder': 'fenlight_%s_shortcut_folder'}[list_type]
+		return {'default': 'fenlightfl_%s_default', 'edited': 'fenlightfl_%s_edited', 'shortcut_folder': 'fenlightfl_%s_shortcut_folder'}[list_type]
 	
 	def random_movie_lists(self):
 		m_list = NavigatorCache.movie_list
@@ -213,16 +212,16 @@ class NavigatorCache:
 			{'mode': 'random.build_tvshow_list', 'action': 'trakt_collection_lists', 'name': 'Random FL TV Show Collection', 'iconImage': 'tv', 'random': 'true'},
 			{'mode': 'random.build_movie_list', 'action': 'trakt_watchlist_lists', 'name': 'Random FL Movie Watchlist', 'iconImage': 'movies', 'random': 'true'},
 			{'mode': 'random.build_tvshow_list', 'action': 'trakt_watchlist_lists', 'name': 'Random FL TV Show Watchlist', 'iconImage': 'tv', 'random': 'true'},
-			{'mode': 'random.build_movie_list', 'action': 'trakt_recommendations', 'new_page': 'movies', 'name': 'Random Trakt Recommended Movies',
+			{'mode': 'random.build_movie_list', 'action': 'trakt_recommendations', 'new_page': 'movies', 'name': 'Random FL Recommended Movies',
 			'iconImage': 'movies', 'random': 'true'},
-			{'mode': 'random.build_tvshow_list', 'action': 'trakt_recommendations', 'new_page': 'shows', 'name': 'Random Trakt Recommended TV Shows',
+			{'mode': 'random.build_tvshow_list', 'action': 'trakt_recommendations', 'new_page': 'shows', 'name': 'Random FL Recommended TV Shows',
 			'iconImage': 'tv', 'random': 'true'},
-			{'mode': 'trakt.list.get_trakt_lists', 'list_type': 'my_lists', 'name': 'Random Shuffled Trakt My Lists (All)',
+			{'mode': 'trakt.list.get_trakt_lists', 'list_type': 'my_lists', 'name': 'Random Shuffled FL My Lists (All)',
 			'iconImage': 'trakt', 'random': 'true', 'shuffle': 'true'},
-			{'mode': 'random.build_trakt_lists', 'list_type': 'my_lists', 'name': 'Random Trakt My Lists (Single)', 'iconImage': 'trakt', 'random': 'true'},
-			{'mode': 'trakt.list.get_trakt_lists', 'list_type': 'liked_lists', 'name': 'Random Shuffled Trakt Liked Lists (All)',
+			{'mode': 'random.build_trakt_lists', 'list_type': 'my_lists', 'name': 'Random FL My Lists (Single)', 'iconImage': 'trakt', 'random': 'true'},
+			{'mode': 'trakt.list.get_trakt_lists', 'list_type': 'liked_lists', 'name': 'Random Shuffled FL Liked Lists (All)',
 			'iconImage': 'trakt', 'random': 'true', 'shuffle': 'true'},
-			{'mode': 'random.build_trakt_lists', 'list_type': 'liked_lists', 'name': 'Random Trakt Liked Lists (Single)', 'iconImage': 'trakt', 'random': 'true'},
+			{'mode': 'random.build_trakt_lists', 'list_type': 'liked_lists', 'name': 'Random FL Liked Lists (Single)', 'iconImage': 'trakt', 'random': 'true'},
 				]
 
 	def random_trakt_lists_public(self):

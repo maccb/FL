@@ -235,7 +235,7 @@ def adjust_personal_list_properties(params):
 	if poster: choices.append(('Delete Custom Poster', '', 'delete_poster'))
 	if fanart: choices.append(('Delete Custom Fanart', '', 'delete_fanart'))
 	choices.extend([('Empty List Contents', 'Delete All Contents of %s' % list_name, 'empty_contents'),
-					('Import FL List', 'Import a Trakt List into %s' % list_name, 'import_trakt')])
+					('Import FL List', 'Import an FL List into %s' % list_name, 'import_trakt')])
 	list_items = [{'line1': item[0], 'line2': item[1] or item[0]} for item in choices]
 	kwargs = {'items': json.dumps(list_items), 'heading': 'Personal List Properties', 'multi_line': 'true', 'narrow_window': 'true'}
 	action = kodi_utils.select_dialog([i[2] for i in choices], **kwargs)
