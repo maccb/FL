@@ -409,7 +409,7 @@ def trakt_anime_most_favorited(page_no):
 
 def trakt_anime_certifications(certification, page_no):
 	def _process(params):
-		data = call_flicklist('/discover', params={'type': 'tv', 'genre': 'anime', 'certification': certification, 'page': page_no, 'per_page': 20}, with_auth=False)
+		data = call_flicklist('/discover', params={'type': 'tv', 'genre': 16, 'certification': certification, 'page': page_no, 'per_page': 20}, with_auth=False)
 		items, page_count = _media_to_trakt_list(data, 'tv')
 		return (items, page_count)
 	string = 'trakt_anime_certifications_%s_%s' % (certification, page_no)

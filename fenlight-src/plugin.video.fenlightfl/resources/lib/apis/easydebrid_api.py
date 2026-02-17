@@ -77,7 +77,7 @@ class EasyDebridAPI:
 		return url + '|' + urlencode(self.headers())
 
 	def headers(self):
-		return {'User-Agent': 'Fen Light for Kodi', 'Authorization': 'Bearer %s' % self.token}
+		return {'User-Agent': 'FL for Kodi', 'Authorization': 'Bearer %s' % self.token}
 
 	def _m2ts_check(self, folder_items):
 		for item in folder_items:
