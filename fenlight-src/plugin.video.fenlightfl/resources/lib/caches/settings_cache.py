@@ -486,3 +486,4 @@ def default_settings():
 {'setting_id': 'extras.movie.button17', 'setting_type': 'string', 'setting_default': 'show_options'},
 {'setting_id': 'updatechecks.clear_context_menu_order_01', 'setting_type': 'string', 'setting_default': 'false'},
 {'setting_id': 'updatechecks.clear_extras_menu_order_01', 'setting_type': 'string', 'setting_default': 'false'}
+]
