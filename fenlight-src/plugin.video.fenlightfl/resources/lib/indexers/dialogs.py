@@ -63,14 +63,14 @@ def addon_icon_choice(params):
 		try:
 			results = kodi_utils.get_all_addon_icons()
 			all_icons = [{'line1': i['name'], 'icon': large_image_url % i['name']} for i in results if i['type'] == 'file']
-			if not all_icons: kodi_utils.ok_dialog(heading='Fen Light Icon Images', text='Error Fetching Icon Images')
+			if not all_icons: kodi_utils.ok_dialog(heading='FL Icon Images', text='Error Fetching Icon Images')
 			all_icons.sort(key=lambda k: k['line1'])
 			kwargs = {'items': json.dumps(all_icons), 'heading': 'Choose New Icon Image'}
 			new_icon = kodi_utils.select_dialog(all_icons, **kwargs)
 			if new_icon == None: return
 			if not kodi_utils.confirm_dialog(text='Set New Icon?'): return
 			new_name = new_icon['line1']
-		except: return kodi_utils.ok_dialog(heading='Fen Light Icon Images', text='Error Fetching Addon Icon Images') 
+		except: return kodi_utils.ok_dialog(heading='FL Icon Images', text='Error Fetching Addon Icon Images') 
 	large_image_folder = os.path.join(kodi_utils.addon_path(), 'resources', 'media', 'addon_icons')
 	small_image_folder = os.path.join(large_image_folder, 'minis')
 	for item in [(large_image_folder, large_image_url), (small_image_folder, small_image_url)]:

@@ -1,7 +1,7 @@
 from threading import Thread
 from datetime import datetime, timedelta
 from windows.base_window import BaseDialog, window_manager, window_player
-from apis import tmdb_api, imdb_api, omdb_api, ai_api, trakt_api
+from apis import tmdb_api, imdb_api, omdb_api, ai_api, flicklist_api as trakt_api
 from indexers import dialogs, people
 from indexers.images import Images
 from modules import kodi_utils, settings, watched_status
@@ -77,7 +77,7 @@ class Extras(BaseDialog):
 					function, new_value = (trakt_api.trakt_like_a_list, 'true') if list_item.getProperty('liked_status') == 'false' else (trakt_api.trakt_unlike_a_list, 'false')
 					new_value = 'true' if list_item.getProperty('liked_status') == 'false' else 'false'
 					if function({'user': user, 'list_slug': list_slug, 'refresh': 'false'}): list_item.setProperty('liked_status', new_value)
-				except: return self.notification('Error with Trakt List')
+				except: return self.notification('Error with FL List')
 				kodi_utils.hide_busy_dialog()
 			else: return
 		if not self.control_id: return
@@ -654,7 +654,7 @@ class Extras(BaseDialog):
 		self.close_all()
 		media_type = 'movies' if self.media_type == 'movie' else 'shows'
 		self.selected = self.folder_runner({'mode': 'trakt.list.in_trakt_lists', 'media_type': media_type,
-											'imdb_id': self.imdb_id, 'category_name': '%s In Trakt Lists' % self.title})
+											'imdb_id': self.imdb_id, 'category_name': '%s In FL Lists' % self.title})
 		self.close()
 
 	def show_trakt_manager(self):

@@ -162,7 +162,7 @@ def adjust_tmdb_list_properties(params):
 	if custom_poster: choices.append(('Delete Custom Poster', '', 'delete_poster'))
 	if custom_fanart: choices.append(('Delete Custom Fanart', '', 'delete_fanart'))
 	choices.extend([('Empty List Contents', 'Delete All Contents of %s' % current_name, 'empty_contents'),
-					('Import Trakt List', 'Import a Trakt List into %s' % current_name, 'import_trakt')])
+					('Import FL List', 'Import a Trakt List into %s' % current_name, 'import_trakt')])
 	list_items = [{'line1': item[0], 'line2': item[1] or item[0]} for item in choices]
 	kwargs = {'items': json.dumps(list_items), 'heading': 'TMDb List Properties', 'multi_line': 'true', 'narrow_window': 'true'}
 	action = kodi_utils.select_dialog([i[2] for i in choices], **kwargs)
@@ -266,7 +266,7 @@ def check_item_status(list_id, media_type, media_id):
 def make_new_tmdb_list(params):
 	suggested_list_name, chosen_list = '', None
 	external_creation = params.get('external_creation', 'false') == 'true'
-	if not external_creation and kodi_utils.confirm_dialog(heading='TMDb Lists', text='Import a Trakt List to populate this new list?',
+	if not external_creation and kodi_utils.confirm_dialog(heading='TMDb Lists', text='Import a FL List to populate this new list?',
 																				ok_label='Yes', cancel_label='No'):
 		from apis.flicklist_api import get_trakt_list_selection
 		chosen_list = get_trakt_list_selection(['default', 'personal'])
@@ -366,7 +366,7 @@ def import_trakt_list_tmdb(params):
 	list_id = params.get('list_id', '')
 	chosen_list = get_trakt_list_selection(['default', 'personal'])
 	if chosen_list == None: return None
-	if kodi_utils.confirm_dialog(heading='TMDb Lists', text='Rename List to Match Trakt List Name?', ok_label='Yes', cancel_label='No'): rename_list = True
+	if kodi_utils.confirm_dialog(heading='TMDb Lists', text='Rename List to Match FL List Name?', ok_label='Yes', cancel_label='No'): rename_list = True
 	else: rename_list = False
 	trakt_list_name = chosen_list.get('name')
 	new_contents = process_trakt_list(chosen_list)
