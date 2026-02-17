@@ -154,7 +154,7 @@ def get_trakt_user_lists(params):
 				if item_count == 0: continue
 				list_name, list_id, user, slug = item['name'], item['ids']['trakt'], item['user']['ids']['slug'], item['ids']['slug']
 				if not slug: continue
-				if item['type'] == 'official': user = 'Trakt Official'
+				if item['type'] == 'official': user = 'FL Official'
 				if not user: continue
 				sort_by, sort_how =  item['sort_by'], item['sort_how']
 				display = '%s | [I]%s (x%s)[/I]' % (list_name, user, str(item_count))
@@ -164,7 +164,7 @@ def get_trakt_user_lists(params):
 				if random: url_params['random'] = 'true'
 				url = build_url(url_params)
 				listitem = make_listitem()
-				if user != 'Trakt Official':
+				if user != 'FL Official':
 					cm_append(('[B]Like List[/B]', 'RunPlugin(%s)' % build_url({'mode': 'trakt.trakt_like_a_list', 'user': user, 'list_slug': slug})))
 					cm_append(('[B]Unlike List[/B]', 'RunPlugin(%s)' % build_url({'mode': 'trakt.trakt_unlike_a_list', 'user': user, 'list_slug': slug})))
 				cm_append(('[B]Add to Shortcut Folder[/B]', 'RunPlugin(%s)' % build_url({'mode': 'menu_editor.shortcut_folder_add_known', 'url': url})))
@@ -187,7 +187,7 @@ def get_trakt_user_lists(params):
 				'Next Page (%s) >>' % new_page, 'nextpage', kodi_utils.get_icon('nextpage_landscape'))
 	except: pass
 	kodi_utils.set_content(handle, 'files')
-	kodi_utils.set_category(handle, params.get('category_name', 'Trakt Lists'))
+	kodi_utils.set_category(handle, params.get('category_name', 'FL Lists'))
 	kodi_utils.end_directory(handle)
 	kodi_utils.set_view_mode('view.main')
 
@@ -202,7 +202,7 @@ def in_trakt_lists(params):
 				display = '%s | [I]%s (x%s)[/I]' % (list_name, user, str(item_count))
 				url = kodi_utils.build_url({'mode': 'trakt.list.build_trakt_list', 'user': user, 'slug': slug, 'list_type': 'user_lists', 'list_name': list_name})
 				listitem = kodi_utils.make_listitem()
-				if not user == 'Trakt Official':
+				if not user == 'FL Official':
 					cm_append(('[B]Like List[/B]', 'RunPlugin(%s)' % kodi_utils.build_url({'mode': 'trakt.trakt_like_a_list', 'user': user, 'list_slug': slug})))
 					cm_append(('[B]Unlike List[/B]', 'RunPlugin(%s)' % kodi_utils.build_url({'mode': 'trakt.trakt_unlike_a_list', 'user': user, 'list_slug': slug})))
 				listitem.addContextMenuItems(cm)
@@ -218,7 +218,7 @@ def in_trakt_lists(params):
 		kodi_utils.add_items(handle, list(_process()))
 	except: pass
 	kodi_utils.set_content(handle, 'files')
-	kodi_utils.set_category(handle, params.get('category_name', 'Trakt Lists'))
+	kodi_utils.set_category(handle, params.get('category_name', 'FL Lists'))
 	kodi_utils.end_directory(handle)
 	kodi_utils.set_view_mode('view.main')
 
@@ -292,7 +292,7 @@ def make_custom_artwork(params):
 	user, slug, custom_image = params['user'], params['list_slug'], params['custom_image']
 	art_type, image_type = ('Posters', 'poster') if action == 'make_poster' else ('Fanart', 'fanart')
 	shuffle_art = kodi_utils.confirm_dialog(
-		heading='Trakt My Lists', text='Use [B]4 Random[/B] %s from List?[CR]OR[CR]Use [B]First 4[/B] %s from List?' % (art_type, art_type),
+		heading='FL My Lists', text='Use [B]4 Random[/B] %s from List?[CR]OR[CR]Use [B]First 4[/B] %s from List?' % (art_type, art_type),
 		ok_label='4 Random', cancel_label='First 4')
 	if shuffle_art == None: return
 	new_image = trakt_image_maker(list_name, list_type, list_id, image_type, user, slug, custom_image, shuffle_art)
@@ -334,31 +334,31 @@ def delete_current_image(params):
 
 def set_list_custom_sort(params):
 	list_id, current_by, current_how = params['list_id'], params['sort_by'], params['sort_how']
-	choices = [('default', 'Default From Trakt%s'), ('rank', 'Rank%s'), ('added', 'Date Added%s'), ('title', 'Title%s'), ('released', 'Date Released%s'), ('runtime', 'Runtime%s'),
+	choices = [('default', 'Default From FL%s'), ('rank', 'Rank%s'), ('added', 'Date Added%s'), ('title', 'Title%s'), ('released', 'Date Released%s'), ('runtime', 'Runtime%s'),
 	('popularity', 'Popularity%s'), ('percentage', 'Percentage%s'), ('votes', 'Votes%s'), ('random', 'Random%s')]
 	choices = [(i[0], i[1] % ('   [B][COLOR green][CURRENT][/COLOR][/B]' if i[0] == current_by else '')) for i in choices]
 	list_items = [{'line1': item[1], 'line2': ''} for item in choices]
-	kwargs = {'items': json.dumps(list_items), 'heading': 'Trakt List Custom Sort By', 'narrow_window': 'true'}
+	kwargs = {'items': json.dumps(list_items), 'heading': 'FL List Custom Sort By', 'narrow_window': 'true'}
 	sort_by = kodi_utils.select_dialog([i[0] for i in choices], **kwargs)
 	if sort_by == None: return
 	if sort_by == 'default':
 		from caches.flicklist_cache import delete_list_custom_sort
 		success = delete_list_custom_sort(list_id)
 		if success:
-			kodi_utils.ok_dialog('Trakt List Custom Sort', 'Success')
+			kodi_utils.ok_dialog('FL List Custom Sort', 'Success')
 			kodi_utils.kodi_refresh()
-		else: kodi_utils.ok_dialog('Trakt List Custom Sort', 'An Error Occured')
+		else: kodi_utils.ok_dialog('FL List Custom Sort', 'An Error Occured')
 		return
 	else:
 		choices = [('asc', 'Ascending%s'), ('desc', 'Descending%s')]
 		choices = [(i[0], i[1] % ('   [B][COLOR green][CURRENT][/COLOR][/B]' if i[0] == current_how else '')) for i in choices]
 		list_items = [{'line1': item[1], 'line2': ''} for item in choices]
-		kwargs = {'items': json.dumps(list_items), 'heading': 'Trakt List Custom Sort How', 'narrow_window': 'true'}
+		kwargs = {'items': json.dumps(list_items), 'heading': 'FL List Custom Sort How', 'narrow_window': 'true'}
 		sort_how = kodi_utils.select_dialog([i[0] for i in choices], **kwargs)
 		if sort_how == None: return
 	from caches.flicklist_cache import set_list_custom_sort
 	success = set_list_custom_sort(list_id, {'list_id': list_id, 'sort_by': sort_by, 'sort_how': sort_how})
 	if success:
-		kodi_utils.ok_dialog('Trakt List Custom Sort', 'Success')
+		kodi_utils.ok_dialog('FL List Custom Sort', 'Success')
 		kodi_utils.kodi_refresh()
-	else: kodi_utils.ok_dialog('Trakt List Custom Sort', 'An Error Occured')
+	else: kodi_utils.ok_dialog('FL List Custom Sort', 'An Error Occured')

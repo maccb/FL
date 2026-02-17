@@ -207,10 +207,10 @@ class TVShows:
 			cm_append(['similar', ('[B]Browse Similar[/B]', self.window_command % browse_similar_params)])
 			if imdb_id:
 				browse_in_trakt_list_params = self.build_url({'mode': 'trakt.list.in_trakt_lists', 'media_type': 'tvshow', 'imdb_id': imdb_id, 'is_external': self.is_external,
-											'category_name': '%s In Trakt Lists' % title})
-				cm_append(['in_trakt_list', ('[B]In Trakt Lists[/B]', self.window_command % browse_in_trakt_list_params)])
+											'category_name': '%s In FL Lists' % title})
+				cm_append(['in_trakt_list', ('[B]In FL Lists[/B]', self.window_command % browse_in_trakt_list_params)])
 			else: browse_in_trakt_list_params = ''
-			cm_append(['trakt_manager', ('[B]Trakt Lists Manager[/B]', 'RunPlugin(%s)' % trakt_manager_params)])
+			cm_append(['trakt_manager', ('[B]FL Lists Manager[/B]', 'RunPlugin(%s)' % trakt_manager_params)])
 			cm_append(['personal_manager', ('[B]Personal Lists Manager[/B]', 'RunPlugin(%s)' % personal_manager_params)])
 			cm_append(['tmdb_manager', ('[B]TMDb Lists Manager[/B]', 'RunPlugin(%s)' % tmdb_manager_params)])
 			cm_append(['favorites_manager', ('[B]Favorites Manager[/B]', 'RunPlugin(%s)' % favorites_manager_params)])

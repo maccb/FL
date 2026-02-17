@@ -193,7 +193,7 @@ def make_new_personal_list(params):
 	is_retry, external_creation = params.get('is_retry', False), params.get('external_creation', 'false') == 'true'
 	chosen_list, suggested_list_name, suggested_author = params.get('chosen_list', []), params.get('suggested_list_name', ''), params.get('suggested_author', '')
 	if not external_creation and not is_retry and kodi_utils.confirm_dialog(
-		heading='Personal Lists',text='Import a Trakt List to populate this new list?', ok_label='Yes', cancel_label='No'):
+		heading='Personal Lists',text='Import an FL List to populate this new list?', ok_label='Yes', cancel_label='No'):
 		from apis.flicklist_api import get_trakt_list_selection
 		chosen_list = get_trakt_list_selection(['default', 'personal', 'liked'])
 		if chosen_list == None: return None, None
@@ -201,7 +201,7 @@ def make_new_personal_list(params):
 		suggested_list_name = chosen_list.get('name')
 		suggested_author = chosen_list.get('user')
 		params.update({'suggested_list_name': suggested_list_name, 'suggested_author': suggested_author, 'chosen_list': chosen_list})
-		if suggested_author in ('Collection', 'Watchlist'): suggested_author = get_setting('fenlight.trakt.user')
+		if suggested_author in ('Collection', 'Watchlist'): suggested_author = get_setting('fenlight.flicklist.user')
 	list_name = personal_list_name(suggested_list_name)
 	if list_name == None: return None, None
 	author = personal_list_author(suggested_author)
@@ -235,7 +235,7 @@ def adjust_personal_list_properties(params):
 	if poster: choices.append(('Delete Custom Poster', '', 'delete_poster'))
 	if fanart: choices.append(('Delete Custom Fanart', '', 'delete_fanart'))
 	choices.extend([('Empty List Contents', 'Delete All Contents of %s' % list_name, 'empty_contents'),
-					('Import Trakt List', 'Import a Trakt List into %s' % list_name, 'import_trakt')])
+					('Import FL List', 'Import an FL List into %s' % list_name, 'import_trakt')])
 	list_items = [{'line1': item[0], 'line2': item[1] or item[0]} for item in choices]
 	kwargs = {'items': json.dumps(list_items), 'heading': 'Personal List Properties', 'multi_line': 'true', 'narrow_window': 'true'}
 	action = kodi_utils.select_dialog([i[2] for i in choices], **kwargs)
@@ -363,7 +363,7 @@ def import_trakt_list(params):
 	new_contents = process_trakt_list(chosen_list)
 	result = personal_lists_cache.add_many_list_items(list_name, author, new_contents)
 	if result == 'Success':
-		if kodi_utils.confirm_dialog(heading='Personal Lists', text='Rename List to Match Trakt List Name?', ok_label='Yes', cancel_label='No'):
+		if kodi_utils.confirm_dialog(heading='Personal Lists', text='Rename List to Match FL List Name?', ok_label='Yes', cancel_label='No'):
 			personal_lists_cache.update_single_detail('name', trakt_list_name, list_name, author)
 	kodi_utils.notification(result, 3000)
 
