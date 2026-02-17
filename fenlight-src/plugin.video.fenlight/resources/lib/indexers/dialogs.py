@@ -447,14 +447,14 @@ def random_choice(params):
 	exec('EpisodeTools(meta).%s()' % choice)
 
 def trakt_manager_choice(params):
-	if not settings.trakt_user_active(): return kodi_utils.notification('No Active Trakt Account', 3500)
+	if not settings.trakt_user_active(): return kodi_utils.notification('No Active FlickList Account', 3500)
 	tmdb_id, tvdb_id, imdb_id, media_type = params['tmdb_id'], params['tvdb_id'], params['imdb_id'], params['media_type']
 	icon = params.get('icon', None) or kodi_utils.get_icon('trakt')
 	choices = [('Add to [B]Watchlist[/B]', 'add_watchlist'), ('Remove from [B]Watchlist[/B]', 'remove_watchlist'),
 				('Add to [B]Collection[/B]', 'add_collection'), ('Remove from [B]Collection[/B]', 'remove_collection'),
 				('Add To [B]Personal List[/B]...', 'add'), ('Remove from [B]Personal List[/B]...', 'remove')]
 	list_items = [{'line1': item[0], 'icon': icon} for item in choices]
-	kwargs = {'items': json.dumps(list_items), 'heading': 'Trakt Lists Manager'}
+	kwargs = {'items': json.dumps(list_items), 'heading': 'FlickList Lists Manager'}
 	choice = kodi_utils.select_dialog([i[1] for i in choices], **kwargs)
 	if choice == None: return
 	from apis import flicklist_api as trakt_api
@@ -857,7 +857,7 @@ def options_menu_choice(params, meta=None):
 	listing_append = listing.append
 	if from_extras:
 		if menu_type in ('movie', 'episode'): listing_append(('Playback Options', 'Scrapers Options', 'playback_choice'))
-		if settings.trakt_user_active(): listing_append(('Trakt Lists Manager', '', 'trakt_manager'))
+		if settings.trakt_user_active(): listing_append(('FL Lists Manager', '', 'trakt_manager'))
 		listing_append(('Personal Lists Manager', '', 'personallists_manager_choice'))
 		listing_append(('TMDb Lists Manager', '', 'tmdblists_manager_choice'))
 		listing_append(('Favorites Manager', '', 'favorites_manager_choice'))

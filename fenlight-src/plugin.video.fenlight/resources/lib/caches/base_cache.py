@@ -237,7 +237,7 @@ def clear_all_cache():
 	if not kodi_utils.confirm_dialog(): return
 	progressDialog = kodi_utils.progress_dialog()
 	line = 'Clearing....[CR]%s'
-	caches = (('meta', 'Meta Cache'), ('internal_scrapers', 'Internal Scrapers Cache'), ('external_scrapers', 'External Scrapers Cache'), ('trakt', 'Trakt Cache'),
+	caches = (('meta', 'Meta Cache'), ('internal_scrapers', 'Internal Scrapers Cache'), ('external_scrapers', 'External Scrapers Cache'), ('trakt', 'FlickList Cache'),
 			('imdb', 'IMDb Cache'), ('list', 'List Data Cache'), ('ai_functions', 'AI Data Cache'), ('tmdb_list', 'TMDb Personal List Cache'), ('main', 'Main Cache'),
 			('pm_cloud', 'Premiumize Cloud'), ('rd_cloud', 'Real Debrid Cloud'), ('ad_cloud', 'All Debrid Cloud'), ('ed_cloud', 'Easy Debrid Cloud'),
 			('tb_cloud', 'TorBox Cloud'))

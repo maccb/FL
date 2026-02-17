@@ -64,7 +64,7 @@ def clear_search():
 	('Clear Keywords TV Show Search History', 'keyword_tmdb_tvshow_queries'),
 	('Clear Easynews Search History', 'easynews_video_queries'),
 	('Clear Easynews Search History', 'easynews_image_queries'),
-	('Clear Trakt List Search History', 'trakt_list_queries')]
+	('Clear FL List Search History', 'trakt_list_queries')]
 	try:
 		list_items = [{'line1': item[0]} for item in clear_history_list]
 		kwargs = {'items': json.dumps(list_items), 'narrow_window': 'true'}
