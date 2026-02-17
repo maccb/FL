@@ -251,7 +251,7 @@ class Navigator:
 
 	def changelog_utils(self):
 		log_loc, old_log_loc = k.translate_path('special://logpath/kodi.log'), k.translate_path('special://logpath/kodi.old.log')
-		fenlight_clogpath = k.translate_path('special://home/addons/plugin.video.fenlight/resources/text/changelog.txt')
+		fenlight_clogpath = k.translate_path('special://home/addons/plugin.video.fenlightfl/resources/text/changelog.txt')
 		self.add({'mode': 'show_text', 'heading': 'Changelog', 'file': fenlight_clogpath, 'font_size': 'large', 'isFolder': 'false'}, 'Changelog', 'lists')
 		self.add({'mode': 'show_text', 'heading': 'Kodi Log Viewer', 'file': log_loc, 'kodi_log': 'true', 'isFolder': 'false'}, 'Kodi Log Viewer', 'lists')
 		self.add({'mode': 'show_text', 'heading': 'Kodi Log Viewer (Old)', 'file': old_log_loc, 'kodi_log': 'true', 'isFolder': 'false'}, 'Kodi Log Viewer (Old)', 'lists')
@@ -439,7 +439,7 @@ class Navigator:
 				iconImage = item_get('iconImage', None)
 				icon = iconImage
 				if iconImage:
-					if iconImage.startswith('http') or 'plugin.video.fenlight' in iconImage: original_image = True
+					if iconImage.startswith('http') or 'plugin.video.fenlightfl' in iconImage: original_image = True
 					else: original_image = False
 				else: icon, original_image = folder_icon, False
 				cm_items = [
@@ -482,7 +482,7 @@ class Navigator:
 		if params: return k.container_refresh_input(params)
 
 	def tips(self):
-		tips_location = 'special://home/addons/plugin.video.fenlight/resources/text/tips'
+		tips_location = 'special://home/addons/plugin.video.fenlightfl/resources/text/tips'
 		files = sorted(k.list_dirs(tips_location)[1])
 		tips_location += '/%s'
 		tips_list = []

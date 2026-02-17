@@ -35,7 +35,7 @@ def list_display_order_choice(params):
 def language_invoker_choice(params):
 	from xml.dom.minidom import parse as mdParse
 	kodi_utils.close_all_dialog()
-	addon_xml = kodi_utils.translate_path('special://home/addons/plugin.video.fenlight/addon.xml')
+	addon_xml = kodi_utils.translate_path('special://home/addons/plugin.video.fenlightfl/addon.xml')
 	root = mdParse(addon_xml)
 	invoker_instance = root.getElementsByTagName('reuselanguageinvoker')[0].firstChild
 	current_invoker_setting = invoker_instance.data
@@ -76,7 +76,7 @@ def addon_icon_choice(params):
 	for item in [(large_image_folder, large_image_url), (small_image_folder, small_image_url)]:
 		urllib.request.urlretrieve(item[1] % new_name, kodi_utils.translate_path(os.path.join(item[0], new_name)))
 	new_icon_path = 'resources/media/addon_icons/%s' % new_name
-	addon_xml = kodi_utils.translate_path('special://home/addons/plugin.video.fenlight/addon.xml')
+	addon_xml = kodi_utils.translate_path('special://home/addons/plugin.video.fenlightfl/addon.xml')
 	root = mdParse(addon_xml)
 	icon_instance = root.getElementsByTagName('icon')[0].firstChild
 	icon_instance.data = new_icon_path

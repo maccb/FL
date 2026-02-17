@@ -171,7 +171,7 @@ def trakt_get_device_token(device_codes):
 		expires_in = device_codes.get('expires_in', 900)
 		sleep_interval = device_codes.get('interval', 5)
 		user_code = str(device_codes.get('user_code', ''))
-		verification_uri = device_codes.get('verification_uri', 'https://flicklist.tv/link')
+		verification_uri = device_codes.get('verification_uri', 'https://beta.flicklist.tv/link')
 		auth_url = '%s?code=%s' % (verification_uri, user_code)
 		qr_code = make_qrcode(auth_url) or ''
 		short_url = make_tinyurl(auth_url)

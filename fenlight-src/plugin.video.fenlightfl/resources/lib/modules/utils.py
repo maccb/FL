@@ -158,7 +158,7 @@ def batch_replace(s, replace_info):
 
 def clean_file_name(s, use_encoding=False, use_blanks=True):
 	try:
-		hex_entities = [['&#x26;', '&'], ['&#x27;', '\''], ['&
+		hex_entities = [['&#x26;', '&'], ['&#x27;', '\''], ['&#xC6;', 'AE'], ['&#xC7;', 'C'],
 					['&#xF4;', 'o'], ['&#xE9;', 'e'], ['&#xEB;', 'e'], ['&#xED;', 'i'],
 					['&#xEE;', 'i'], ['&#xA2;', 'c'], ['&#xE2;', 'a'], ['&#xEF;', 'i'],
 					['&#xE1;', 'a'], ['&#xE8;', 'e'], ['%2E', '.'], ['&frac12;', '%BD'],

@@ -240,7 +240,7 @@ class AddonXMLCheck:
 	def run(self):
 		kodi_utils.logger('Fen Light', 'AddonXMLCheck Service Starting')
 		from xml.dom.minidom import parse as mdParse
-		self.addon_xml = kodi_utils.translate_path('special://home/addons/plugin.video.fenlight/addon.xml')
+		self.addon_xml = kodi_utils.translate_path('special://home/addons/plugin.video.fenlightfl/addon.xml')
 		self.root = mdParse(self.addon_xml)
 		self.change_list = []
 		self.check_property('reuse_language_invoker', 'reuselanguageinvoker')

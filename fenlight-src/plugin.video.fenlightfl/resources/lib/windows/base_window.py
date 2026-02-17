@@ -261,7 +261,7 @@ class FontUtils:
 		else: self.skin_font_info = self.default_font_info()
 		for item in ((21, False, 'font10'), (26, False, 'font12'), (30, False, 'font13'), (33, False, 'font14'), (38, False, 'font16'), (60, True, 'font60')):
 			replacement_values_append(self.match_font(*item))
-		skin_files = kodi_utils.list_dirs(kodi_utils.translate_path('special://home/addons/plugin.video.fenlight/resources/skins/Default/1080i/'))[1]
+		skin_files = kodi_utils.list_dirs(kodi_utils.translate_path('special://home/addons/plugin.video.fenlightfl/resources/skins/Default/1080i/'))[1]
 		for item in skin_files:
 			self.replace_font(item, replacement_values)
 		kodi_utils.set_property('fenlight.current_skin', self.current_skin)
@@ -321,7 +321,7 @@ class FontUtils:
 		return results
 
 	def replace_font(self, window, replacement_values):
-		file = kodi_utils.translate_path('special://home/addons/plugin.video.fenlight/resources/skins/Default/1080i/' + window)
+		file = kodi_utils.translate_path('special://home/addons/plugin.video.fenlightfl/resources/skins/Default/1080i/' + window)
 		with kodi_utils.open_file(file) as f: content = f.read()
 		for item in replacement_values:
 			try: content = re.sub(r'<font>(.*?)</font> <\!-- %s -->' % item[0], '<font>%s</font> <!-- %s -->' % (item[1], item[0]), content)

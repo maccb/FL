@@ -71,7 +71,7 @@ def kodi_dialog():
 	return xbmcgui.Dialog()
 
 def addon_info(info):
-	return xbmcaddon.Addon('plugin.video.fenlight').getAddonInfo(info)
+	return xbmcaddon.Addon('plugin.video.fenlightfl').getAddonInfo(info)
 
 def addon_version():
 	return get_property('fenlight.addon_version') or addon_info('version')
@@ -100,7 +100,7 @@ def get_addon_fanart():
 	return get_property('fenlight.default_addon_fanart') or addon_fanart()
 
 def build_url(url_params):
-	return 'plugin://plugin.video.fenlight/?%s' % urlencode(url_params)
+	return 'plugin://plugin.video.fenlightfl/?%s' % urlencode(url_params)
 
 def add_dir(handle, url_params, list_name, icon_image='folder', fanart_image=None, isFolder=True):
 	fanart = fanart_image or get_addon_fanart()
@@ -177,7 +177,7 @@ def clear_property(prop):
 def clear_all_properties():
 	return kodi_window().clearProperties()
 
-def addon(addon_id='plugin.video.fenlight'):
+def addon(addon_id='plugin.video.fenlightfl'):
 	return xbmcaddon.Addon(id=addon_id)
 
 def addon_installed(addon_id):
@@ -265,7 +265,7 @@ def close_dialog(dialog, block=False):
 def close_all_dialog():
 	execute_builtin('Dialog.Close(all,true)')
 
-def run_addon(addon='plugin.video.fenlight', block=False):
+def run_addon(addon='plugin.video.fenlightfl', block=False):
 	return execute_builtin('RunAddon(%s)' % addon, block)
 
 def external():
@@ -316,7 +316,7 @@ def replace_window(params, block=False):
 	if isinstance(params, dict): params = build_url(params)
 	return execute_builtin('ReplaceWindow(Videos,%s)' % params, block)
 
-def disable_enable_addon(addon_name='plugin.video.fenlight'):
+def disable_enable_addon(addon_name='plugin.video.fenlightfl'):
 	import json
 	try:
 		xbmc.executeJSONRPC(json.dumps({'jsonrpc': '2.0', 'id': 1, 'method': 'Addons.SetAddonEnabled', 'params': {'addonid': addon_name, 'enabled': False}}))
@@ -327,7 +327,7 @@ def update_local_addons():
 	execute_builtin('UpdateLocalAddons', True)
 	sleep(2500)
  
-def update_kodi_addons_db(addon_name='plugin.video.fenlight'):
+def update_kodi_addons_db(addon_name='plugin.video.fenlightfl'):
 	import time
 	import sqlite3 as database
 	try:
