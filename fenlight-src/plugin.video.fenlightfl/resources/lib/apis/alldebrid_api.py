@@ -12,7 +12,7 @@ from modules.kodi_utils import progress_dialog, notification, hide_busy_dialog, 
 
 class AllDebridAPI:
 	def __init__(self):
-		self.token = get_setting('fenlight.ad.token', 'empty_setting')
+		self.token = get_setting('fenlightfl.ad.token', 'empty_setting')
 		self.break_auth_loop = False
 		self.base_url = 'https://api.alldebrid.com/v4/'
 		self.user_agent = 'Fen Light for Kodi'

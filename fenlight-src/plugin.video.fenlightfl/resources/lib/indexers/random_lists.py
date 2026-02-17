@@ -180,7 +180,7 @@ class RandomLists():
 			else: self.params.update({'list': [i['ids'] for i in result], 'id_type': 'trakt_dict'})
 			self.list_items = self.function(self.params).worker()
 			self.category_name =  list_name
-		except: kodi_utils.clear_property('fenlight.random_because_you_watched')
+		except: kodi_utils.clear_property('fenlightfl.random_because_you_watched')
 		self.make_directory()
 
 	def random_trakt_lists(self):
@@ -351,8 +351,8 @@ class RandomLists():
 		kodi_utils.set_category(self.handle, self.category_name)
 		kodi_utils.end_directory(self.handle, cacheToDisc=False if self.is_external else True)
 		if self.is_external:
-			if self.folder_name: kodi_utils.set_property('fenlight.%s' % self.folder_name, self.category_name)
-			else: kodi_utils.set_property('fenlight.%s' % self.base_list_name, self.category_name)
+			if self.folder_name: kodi_utils.set_property('fenlightfl.%s' % self.folder_name, self.category_name)
+			else: kodi_utils.set_property('fenlightfl.%s' % self.base_list_name, self.category_name)
 		else: kodi_utils.set_view_mode(self.view_mode, self.content_type, self.is_external)
 
 	def get_function(self):
@@ -376,7 +376,7 @@ def random_shortcut_folders(folder_name, random_results):
 	if random_list.get('action') in ('tmdb_movies_discover', 'tmdb_tv_discover'): return RandomLists(random_list).run_random()
 	menu_type = random_check[random_list['mode']]
 	list_name = random_list.get('list_name', None) or random_list.get('name', None) or 'Random'
-	if is_external: kodi_utils.set_property('fenlight.%s' % folder_name, list_name)
+	if is_external: kodi_utils.set_property('fenlightfl.%s' % folder_name, list_name)
 	if menu_type == 'movie':
 		return Movies(random_list).fetch_list()
 	if menu_type == 'tvshow':

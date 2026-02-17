@@ -8,7 +8,7 @@ from modules import kodi_utils
 logger = kodi_utils.logger
 
 def get_location(insert=''):
-	return 'https://github.com/%s/%s/raw/main/packages/%s' % (get_setting('fenlight.update.username'), get_setting('update.location'), insert)
+	return 'https://github.com/%s/%s/raw/main/packages/%s' % (get_setting('fenlightfl.update.username'), get_setting('update.location'), insert)
 
 def get_versions():
 	try:

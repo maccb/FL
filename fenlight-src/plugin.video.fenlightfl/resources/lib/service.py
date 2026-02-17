@@ -7,9 +7,9 @@ from threading import Thread
 from caches.settings_cache import get_setting, set_setting, sync_settings
 from modules import kodi_utils
 
-pause_services_prop = 'fenlight.pause_services'
-firstrun_update_prop = 'fenlight.firstrun_update'
-current_skin_prop = 'fenlight.current_skin'
+pause_services_prop = 'fenlightfl.pause_services'
+firstrun_update_prop = 'fenlightfl.firstrun_update'
+current_skin_prop = 'fenlightfl.current_skin'
 trakt_service_string = 'FlickListMonitor Service Update %s - %s'
 trakt_success_line_dict = {'success': 'FlickList Update Performed', 'no account': '(Unauthorized) FlickList Update Performed'}
 update_string = 'Next Update in %s minutes...'
@@ -19,14 +19,14 @@ class SetAddonConstants:
 		kodi_utils.logger('FL', 'SetAddonConstants Service Starting')
 		import random
 		addon_items = [
-			('fenlight.playback_key', str(random.randint(1000, 10000))),
-			('fenlight.addon_version', kodi_utils.addon_info('version')),
-			('fenlight.addon_path', kodi_utils.addon_info('path')),
-			('fenlight.addon_profile', kodi_utils.translate_path(kodi_utils.addon_info('profile'))),
-			('fenlight.addon_icon', kodi_utils.translate_path(kodi_utils.addon_info('icon'))),
-			('fenlight.addon_icon_mini', os.path.join(kodi_utils.addon_info('path'), 'resources', 'media', 'addon_icons', 'minis',
+			('fenlightfl.playback_key', str(random.randint(1000, 10000))),
+			('fenlightfl.addon_version', kodi_utils.addon_info('version')),
+			('fenlightfl.addon_path', kodi_utils.addon_info('path')),
+			('fenlightfl.addon_profile', kodi_utils.translate_path(kodi_utils.addon_info('profile'))),
+			('fenlightfl.addon_icon', kodi_utils.translate_path(kodi_utils.addon_info('icon'))),
+			('fenlightfl.addon_icon_mini', os.path.join(kodi_utils.addon_info('path'), 'resources', 'media', 'addon_icons', 'minis',
 			os.path.basename(kodi_utils.translate_path(kodi_utils.addon_info('icon'))))),
-			('fenlight.addon_fanart', kodi_utils.translate_path(kodi_utils.addon_info('fanart')))
+			('fenlightfl.addon_fanart', kodi_utils.translate_path(kodi_utils.addon_info('fanart')))
 					]
 		for item in addon_items: kodi_utils.set_property(*item)
 		return kodi_utils.logger('FL', 'SetAddonConstants Service Finished')
@@ -53,7 +53,7 @@ class ImportSetupConfig:
 
 	def run(self):
 		kodi_utils.logger('FL', 'ImportSetupConfig Service Starting')
-		existing_token = get_setting('fenlight.flicklist.token', '')
+		existing_token = get_setting('fenlightfl.flicklist.token', '')
 		if existing_token:
 			return kodi_utils.logger('FL', 'ImportSetupConfig Service Skipped (token exists)')
 		config = self._find_config()
@@ -106,7 +106,7 @@ class OnUpdateChanges:
 		kodi_utils.logger('FL', 'OnUpdateChanges Service Starting')
 		try:
 			for method in list(filter(lambda x: x[0] != 'run', inspect.getmembers(OnUpdateChanges, predicate=inspect.isfunction))):
-				if not get_setting('fenlight.updatechecks.%s' % method[0], 'false') == 'true':
+				if not get_setting('fenlightfl.updatechecks.%s' % method[0], 'false') == 'true':
 					method[1](self)
 					set_setting('updatechecks.%s' % method[0], 'true')
 		except: pass
@@ -155,7 +155,7 @@ class FlickListMonitor:
 				else:
 					if status in ('success', 'no account'): kodi_utils.logger('FL', trakt_service_string % ('Success. %s' % trakt_success_line_dict[status], next_update_string))
 					else: kodi_utils.logger('FL', trakt_service_string % ('Success. No Changes Needed', next_update_string))
-					if status == 'success' and get_setting('fenlight.trakt.refresh_widgets', 'false') == 'true': kodi_utils.run_plugin({'mode': 'kodi_refresh'})
+					if status == 'success' and get_setting('fenlightfl.trakt.refresh_widgets', 'false') == 'true': kodi_utils.run_plugin({'mode': 'kodi_refresh'})
 			except Exception as e: kodi_utils.logger('FL', trakt_service_string % ('Failed', 'The following Error Occured: %s' % str(e)))
 			wait_for_abort(wait_time)
 		try: del monitor
@@ -196,7 +196,7 @@ class WidgetRefresher:
 		while not monitor.abortRequested():
 			try:
 				wait_for_abort(10)
-				offset = int(get_setting('fenlight.widget_refresh_timer', '60'))
+				offset = int(get_setting('fenlightfl.widget_refresh_timer', '60'))
 				if offset != self.offset:
 					self.set_next_refresh(time())
 					continue
@@ -216,15 +216,15 @@ class WidgetRefresher:
 		if not self.external(): return True
 
 		if self.next_refresh == None or self.is_playing() or kodi_utils.get_property(pause_services_prop) == 'true': return True
-		if kodi_utils.get_property('fenlight.window_loaded') == 'true': return True 
+		if kodi_utils.get_property('fenlightfl.window_loaded') == 'true': return True 
 		try:
-			window_stack = json.loads(kodi_utils.get_property('fenlight.window_stack'))
+			window_stack = json.loads(kodi_utils.get_property('fenlightfl.window_stack'))
 			if window_stack or window_stack == []: return True
 		except: pass
 		return False
 
 	def set_next_refresh(self, _time):
-		self.offset = int(get_setting('fenlight.widget_refresh_timer', '60'))
+		self.offset = int(get_setting('fenlightfl.widget_refresh_timer', '60'))
 		if self.offset: self.next_refresh = _time + (self.offset*60)
 		else: self.next_refresh = None
 
@@ -251,7 +251,7 @@ class AddonXMLCheck:
 		return kodi_utils.logger('FL', 'AddonXMLCheck Service Finished')
 
 	def check_property(self, setting, tag_name):
-		current_addon_setting = get_setting('fenlight.%s' % setting, None)
+		current_addon_setting = get_setting('fenlightfl.%s' % setting, None)
 		if current_addon_setting is None: return
 		tag_instance = self.root.getElementsByTagName(tag_name)[0].firstChild
 		current_property = tag_instance.data

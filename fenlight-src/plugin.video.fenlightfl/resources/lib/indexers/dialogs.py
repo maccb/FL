@@ -155,7 +155,7 @@ def personallists_manager_choice(params):
 	from indexers.personal_lists import get_all_personal_lists, make_new_personal_list, new_list_check
 	icon = params.get('icon', None) or kodi_utils.get_icon('lists')
 	list_type = params['list_type']
-	all_lists = get_all_personal_lists(get_setting('fenlight.personal_list.list_sort', '0'))
+	all_lists = get_all_personal_lists(get_setting('fenlightfl.personal_list.list_sort', '0'))
 	choices = []
 	if not all_lists: action = 'add_new'
 	else:
@@ -642,7 +642,7 @@ def set_quality_choice(params):
 	icon = params.get('icon', None) or ''
 	dl = ['Include 4K', 'Include 1080p', 'Include 720p', 'Include SD']
 	fl = ['4K', '1080p', '720p', 'SD']
-	q_setting = get_setting('fenlight.%s' % quality_setting).split(', ')
+	q_setting = get_setting('fenlightfl.%s' % quality_setting).split(', ')
 	try: preselect = [fl.index(i) for i in q_setting]
 	except: preselect = []
 	list_items = [{'line1': item, 'icon': icon} for item in dl]
@@ -663,11 +663,11 @@ def extras_buttons_choice(params):
 			for item in range(10, 18):
 				setting_id = 'extras.%s.button%s' % (_type, item)
 				try:
-					button_action = get_setting('fenlight.%s' % setting_id)
+					button_action = get_setting('fenlightfl.%s' % setting_id)
 					button_label = extras_button_label_values[_type][button_action]
 				except:
-					set_setting(setting_id.replace('fenlight.', ''), default_setting_values(setting_id)['setting_default'])
-					button_action = get_setting('fenlight.%s' % setting_id)
+					set_setting(setting_id.replace('fenlightfl.', ''), default_setting_values(setting_id)['setting_default'])
+					button_action = get_setting('fenlightfl.%s' % setting_id)
 					button_label = extras_button_label_values[_type][button_action]
 				button_dict[setting_id] = {'button_action': button_action, 'button_label': button_label, 'button_name': 'Button %s' % str(item - 9)}
 				orig_button_dict[setting_id] = {'button_action': button_action, 'button_label': button_label, 'button_name': 'Button %s' % str(item - 9)}
@@ -729,7 +729,7 @@ def set_language_filter_choice(params):
 	lang_choices = language_choices()
 	if include_none == 'false': lang_choices.pop('None')
 	dl, fl = list(lang_choices.keys()), list(lang_choices.values())
-	set_filter = get_setting('fenlight.%s' % filter_setting_id).split(', ')
+	set_filter = get_setting('fenlightfl.%s' % filter_setting_id).split(', ')
 	try: preselect = [fl.index(i) for i in set_filter]
 	except: preselect = []
 	list_items = [{'line1': item} for item in dl]
@@ -789,7 +789,7 @@ def clear_favorites_choice(params={}):
 
 def scraper_color_choice(params):
 	setting = params.get('setting_id')
-	current_setting, original_highlight = get_setting('fenlight.%s' % setting), default_setting_values(setting)['setting_default']
+	current_setting, original_highlight = get_setting('fenlightfl.%s' % setting), default_setting_values(setting)['setting_default']
 	if current_setting != original_highlight:
 		action = kodi_utils.confirm_dialog(text='Set new Highlight or Restore Default Highlight?', ok_label='Set New', cancel_label='Restore Default', default_control=10)
 		if action == None: return
@@ -799,7 +799,7 @@ def scraper_color_choice(params):
 
 def personal_list_unseen_color_choice(params):
 	setting = 'personal_list.unseen_highlight'
-	current_setting, original_highlight = get_setting('fenlight.%s' % setting), default_setting_values(setting)['setting_default']
+	current_setting, original_highlight = get_setting('fenlightfl.%s' % setting), default_setting_values(setting)['setting_default']
 	if current_setting != original_highlight:
 		action = kodi_utils.confirm_dialog(text='Set new Highlight or Restore Default Highlight?', ok_label='Set New', cancel_label='Restore Default', default_control=10)
 		if action == None: return

@@ -37,7 +37,7 @@
                     <align>left</align>
                     <aligny>top</aligny>
                     <aspectratio aligny="top">keep</aspectratio>
-                    <texture colordiffuse="FFCCCCCC">$INFO[Window(10000).Property(fenlight.addon_icon_mini)]</texture>
+                    <texture colordiffuse="FFCCCCCC">$INFO[Window(10000).Property(fenlightfl.addon_icon_mini)]</texture>
                 </control>
                 <control type="label">
                     <width max="1700">auto</width>
@@ -212,19 +212,19 @@
                     <item>
                         <visible>Container(2001).HasFocus(10)</visible>
                         <property name="setting_label">Display Name</property>
-                        <property name="setting_value">$INFO[Window(10000).Property(fenlight.folder1.display_name)]</property>
+                        <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.folder1.display_name)]</property>
                         <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_string&amp;setting_id=folder1.display_name)</onclick>
                     </item>
                     <item>
                         <visible>Container(2001).HasFocus(10)</visible>
                         <property name="setting_label">Movies Directory</property>
-                        <property name="setting_value">$INFO[Window(10000).Property(fenlight.folder1.movies_directory)]</property>
+                        <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.folder1.movies_directory)]</property>
                         <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_source_folder_path&amp;setting_id=folder1.movies_directory)</onclick>
                     </item>
                     <item>
                         <visible>Container(2001).HasFocus(10)</visible>
                         <property name="setting_label">TV Shows Directory</property>
-                        <property name="setting_value">$INFO[Window(10000).Property(fenlight.folder1.tv_shows_directory)]</property>
+                        <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.folder1.tv_shows_directory)]</property>
                         <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_source_folder_path&amp;setting_id=folder1.tv_shows_directory)</onclick>
                     </item>
                     <item>
@@ -236,19 +236,19 @@
                     <item>
                         <visible>Container(2001).HasFocus(20)</visible>
                         <property name="setting_label">Display Name</property>
-                        <property name="setting_value">$INFO[Window(10000).Property(fenlight.folder2.display_name)]</property>
+                        <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.folder2.display_name)]</property>
                         <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_string&amp;setting_id=folder2.display_name)</onclick>
                     </item>
                     <item>
                         <visible>Container(2001).HasFocus(20)</visible>
                         <property name="setting_label">Movies Directory</property>
-                        <property name="setting_value">$INFO[Window(10000).Property(fenlight.folder2.movies_directory)]</property>
+                        <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.folder2.movies_directory)]</property>
                         <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_source_folder_path&amp;setting_id=folder2.movies_directory)</onclick>
                     </item>
                     <item>
                         <visible>Container(2001).HasFocus(20)</visible>
                         <property name="setting_label">TV Shows Directory</property>
-                        <property name="setting_value">$INFO[Window(10000).Property(fenlight.folder2.tv_shows_directory)]</property>
+                        <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.folder2.tv_shows_directory)]</property>
                         <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_source_folder_path&amp;setting_id=folder2.tv_shows_directory)</onclick>
                     </item>
                     <item>
@@ -260,19 +260,19 @@
                     <item>
                         <visible>Container(2001).HasFocus(30)</visible>
                         <property name="setting_label">Display Name</property>
-                        <property name="setting_value">$INFO[Window(10000).Property(fenlight.folder3.display_name)]</property>
+                        <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.folder3.display_name)]</property>
                         <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_string&amp;setting_id=folder3.display_name)</onclick>
                     </item>
                     <item>
                         <visible>Container(2001).HasFocus(30)</visible>
                         <property name="setting_label">Movies Directory</property>
-                        <property name="setting_value">$INFO[Window(10000).Property(fenlight.folder3.movies_directory)]</property>
+                        <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.folder3.movies_directory)]</property>
                         <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_source_folder_path&amp;setting_id=folder3.movies_directory)</onclick>
                     </item>
                     <item>
                         <visible>Container(2001).HasFocus(30)</visible>
                         <property name="setting_label">TV Shows Directory</property>
-                        <property name="setting_value">$INFO[Window(10000).Property(fenlight.folder3.tv_shows_directory)]</property>
+                        <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.folder3.tv_shows_directory)]</property>
                         <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_source_folder_path&amp;setting_id=folder3.tv_shows_directory)</onclick>
                     </item>
                     <item>
@@ -284,19 +284,19 @@
                     <item>
                         <visible>Container(2001).HasFocus(40)</visible>
                         <property name="setting_label">Display Name</property>
-                        <property name="setting_value">$INFO[Window(10000).Property(fenlight.folder4.display_name)]</property>
+                        <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.folder4.display_name)]</property>
                         <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_string&amp;setting_id=folder4.display_name)</onclick>
                     </item>
                     <item>
                         <visible>Container(2001).HasFocus(40)</visible>
                         <property name="setting_label">Movies Directory</property>
-                        <property name="setting_value">$INFO[Window(10000).Property(fenlight.folder4.movies_directory)]</property>
+                        <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.folder4.movies_directory)]</property>
                         <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_source_folder_path&amp;setting_id=folder4.movies_directory)</onclick>
                     </item>
                     <item>
                         <visible>Container(2001).HasFocus(40)</visible>
                         <property name="setting_label">TV Shows Directory</property>
-                        <property name="setting_value">$INFO[Window(10000).Property(fenlight.folder4.tv_shows_directory)]</property>
+                        <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.folder4.tv_shows_directory)]</property>
                         <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_source_folder_path&amp;setting_id=folder4.tv_shows_directory)</onclick>
                     </item>
                     <item>
@@ -308,19 +308,19 @@
                     <item>
                         <visible>Container(2001).HasFocus(50)</visible>
                         <property name="setting_label">Display Name</property>
-                        <property name="setting_value">$INFO[Window(10000).Property(fenlight.folder5.display_name)]</property>
+                        <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.folder5.display_name)]</property>
                         <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_string&amp;setting_id=folder5.display_name)</onclick>
                     </item>
                     <item>
                         <visible>Container(2001).HasFocus(50)</visible>
                         <property name="setting_label">Movies Directory</property>
-                        <property name="setting_value">$INFO[Window(10000).Property(fenlight.folder5.movies_directory)]</property>
+                        <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.folder5.movies_directory)]</property>
                         <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_source_folder_path&amp;setting_id=folder5.movies_directory)</onclick>
                     </item>
                     <item>
                         <visible>Container(2001).HasFocus(50)</visible>
                         <property name="setting_label">TV Shows Directory</property>
-                        <property name="setting_value">$INFO[Window(10000).Property(fenlight.folder5.tv_shows_directory)]</property>
+                        <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.folder5.tv_shows_directory)]</property>
                         <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_source_folder_path&amp;setting_id=folder5.tv_shows_directory)</onclick>
                     </item>
                     <item>

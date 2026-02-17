@@ -10,14 +10,14 @@ from modules.kodi_utils import sleep, ok_dialog, progress_dialog, notification
 
 class RealDebridAPI:
 	def __init__(self):
-		self.client_ID = get_setting('fenlight.rd.client_id', 'empty_setting')
+		self.client_ID = get_setting('fenlightfl.rd.client_id', 'empty_setting')
 		if self.client_ID in ('empty_setting', ''): self.client_ID = 'X245A4XAIBGVM'
-		url = {'true': 'app.real-debrid.com', 'false': 'api.real-debrid.com'}[get_setting('fenlight.rd.alternate_base_url', 'false')]
+		url = {'true': 'app.real-debrid.com', 'false': 'api.real-debrid.com'}[get_setting('fenlightfl.rd.alternate_base_url', 'false')]
 		self.base_url = 'https://%s/rest/1.0/' % url
 		self.auth_url = 'https://%s/oauth/v2/' % url
-		self.token = get_setting('fenlight.rd.token', 'empty_setting')
-		self.secret = get_setting('fenlight.rd.secret', 'empty_setting')
-		self.refresh = get_setting('fenlight.rd.refresh', 'empty_setting')
+		self.token = get_setting('fenlightfl.rd.token', 'empty_setting')
+		self.secret = get_setting('fenlightfl.rd.secret', 'empty_setting')
+		self.refresh = get_setting('fenlightfl.rd.refresh', 'empty_setting')
 		self.device_code = ''
 		self.refresh_retries = 0
 		self.break_auth_loop = False

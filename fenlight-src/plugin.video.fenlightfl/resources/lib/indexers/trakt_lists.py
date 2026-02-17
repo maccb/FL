@@ -125,13 +125,13 @@ def get_trakt_lists(params):
 			if shuffle_lists:
 				returning_to_list = 'build_trakt_lists_contents' in kodi_utils.folder_path()
 				if returning_to_list:
-					try: data = json.loads(kodi_utils.get_property('fenlight.trakt.lists.order'))
+					try: data = json.loads(kodi_utils.get_property('fenlightfl.trakt.lists.order'))
 					except: pass
 				else:
 					shuffle(data)
-					kodi_utils.set_property('fenlight.trakt.lists.order', json.dumps(data))
+					kodi_utils.set_property('fenlightfl.trakt.lists.order', json.dumps(data))
 			else:
-				kodi_utils.clear_property('fenlight.trakt.lists.order')
+				kodi_utils.clear_property('fenlightfl.trakt.lists.order')
 				data.sort(key=lambda k: k['name'])
 			result = list(_process())
 		else: result = list(_new_process())
@@ -244,7 +244,7 @@ def build_trakt_list(params):
 		paginate_enabled = paginate(is_external)
 		use_result = 'result' in params
 		page_no, paginate_start = int(params.get('new_page', '1')), int(params.get('paginate_start', '0'))
-		if page_no == 1 and not is_external: kodi_utils.set_property('fenlight.exit_params', kodi_utils.folder_path())
+		if page_no == 1 and not is_external: kodi_utils.set_property('fenlightfl.exit_params', kodi_utils.folder_path())
 		if use_result: result = params.get('result', [])
 		else:
 			user, slug, list_id, list_type = params.get('user'), params.get('slug'), params.get('list_id'), params.get('list_type')

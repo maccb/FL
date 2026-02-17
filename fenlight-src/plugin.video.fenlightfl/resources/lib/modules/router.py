@@ -3,7 +3,7 @@ from urllib.parse import parse_qsl
 from modules.kodi_utils import external, get_property
 
 def sys_exit_check():
-	if get_property('fenlight.reuse_language_invoker') == 'false': return False
+	if get_property('fenlightfl.reuse_language_invoker') == 'false': return False
 	return external()
 
 def routing(sys):

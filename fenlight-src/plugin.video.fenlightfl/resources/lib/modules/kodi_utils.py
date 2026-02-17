@@ -74,30 +74,30 @@ def addon_info(info):
 	return xbmcaddon.Addon('plugin.video.fenlightfl').getAddonInfo(info)
 
 def addon_version():
-	return get_property('fenlight.addon_version') or addon_info('version')
+	return get_property('fenlightfl.addon_version') or addon_info('version')
 
 def addon_path():
-	return get_property('fenlight.addon_path') or addon_info('path')
+	return get_property('fenlightfl.addon_path') or addon_info('path')
 
 def addon_profile():
-	return get_property('fenlight.addon_profile') or translate_path(addon_info('profile'))
+	return get_property('fenlightfl.addon_profile') or translate_path(addon_info('profile'))
 
 def addon_icon():
-	return get_property('fenlight.addon_icon') or translate_path(addon_info('icon'))
+	return get_property('fenlightfl.addon_icon') or translate_path(addon_info('icon'))
 
 def addon_icon_mini():
-	return get_property('fenlight.addon_icon_mini') or os.path.join(addon_info('path'), 'resources', 'media', 'addon_icons', 'minis',
+	return get_property('fenlightfl.addon_icon_mini') or os.path.join(addon_info('path'), 'resources', 'media', 'addon_icons', 'minis',
 														os.path.basename(translate_path(addon_info('icon'))))
 
 def addon_fanart():
-	return get_property('fenlight.addon_fanart') or translate_path(addon_info('fanart'))
+	return get_property('fenlightfl.addon_fanart') or translate_path(addon_info('fanart'))
 
 def get_icon(image_name, image_folder='icons'):
 	return 'https://raw.githubusercontent.com/%s/%s/main/packages/media/%s/%s.png' \
-			% (get_property('fenlight.update.username'), get_property('fenlight.update.location'), image_folder, image_name)
+			% (get_property('fenlightfl.update.username'), get_property('fenlightfl.update.location'), image_folder, image_name)
 
 def get_addon_fanart():
-	return get_property('fenlight.default_addon_fanart') or addon_fanart()
+	return get_property('fenlightfl.default_addon_fanart') or addon_fanart()
 
 def build_url(url_params):
 	return 'plugin://plugin.video.fenlightfl/?%s' % urlencode(url_params)
@@ -132,10 +132,10 @@ def end_directory(handle, cacheToDisc=True):
 	xbmcplugin.endOfDirectory(handle, cacheToDisc=cacheToDisc)
 
 def set_view_mode(view_type, content='files', is_external=None):
-	if not get_property('fenlight.use_viewtypes') == 'true': return
+	if not get_property('fenlightfl.use_viewtypes') == 'true': return
 	if is_external == None: is_external = external()
 	if is_external: return
-	view_id = get_property('fenlight.%s' % view_type) or None
+	view_id = get_property('fenlightfl.%s' % view_type) or None
 	if not view_id: return
 	try:
 		hold = 0
@@ -291,7 +291,7 @@ def refresh_widgets():
 	from caches.random_widgets_cache import RandomWidgets
 	RandomWidgets().delete_like('random_list.%')
 	kodi_refresh()
-	if get_setting('fenlight.widget_refresh_notification', 'true') == 'true': notification('Widgets Refreshed', 2500)
+	if get_setting('fenlightfl.widget_refresh_notification', 'true') == 'true': notification('Widgets Refreshed', 2500)
 
 def run_plugin(params, block=False):
 	if isinstance(params, dict): params = build_url(params)
@@ -368,7 +368,7 @@ def open_settings():
 
 def external_scraper_settings():
 	try:
-		external = get_property('fenlight.external_scraper.module')
+		external = get_property('fenlightfl.external_scraper.module')
 		if external in ('empty_setting', ''): return
 		execute_builtin('Addon.OpenSettings(%s)' % external)
 	except: pass
@@ -441,9 +441,9 @@ def timeIt(func):
 
 def volume_checker():
 	try:
-		if get_property('fenlight.playback.volumecheck_enabled') == 'false' or get_visibility('Player.Muted'): return
+		if get_property('fenlightfl.playback.volumecheck_enabled') == 'false' or get_visibility('Player.Muted'): return
 		from modules.utils import string_alphanum_to_num
-		max_volume = min(int(get_property('fenlight.playback.volumecheck_percent') or '50'), 100)
+		max_volume = min(int(get_property('fenlightfl.playback.volumecheck_percent') or '50'), 100)
 		if int(100 - (float(string_alphanum_to_num(get_infolabel('Player.Volume').split('.')[0]))/60)*100) > max_volume: execute_builtin('SetVolume(%d)' % max_volume)
 	except: pass
 
@@ -462,7 +462,7 @@ def get_all_icons():
 			results = [i['name'].replace('.png', '') for i in results.json()]
 			return results
 		except: return ['folder.png']
-	username, location = get_property('fenlight.update.username'), get_property('fenlight.update.location')
+	username, location = get_property('fenlightfl.update.username'), get_property('fenlightfl.update.location')
 	return cache_object(_process, 'all_icons', 'foo', False, 168)
 
 def get_all_addon_icons():
@@ -473,7 +473,7 @@ def get_all_addon_icons():
 			results = requests.get('https://api.github.com/repos/%s/%s/contents/packages/addon_icons' % (username, location))
 			return results
 		except: return []
-	username, location = get_property('fenlight.update.username'), get_property('fenlight.update.location')
+	username, location = get_property('fenlightfl.update.username'), get_property('fenlightfl.update.location')
 	return cache_object(_process, 'all_addon_icons', 'foo', True, 168)
 
 def upload_logfile(params):

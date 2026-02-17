@@ -56,8 +56,8 @@ class Sources():
 		self.ignore_scrape_filters = params_get('ignore_scrape_filters', 'false') == 'true'
 		self.nextep_settings, self.disable_autoplay_next_episode = params_get('nextep_settings', {}), params_get('disable_autoplay_next_episode', 'false') == 'true'
 		self.disabled_ext_ignored = params_get('disabled_ext_ignored', self.disabled_ext_ignored) == 'true'
-		self.folders_ignore_filters = get_setting('fenlight.results.folders_ignore_filters', 'false') == 'true'
-		self.filter_size_method = int(get_setting('fenlight.results.filter_size_method', '0'))
+		self.folders_ignore_filters = get_setting('fenlightfl.results.folders_ignore_filters', 'false') == 'true'
+		self.filter_size_method = int(get_setting('fenlightfl.results.filter_size_method', '0'))
 		self.media_type, self.tmdb_id = params_get('media_type'), params_get('tmdb_id')		
 		self.custom_title, self.custom_year = params_get('custom_title', None), params_get('custom_year', None)
 		self.episode_group_label, self.episode_id = params_get('episode_group_label', ''), params_get('episode_id', None)
@@ -76,7 +76,7 @@ class Sources():
 		self.limit_resolve = settings.limit_resolve()
 		self.weight_size = settings.size_sort_weighted()
 		self.sort_function, self.quality_filter = settings.results_sort_order(), self._quality_filter()
-		self.include_unknown_size = get_setting('fenlight.results.size_unknown', 'false') == 'true'
+		self.include_unknown_size = get_setting('fenlightfl.results.size_unknown', 'false') == 'true'
 		self.make_search_info()
 		if self.autoscrape: self.autoscrape_nextep_handler()
 		else: return self.get_sources()
@@ -192,13 +192,13 @@ class Sources():
 		else: folder_results = []
 		results = [i for i in results if i['quality'] in self.quality_filter]
 		if self.filter_size_method:
-			min_size = string_to_float(get_setting('fenlight.results.%s_size_min' % self.media_type, '0'), '0') / 1000
+			min_size = string_to_float(get_setting('fenlightfl.results.%s_size_min' % self.media_type, '0'), '0') / 1000
 			if min_size == 0.0 and not self.include_unknown_size: min_size = 0.02
 			if self.filter_size_method == 1:
 				duration = self.meta['duration'] or (5400 if self.media_type == 'movie' else 2400)
 				max_size = ((0.125 * (0.90 * string_to_float(get_setting('results.line_speed', '25'), '25'))) * duration)/1000
 			elif self.filter_size_method == 2:
-				max_size = string_to_float(get_setting('fenlight.results.%s_size_max' % self.media_type, '10000'), '10000') / 1000
+				max_size = string_to_float(get_setting('fenlightfl.results.%s_size_max' % self.media_type, '10000'), '10000') / 1000
 			results = [i for i in results if i['scrape_provider'] == 'folders' or min_size <= i['size'] <= max_size]
 		results += folder_results
 		return results
@@ -210,7 +210,7 @@ class Sources():
 	def special_filter(self, results, file_type):
 		enable_setting, key = settings.filter_status(file_type), self.filter_keys[file_type]
 		if key == 'HEVC' and enable_setting == 0:
-			hevc_max_quality = self._get_quality_rank(get_setting('fenlight.filter.hevc.%s' % ('max_autoplay_quality' if self.autoplay else 'max_quality'), '4K'))
+			hevc_max_quality = self._get_quality_rank(get_setting('fenlightfl.filter.hevc.%s' % ('max_autoplay_quality' if self.autoplay else 'max_quality'), '4K'))
 			results = [i for i in results if not key in i['extraInfo'] or i['quality_rank'] >= hevc_max_quality]
 		if enable_setting == 1:
 			if key in ('D/VISION', 'HDR'):
@@ -337,7 +337,7 @@ class Sources():
 		current_list.extend(self.folder_sources())
 
 	def get_folderscraper_info(self):
-		folder_info = [(get_setting('fenlight.%s.display_name' % i), i, settings.source_folders_directory(self.media_type, i))
+		folder_info = [(get_setting('fenlightfl.%s.display_name' % i), i, settings.source_folders_directory(self.media_type, i))
 						for i in ('folder1', 'folder2', 'folder3', 'folder4', 'folder5')]
 		return [i for i in folder_info if not i[0] in (None, 'None', '') and i[2]]
 
@@ -480,11 +480,11 @@ class Sources():
 
 	def _process_internal_results(self):
 		for i in self.internal_scrapers:
-			win_property = kodi_utils.get_property('fenlight.internal_results.%s' % i)
+			win_property = kodi_utils.get_property('fenlightfl.internal_results.%s' % i)
 			if win_property in ('checked', '', None): continue
 			try: sources = json.loads(win_property)
 			except: continue
-			kodi_utils.set_property('fenlight.internal_results.%s' % i, 'checked')
+			kodi_utils.set_property('fenlightfl.internal_results.%s' % i, 'checked')
 			self._sources_quality_count(sources)
 	
 	def _sources_quality_count(self, sources):
@@ -546,9 +546,9 @@ class Sources():
 
 	def _clear_properties(self):
 		def_internal = self.default_internal_scrapers
-		for item in def_internal: kodi_utils.clear_property('fenlight.internal_results.%s' % item)
+		for item in def_internal: kodi_utils.clear_property('fenlightfl.internal_results.%s' % item)
 		if self.active_folders:
-			for item in self.folder_info: kodi_utils.clear_property('fenlight.internal_results.%s' % item[0])
+			for item in self.folder_info: kodi_utils.clear_property('fenlightfl.internal_results.%s' % item[0])
 
 	def _make_progress_dialog(self):
 		self.progress_dialog = create_window(('windows.sources', 'SourcesPlayback'), 'sources_playback.xml', meta=self.meta)

@@ -65,4 +65,4 @@ def model_present(model_id):
 	return model_id in models()
 
 def get_api():
-	return get_setting('fenlight.google_api')
+	return get_setting('fenlightfl.google_api')

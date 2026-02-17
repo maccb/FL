@@ -68,7 +68,7 @@
                 <align>left</align>
                 <aligny>top</aligny>
                 <aspectratio aligny="top">keep</aspectratio>
-                <texture colordiffuse="FFB7B4BB">$INFO[Window(10000).Property(fenlight.addon_icon_mini)]</texture>
+                <texture colordiffuse="FFB7B4BB">$INFO[Window(10000).Property(fenlightfl.addon_icon_mini)]</texture>
             </control>
             <!-- HEADING - NEXT EPISODE -->
             <control type="group">

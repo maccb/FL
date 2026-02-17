@@ -171,7 +171,7 @@ class FenLightPlayer(xbmc.Player):
 									'tvdb_id': self.tvdb_id, 'from_playback': 'true'}
 				Thread(target=self.run_media_progress, args=(watched_function, watched_params)).start()
 			else:
-				ku.clear_property('fenlight.random_episode_history')
+				ku.clear_property('fenlightfl.random_episode_history')
 				if self.current_point >= 5:
 					progress_params = {'media_type': self.media_type, 'tmdb_id': self.tmdb_id, 'curr_time': self.curr_time, 'total_time': self.total_time,
 									'title': self.title, 'season': self.season, 'episode': self.episode, 'from_playback': 'true'}
@@ -256,7 +256,7 @@ class FenLightPlayer(xbmc.Player):
 		except: pass
 
 	def clear_playback_properties(self):
-		ku.clear_property('fenlight.window_stack')
+		ku.clear_property('fenlightfl.window_stack')
 		ku.clear_property('script.flicklist.ids')
 		ku.clear_property('subs.player_filename')
 

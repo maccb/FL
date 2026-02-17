@@ -66,7 +66,7 @@ class TMDbListAPI:
 				threads = list(make_thread_list(_process_multi, range(2, total_pages + 1)))
 				[i.join() for i in threads]
 			return results
-		account_id = get_setting('fenlight.tmdb.account_id')
+		account_id = get_setting('fenlightfl.tmdb.account_id')
 		string = 'get_user_lists'
 		url = '%s/account/%s/lists?page=%s'
 		results = []
@@ -117,7 +117,7 @@ class TMDbListAPI:
 		return self.request_data(url, params={'media_type': media_type, 'media_id': int(media_id)})
 
 	def request_data(self, url, params=None, data=None, method='get'):
-		headers = {'accept': 'application/json', 'content-type': 'application/json', 'Authorization': 'Bearer %s' % get_setting('fenlight.tmdb.token')}
+		headers = {'accept': 'application/json', 'content-type': 'application/json', 'Authorization': 'Bearer %s' % get_setting('fenlightfl.tmdb.token')}
 		try: result = session.request(method, url, params=params, json=data, headers=headers, timeout=90).json()
 		except: result = None
 		return result
