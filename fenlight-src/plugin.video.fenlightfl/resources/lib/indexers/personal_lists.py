@@ -201,7 +201,7 @@ def make_new_personal_list(params):
 		suggested_list_name = chosen_list.get('name')
 		suggested_author = chosen_list.get('user')
 		params.update({'suggested_list_name': suggested_list_name, 'suggested_author': suggested_author, 'chosen_list': chosen_list})
-		if suggested_author in ('Collection', 'Watchlist'): suggested_author = get_setting('fenlightfl.trakt.user')
+		if suggested_author in ('Collection', 'Watchlist'): suggested_author = get_setting('fenlightfl.flicklist.user')
 	list_name = personal_list_name(suggested_list_name)
 	if list_name == None: return None, None
 	author = personal_list_author(suggested_author)

@@ -525,7 +525,7 @@
                       </item>
                       <item>
                           <visible>Container(2000).HasFocus(10)</visible>
-                          <visible>!String.IsEqual(Window(10000).Property(fenlightfl.trakt.user),empty_setting)</visible>
+                          <visible>!String.IsEqual(Window(10000).Property(fenlightfl.flicklist.user),empty_setting)</visible>
                           <property name="setting_label">Watched Status Provider</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.watched_indicators_name)]</property>
@@ -541,21 +541,21 @@
                       </item>
                       <item>
                           <visible>Container(2000).HasFocus(10)</visible>
-                          <visible>!String.IsEqual(Window(10000).Property(fenlightfl.trakt.user),empty_setting)</visible>
+                          <visible>!String.IsEqual(Window(10000).Property(fenlightfl.flicklist.user),empty_setting)</visible>
                           <property name="setting_label">Resync Interval (mins)</property>
                           <property name="setting_type">numeric</property>
-                          <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.trakt.sync_interval)]</property>
+                          <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.flicklist.sync_interval)]</property>
                           <property name="setting_description">Choose how often FL polls your FlickList service for any changes</property>
-                          <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_numeric&amp;setting_id=trakt.sync_interval)</onclick>
+                          <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_numeric&amp;setting_id=flicklist.sync_interval)</onclick>
                       </item>
                       <item>
                           <visible>Container(2000).HasFocus(10)</visible>
-                          <visible>!String.IsEqual(Window(10000).Property(fenlightfl.trakt.user),empty_setting)</visible>
+                          <visible>!String.IsEqual(Window(10000).Property(fenlightfl.flicklist.user),empty_setting)</visible>
                           <property name="setting_label">Refresh Widgets After FL Sync</property>
                           <property name="setting_type">boolean</property>
-                          <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.trakt.refresh_widgets)]</property>
+                          <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.flicklist.refresh_widgets)]</property>
                           <property name="setting_description">Enable this and FL will refresh widgets after performing a FlickList Sync if there were any changes</property>
-                          <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=trakt.refresh_widgets)</onclick>
+                          <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=flicklist.refresh_widgets)</onclick>
                       </item>
         <!-- UTC Time Offset -->
                       <item>
@@ -967,7 +967,7 @@
                       </item>
                       <item>
                           <visible>Container(2000).HasFocus(30)</visible>
-                          <visible>!String.IsEqual(Window(10000).Property(fenlightfl.trakt.user),empty_setting)</visible>
+                          <visible>!String.IsEqual(Window(10000).Property(fenlightfl.flicklist.user),empty_setting)</visible>
                           <property name="setting_label">FL Collection</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.sort.collection_name)]</property>
@@ -976,7 +976,7 @@
                       </item>
                       <item>
                           <visible>Container(2000).HasFocus(30)</visible>
-                          <visible>!String.IsEqual(Window(10000).Property(fenlightfl.trakt.user),empty_setting)</visible>
+                          <visible>!String.IsEqual(Window(10000).Property(fenlightfl.flicklist.user),empty_setting)</visible>
                           <property name="setting_label">FL Watchlist</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.sort.watchlist_name)]</property>
@@ -1249,33 +1249,33 @@
                           <visible>Container(2000).HasFocus(40)</visible>
                           <property name="setting_label">Flatten TV Shows Airing on Same Day</property>
                           <property name="setting_type">boolean</property>
-                          <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.trakt.flatten_episodes)]</property>
+                          <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.flicklist.flatten_episodes)]</property>
                           <property name="setting_description">Enable this to limit to the first instance of a TV Show episode when that TV Show has multiple episodes airing on the same day</property>
-                          <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=trakt.flatten_episodes)</onclick>
+                          <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=flicklist.flatten_episodes)</onclick>
                       </item>
                       <item>
                           <visible>Container(2000).HasFocus(40)</visible>
                           <property name="setting_label">Sort Order</property>
                           <property name="setting_type">action</property>
-                          <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.trakt.calendar_sort_order_name)]</property>
+                          <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.flicklist.calendar_sort_order_name)]</property>
                           <property name="setting_description">Choose the sort direction of the FL Calendar list. Ascending or Descending</property>
-                          <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_from_list&amp;setting_id=trakt.calendar_sort_order)</onclick>
+                          <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_from_list&amp;setting_id=flicklist.calendar_sort_order)</onclick>
                       </item>
                       <item>
                           <visible>Container(2000).HasFocus(40)</visible>
                           <property name="setting_label">Show Previous Days</property>
                           <property name="setting_type">numeric</property>
-                          <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.trakt.calendar_previous_days)]</property>
+                          <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.flicklist.calendar_previous_days)]</property>
                           <property name="setting_description">Choose how many previous days will be shown within the FL Calendar</property>
-                          <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_numeric&amp;setting_id=trakt.calendar_previous_days)</onclick>
+                          <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_numeric&amp;setting_id=flicklist.calendar_previous_days)</onclick>
                       </item>
                       <item>
                           <visible>Container(2000).HasFocus(40)</visible>
                           <property name="setting_label">Show Future Days</property>
                           <property name="setting_type">numeric</property>
-                          <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.trakt.calendar_future_days)]</property>
+                          <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.flicklist.calendar_future_days)]</property>
                           <property name="setting_description">Choose how many future days will be shown within the FL Calendar</property>
-                          <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_numeric&amp;setting_id=trakt.calendar_future_days)</onclick>
+                          <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_numeric&amp;setting_id=flicklist.calendar_future_days)</onclick>
                       </item>
 <!-- META ACCOUNTS 50 -->
         <!-- FlickList -->
@@ -1287,7 +1287,7 @@
                       </item>
                       <item>
                           <visible>Container(2000).HasFocus(50)</visible>
-                          <visible>String.IsEqual(Window(10000).Property(fenlightfl.trakt.user),empty_setting)</visible>
+                          <visible>String.IsEqual(Window(10000).Property(fenlightfl.flicklist.user),empty_setting)</visible>
                           <property name="setting_label">Authorize</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">...</property>
@@ -1296,47 +1296,13 @@
                       </item>
                       <item>
                           <visible>Container(2000).HasFocus(50)</visible>
-                          <visible>!String.IsEqual(Window(10000).Property(fenlightfl.trakt.user),empty_setting)</visible>
+                          <visible>!String.IsEqual(Window(10000).Property(fenlightfl.flicklist.user),empty_setting)</visible>
                           <property name="setting_label">Revoke Authorization</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">...</property>
-                          <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.trakt.user)]</property>
+                          <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.flicklist.user)]</property>
                           <property name="setting_description">Revoke authorization of your FlickList account</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=trakt.trakt_revoke_authentication)</onclick>
-                      </item>
-                      <item>
-                          <visible>Container(2000).HasFocus(50)</visible>
-                          <property name="setting_label">Client ID Key</property>
-                          <property name="setting_type">numeric</property>
-                          <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.trakt.client)]</property>
-                          <property name="setting_description">Enter here your FlickList Client ID key</property>
-                          <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_string&amp;setting_id=trakt.client)</onclick>
-                      </item>
-                      <item>
-                          <visible>Container(2000).HasFocus(50)</visible>
-                          <visible>!String.IsEqual(Window(10000).Property(fenlightfl.trakt.client),1038ef327e86e7f6d39d80d2eb5479bff66dd8394e813c5e0e387af0f84d89fb)</visible>
-                          <property name="setting_label">    - Restore Default Client ID Key</property>
-                          <property name="setting_type">action</property>
-                          <property name="setting_value">...</property>
-                          <property name="setting_description">Restore default FlickList Client ID Key</property>
-                          <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.restore_setting_default&amp;setting_id=trakt.client)</onclick>
-                      </item>
-                      <item>
-                          <visible>Container(2000).HasFocus(50)</visible>
-                          <property name="setting_label">Client Secret Key</property>
-                          <property name="setting_type">numeric</property>
-                          <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.trakt.secret)]</property>
-                          <property name="setting_description">Enter here your FlickList Client Secret key</property>
-                          <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_string&amp;setting_id=trakt.secret)</onclick>
-                      </item>
-                      <item>
-                          <visible>Container(2000).HasFocus(50)</visible>
-                          <visible>!String.IsEqual(Window(10000).Property(fenlightfl.trakt.secret),8d27a92e1d17334dae4a0590083a4f26401cb8f721f477a79fd3f218f8534fd1)</visible>
-                          <property name="setting_label">    - Restore Default Client Secret Key</property>
-                          <property name="setting_type">action</property>
-                          <property name="setting_value">...</property>
-                          <property name="setting_description">Restore default FlickList Client Secret Key</property>
-                          <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.restore_setting_default&amp;setting_id=trakt.secret)</onclick>
                       </item>
         <!-- TMDb -->
                       <item>

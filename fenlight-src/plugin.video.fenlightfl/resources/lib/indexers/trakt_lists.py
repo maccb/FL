@@ -125,13 +125,13 @@ def get_trakt_lists(params):
 			if shuffle_lists:
 				returning_to_list = 'build_trakt_lists_contents' in kodi_utils.folder_path()
 				if returning_to_list:
-					try: data = json.loads(kodi_utils.get_property('fenlightfl.trakt.lists.order'))
+					try: data = json.loads(kodi_utils.get_property('fenlightfl.flicklist.lists.order'))
 					except: pass
 				else:
 					shuffle(data)
-					kodi_utils.set_property('fenlightfl.trakt.lists.order', json.dumps(data))
+					kodi_utils.set_property('fenlightfl.flicklist.lists.order', json.dumps(data))
 			else:
-				kodi_utils.clear_property('fenlightfl.trakt.lists.order')
+				kodi_utils.clear_property('fenlightfl.flicklist.lists.order')
 				data.sort(key=lambda k: k['name'])
 			result = list(_process())
 		else: result = list(_new_process())
