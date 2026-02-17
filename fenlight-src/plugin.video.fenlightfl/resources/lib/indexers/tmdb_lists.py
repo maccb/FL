@@ -162,7 +162,7 @@ def adjust_tmdb_list_properties(params):
 	if custom_poster: choices.append(('Delete Custom Poster', '', 'delete_poster'))
 	if custom_fanart: choices.append(('Delete Custom Fanart', '', 'delete_fanart'))
 	choices.extend([('Empty List Contents', 'Delete All Contents of %s' % current_name, 'empty_contents'),
-					('Import FL List', 'Import a Trakt List into %s' % current_name, 'import_trakt')])
+					('Import FL List', 'Import an FL List into %s' % current_name, 'import_trakt')])
 	list_items = [{'line1': item[0], 'line2': item[1] or item[0]} for item in choices]
 	kwargs = {'items': json.dumps(list_items), 'heading': 'TMDb List Properties', 'multi_line': 'true', 'narrow_window': 'true'}
 	action = kodi_utils.select_dialog([i[2] for i in choices], **kwargs)

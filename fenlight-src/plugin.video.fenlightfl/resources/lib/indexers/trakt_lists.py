@@ -334,7 +334,7 @@ def delete_current_image(params):
 
 def set_list_custom_sort(params):
 	list_id, current_by, current_how = params['list_id'], params['sort_by'], params['sort_how']
-	choices = [('default', 'Default From Trakt%s'), ('rank', 'Rank%s'), ('added', 'Date Added%s'), ('title', 'Title%s'), ('released', 'Date Released%s'), ('runtime', 'Runtime%s'),
+	choices = [('default', 'Default From FL%s'), ('rank', 'Rank%s'), ('added', 'Date Added%s'), ('title', 'Title%s'), ('released', 'Date Released%s'), ('runtime', 'Runtime%s'),
 	('popularity', 'Popularity%s'), ('percentage', 'Percentage%s'), ('votes', 'Votes%s'), ('random', 'Random%s')]
 	choices = [(i[0], i[1] % ('   [B][COLOR green][CURRENT][/COLOR][/B]' if i[0] == current_by else '')) for i in choices]
 	list_items = [{'line1': item[1], 'line2': ''} for item in choices]
