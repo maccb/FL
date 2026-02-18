@@ -1292,7 +1292,7 @@
                           <property name="setting_type">action</property>
                           <property name="setting_value">...</property>
                           <property name="setting_description">Authorize your FlickList account and use it within FL</property>
-                          <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=trakt.trakt_authenticate)</onclick>
+                          <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=fl.fl_authenticate)</onclick>
                       </item>
                       <item>
                           <visible>Container(2000).HasFocus(50)</visible>
@@ -1302,7 +1302,7 @@
                           <property name="setting_value">...</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.flicklist.user)]</property>
                           <property name="setting_description">Revoke authorization of your FlickList account</property>
-                          <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=trakt.trakt_revoke_authentication)</onclick>
+                          <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=fl.fl_revoke_authentication)</onclick>
                       </item>
         <!-- TMDb -->
                       <item>

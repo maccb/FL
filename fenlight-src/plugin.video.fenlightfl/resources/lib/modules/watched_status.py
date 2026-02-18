@@ -1,14 +1,14 @@
 from datetime import datetime
 from threading import Thread
-from apis.flicklist_api import trakt_watched_status_mark, trakt_progress, trakt_get_hidden_items
+from apis.flicklist_api import fl_watched_status_mark, fl_progress, fl_get_hidden_items
 from caches.base_cache import connect_database, database
-from caches.flicklist_cache import clear_trakt_collection_watchlist_data
+from caches.flicklist_cache import clear_fl_collection_watchlist_data
 from modules.kodi_utils import kodi_progress_background, sleep, get_video_database_path, notification, kodi_refresh
 from modules.utils import get_datetime, adjust_premiered_date, sort_for_article, make_thread_list
 from modules import metadata, settings
 
 def get_database(watched_indicators=None):
-	return connect_database({0: 'watched_db', 1: 'trakt_db'}[watched_indicators or settings.watched_indicators()])
+	return connect_database({0: 'watched_db', 1: 'fl_db'}[watched_indicators or settings.watched_indicators()])
 
 
 def get_hidden_progress_items(watched_indicators):
@@ -17,7 +17,7 @@ def get_hidden_progress_items(watched_indicators):
 			watched_db = get_database()
 			watched_info = watched_db.execute('SELECT status FROM watched_status WHERE db_type = ?', ('hidden_progress_items',)).fetchone()[0]
 			return eval(watched_info) or []
-		else: return trakt_get_hidden_items('dropped')
+		else: return fl_get_hidden_items('dropped')
 	except: return []
 
 def update_hidden_progress(media_id):
@@ -209,7 +209,7 @@ def erase_bookmark(media_type, media_id, season='', episode='', refresh='false')
 				if media_type == 'episode': resume_id = get_bookmarks_episode(str(media_id), season, watched_db)[int(episode)]['resume_id']
 				else: resume_id = get_bookmarks_movie()[str(media_id)]['resume_id']
 				sleep(1000)
-				trakt_progress('clear_progress', media_type, media_id, 0, season, episode, resume_id)
+				fl_progress('clear_progress', media_type, media_id, 0, season, episode, resume_id)
 			except: pass
 		watched_db.execute('DELETE FROM progress where db_type = ? and media_id = ? and season = ? and episode = ?', (media_type, media_id, season, episode))
 		refresh_container(refresh == 'true')
@@ -227,7 +227,7 @@ def batch_erase_bookmark(watched_indicators, insert_list, action):
 						media_id, season, episode = i[1], i[2], i[3]
 						resume_id = get_bookmarks_episode(str(media_id), season, watched_db)[int(episode)]['resume_id']
 						sleep(1000)
-						trakt_progress('clear_progress', i[0], i[1], 0, i[2], i[3], resume_id)
+						fl_progress('clear_progress', i[0], i[1], 0, i[2], i[3], resume_id)
 					except: pass
 			Thread(target=_process).start()
 		watched_db.executemany('DELETE FROM progress where db_type = ? and media_id = ? and season = ? and episode = ?', modified_list)
@@ -242,8 +242,8 @@ def set_bookmark(params):
 		resume_point = round(adjusted_current_time/float(total_time)*100,1)
 		watched_indicators = settings.watched_indicators()
 		if watched_indicators == 1:
-			if trakt_official_status(media_type) == False: return
-			else: trakt_progress('set_progress', media_type, tmdb_id, resume_point, season, episode, refresh_trakt=True)
+			if fl_official_status(media_type) == False: return
+			else: fl_progress('set_progress', media_type, tmdb_id, resume_point, season, episode, refresh_fl=True)
 		else:
 			erase_bookmark(media_type, tmdb_id, season, episode)
 			last_played = get_last_played_value(watched_indicators)
@@ -260,9 +260,9 @@ def mark_movie(params):
 	tmdb_id, title = params.get('tmdb_id'), params.get('title')
 	watched_indicators = settings.watched_indicators()
 	if watched_indicators == 1:
-		if from_playback and trakt_official_status(media_type) == False: sleep(1000)
-		elif not trakt_watched_status_mark(action, 'movies', tmdb_id): return notification('Error')
-		clear_trakt_collection_watchlist_data('watchlist', media_type)
+		if from_playback and fl_official_status(media_type) == False: sleep(1000)
+		elif not fl_watched_status_mark(action, 'movies', tmdb_id): return notification('Error')
+		clear_fl_collection_watchlist_data('watchlist', media_type)
 	watched_status_mark(watched_indicators, media_type, tmdb_id, action, title=title)
 	refresh_container(refresh)
 
@@ -274,8 +274,8 @@ def mark_tvshow(params):
 	progress_backround = kodi_progress_background()
 	progress_backround.create('[B]Please Wait..[/B]', '')
 	if watched_indicators == 1:
-		if not trakt_watched_status_mark(action, 'shows', tmdb_id, tvdb_id): return notification('Error')
-		clear_trakt_collection_watchlist_data('watchlist', 'tvshow')
+		if not fl_watched_status_mark(action, 'shows', tmdb_id, tvdb_id): return notification('Error')
+		clear_fl_collection_watchlist_data('watchlist', 'tvshow')
 	current_date = get_datetime()
 	insert_list = []
 	insert_append = insert_list.append
@@ -310,8 +310,8 @@ def mark_season(params):
 	watched_indicators = settings.watched_indicators()
 	heading = '[B]Mark Watched %s[/B]' if action == 'mark_as_watched' else '[B]Mark Unwatched %s[/B]'
 	if watched_indicators == 1:
-		if not trakt_watched_status_mark(action, 'season', tmdb_id, tvdb_id, season): return notification('Error')
-		clear_trakt_collection_watchlist_data('watchlist', 'tvshow')
+		if not fl_watched_status_mark(action, 'season', tmdb_id, tvdb_id, season): return notification('Error')
+		clear_fl_collection_watchlist_data('watchlist', 'tvshow')
 	progress_backround = kodi_progress_background()
 	progress_backround.create('[B]Please Wait..[/B]', '')
 	current_date = get_datetime()
@@ -341,9 +341,9 @@ def mark_episode(params):
 	except: tvdb_id = 0
 	watched_indicators = settings.watched_indicators()
 	if watched_indicators == 1:
-		if from_playback and trakt_official_status(media_type) == False: sleep(1000)
-		elif not trakt_watched_status_mark(action, media_type, tmdb_id, tvdb_id, season, episode): return notification('Error')
-		clear_trakt_collection_watchlist_data('watchlist', 'tvshow')
+		if from_playback and fl_official_status(media_type) == False: sleep(1000)
+		elif not fl_watched_status_mark(action, media_type, tmdb_id, tvdb_id, season, episode): return notification('Error')
+		clear_fl_collection_watchlist_data('watchlist', 'tvshow')
 	watched_status_mark(watched_indicators, media_type, tmdb_id, action, season, episode, title)
 	update_hidden_progress(tmdb_id)
 	refresh_container(refresh)

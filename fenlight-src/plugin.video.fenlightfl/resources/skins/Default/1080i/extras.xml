@@ -1107,7 +1107,7 @@
                             <textcolor>FFCCCCCC</textcolor>
                             <align>left</align>
                             <aligny>bottom</aligny>
-                            <label>[B]Comments $INFO[Window.Property(trakt_comments.number)][/B]</label>
+                            <label>[B]Comments $INFO[Window.Property(fl_comments.number)][/B]</label>
                         </control>
                         <control type="panel" id="2057">
                             <pagecontrol>4057</pagecontrol>
@@ -1489,7 +1489,7 @@
                             <textcolor>FFCCCCCC</textcolor>
                             <align>left</align>
                             <aligny>bottom</aligny>
-                            <label>[B]In FL Lists $INFO[Window.Property(trakt_in_lists.number)][/B]</label>
+                            <label>[B]In FL Lists $INFO[Window.Property(fl_in_lists.number)][/B]</label>
                         </control>
                         <control type="fixedlist" id="2061">
                             <animation effect="slide" end="-472,0" time="0" condition="Integer.IsEqual(Container(2061).NumItems,1) | Integer.IsEqual(Container(2061).NumItems,2)">Conditional</animation>

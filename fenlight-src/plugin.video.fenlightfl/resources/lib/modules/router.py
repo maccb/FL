@@ -34,13 +34,16 @@ def routing(sys):
 	elif 'custom_key.' in mode:
 		from modules import custom_keys
 		exec('custom_keys.%s()' % mode.split('custom_key.')[1])
-	elif 'trakt.' in mode:
+	elif 'fl.' in mode:
 		if '.list' in mode:
-			from indexers import trakt_lists
-			exec('trakt_lists.%s(params)' % mode.split('.')[2])
+			from indexers import fl_lists
+			exec('fl_lists.%s(params)' % mode.split('.')[2])
 		else:
-			from apis import flicklist_api as trakt_api
-			exec('trakt_api.%s(params)' % mode.split('.')[1])
+			from apis import flicklist_api as fl_api
+			exec('fl_api.%s(params)' % mode.split('.')[1])
+	elif 'fl_calendar.' in mode:
+		from indexers import fl_calendar
+		exec('fl_calendar.%s(params)' % mode.split('fl_calendar.')[1])
 	elif 'build' in mode:
 		if mode == 'build_movie_list':
 			from indexers.movies import Movies
@@ -65,7 +68,7 @@ def routing(sys):
 			build_single_episode('episode.next', params)
 		elif mode == 'build_my_calendar':
 			from indexers.episodes import build_single_episode
-			build_single_episode('episode.trakt', params)
+			build_single_episode('episode.fl', params)
 		elif mode == 'build_next_episode_manager':
 			from modules.episode_tools import build_next_episode_manager
 			build_next_episode_manager()

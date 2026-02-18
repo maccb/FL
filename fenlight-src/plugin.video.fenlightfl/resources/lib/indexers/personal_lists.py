@@ -194,8 +194,8 @@ def make_new_personal_list(params):
 	chosen_list, suggested_list_name, suggested_author = params.get('chosen_list', []), params.get('suggested_list_name', ''), params.get('suggested_author', '')
 	if not external_creation and not is_retry and kodi_utils.confirm_dialog(
 		heading='Personal Lists',text='Import a FL List to populate this new list?', ok_label='Yes', cancel_label='No'):
-		from apis.flicklist_api import get_trakt_list_selection
-		chosen_list = get_trakt_list_selection(['default', 'personal', 'liked'])
+		from apis.flicklist_api import get_fl_list_selection
+		chosen_list = get_fl_list_selection(['default', 'personal', 'liked'])
 		if chosen_list == None: return None, None
 		params['chosen_list'] = chosen_list
 		suggested_list_name = chosen_list.get('name')
@@ -216,7 +216,7 @@ def make_new_personal_list(params):
 		kodi_utils.notification('Error Creating List', 3000)
 		return None, None
 	if chosen_list:
-		new_contents = process_trakt_list(chosen_list)
+		new_contents = process_fl_list(chosen_list)
 		result = personal_lists_cache.add_many_list_items(list_name, author, new_contents)
 	if not external_creation and any([kodi_utils.path_check('get_personal_lists') or kodi_utils.external()]): kodi_utils.kodi_refresh()
 	return list_name, author
@@ -235,7 +235,7 @@ def adjust_personal_list_properties(params):
 	if poster: choices.append(('Delete Custom Poster', '', 'delete_poster'))
 	if fanart: choices.append(('Delete Custom Fanart', '', 'delete_fanart'))
 	choices.extend([('Empty List Contents', 'Delete All Contents of %s' % list_name, 'empty_contents'),
-					('Import FL List', 'Import an FL List into %s' % list_name, 'import_trakt')])
+					('Import FL List', 'Import an FL List into %s' % list_name, 'import_fl')])
 	list_items = [{'line1': item[0], 'line2': item[1] or item[0]} for item in choices]
 	kwargs = {'items': json.dumps(list_items), 'heading': 'Personal List Properties', 'multi_line': 'true', 'narrow_window': 'true'}
 	action = kodi_utils.select_dialog([i[2] for i in choices], **kwargs)
@@ -285,8 +285,8 @@ def adjust_personal_list_properties(params):
 	elif action == 'empty_contents':
 		delete_personal_list_contents({'list_name': list_name, 'author': author})
 		params.update({'refresh': 'true'})
-	elif action == 'import_trakt':
-		import_trakt_list({'list_name': list_name, 'author': author, 'description': description, 'sort_order': sort_order,
+	elif action == 'import_fl':
+		import_fl_list({'list_name': list_name, 'author': author, 'description': description, 'sort_order': sort_order,
 							'seen': seen, 'poster': poster, 'fanart': fanart})
 		params.update({'refresh': 'true'})
 	return adjust_personal_list_properties(params)
@@ -351,46 +351,46 @@ def personal_list_description():
 	description = unquote(description)
 	return description
 
-def import_trakt_list(params):
+def import_fl_list(params):
 	media_type_check = {'movie': 'movie', 'show': 'tvshow', 'tvshow': 'tvshow'}
 	list_name, author, description, sort_order, seen = params['list_name'], params['author'], params['description'], params['sort_order'], params['seen']
 	poster, fanart = params['poster'], params['fanart']
 	if not list_change_warning(list_name): return
-	from apis.flicklist_api import get_trakt_list_selection, trakt_fetch_collection_watchlist, get_trakt_list_contents
-	chosen_list = get_trakt_list_selection(['default', 'personal', 'liked'])
+	from apis.flicklist_api import get_fl_list_selection, fl_fetch_collection_watchlist, get_fl_list_contents
+	chosen_list = get_fl_list_selection(['default', 'personal', 'liked'])
 	if chosen_list == None: return
-	trakt_list_name = chosen_list.get('name')
-	new_contents = process_trakt_list(chosen_list)
+	fl_list_name = chosen_list.get('name')
+	new_contents = process_fl_list(chosen_list)
 	result = personal_lists_cache.add_many_list_items(list_name, author, new_contents)
 	if result == 'Success':
 		if kodi_utils.confirm_dialog(heading='Personal Lists', text='Rename List to Match FL List Name?', ok_label='Yes', cancel_label='No'):
-			personal_lists_cache.update_single_detail('name', trakt_list_name, list_name, author)
+			personal_lists_cache.update_single_detail('name', fl_list_name, list_name, author)
 	kodi_utils.notification(result, 3000)
 
-def process_trakt_list(chosen_list):
-	from apis.flicklist_api import trakt_fetch_collection_watchlist, get_trakt_list_contents
+def process_fl_list(chosen_list):
+	from apis.flicklist_api import fl_fetch_collection_watchlist, get_fl_list_contents
 	media_type_check = {'movie': 'movie', 'show': 'tvshow', 'tvshow': 'tvshow'}
 	new_contents = []
 	new_contents_append = new_contents.append
 	current_timestamp = get_current_timestamp()
-	trakt_list_type, trakt_list_name = chosen_list.get('list_type'), chosen_list.get('name')
-	if trakt_list_type in ('collection', 'watchlist'):
-		trakt_media_type = chosen_list.get('media_type')
-		result = trakt_fetch_collection_watchlist(trakt_list_type, trakt_media_type)
+	fl_list_type, fl_list_name = chosen_list.get('list_type'), chosen_list.get('name')
+	if fl_list_type in ('collection', 'watchlist'):
+		fl_media_type = chosen_list.get('media_type')
+		result = fl_fetch_collection_watchlist(fl_list_type, fl_media_type)
 		try:
-			sort_order = settings.lists_sort_order(trakt_list_type)
+			sort_order = settings.lists_sort_order(fl_list_type)
 			if sort_order == 0: result = sort_for_article(result, 'title', settings.ignore_articles())
 			elif sort_order == 1: result.sort(key=lambda k: k['collected_at'], reverse=True)
 			else: result.sort(key=lambda k: k.get('released'), reverse=True)
 		except: pass
 	else:
-		result = get_trakt_list_contents(trakt_list_type, chosen_list.get('user'), chosen_list.get('slug'), trakt_list_type == 'my_lists')
+		result = get_fl_list_contents(fl_list_type, chosen_list.get('user'), chosen_list.get('slug'), fl_list_type == 'my_lists')
 		try: result.sort(key=lambda k: (k['order']))
 		except: pass
 	for count, item in enumerate(result):
 		try:
-			media_type = item.get('type') or media_type_check[trakt_media_type]
-			if trakt_list_type in ('my_lists', 'liked_lists') and item['type'] not in ('movie', 'show'): continue
+			media_type = item.get('type') or media_type_check[fl_media_type]
+			if fl_list_type in ('my_lists', 'liked_lists') and item['type'] not in ('movie', 'show'): continue
 			media_id = item['media_ids']['tmdb']
 			if media_id in (None, 'None', ''): continue
 			title = item['title']

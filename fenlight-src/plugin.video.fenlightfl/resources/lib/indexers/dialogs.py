@@ -446,10 +446,10 @@ def random_choice(params):
 	from modules.episode_tools import EpisodeTools
 	exec('EpisodeTools(meta).%s()' % choice)
 
-def trakt_manager_choice(params):
-	if not settings.trakt_user_active(): return kodi_utils.notification('No Active FlickList Account', 3500)
+def fl_manager_choice(params):
+	if not settings.fl_user_active(): return kodi_utils.notification('No Active FlickList Account', 3500)
 	tmdb_id, tvdb_id, imdb_id, media_type = params['tmdb_id'], params['tvdb_id'], params['imdb_id'], params['media_type']
-	icon = params.get('icon', None) or kodi_utils.get_icon('trakt')
+	icon = params.get('icon', None) or kodi_utils.get_icon('fl')
 	choices = [('Add to [B]Watchlist[/B]', 'add_watchlist'), ('Remove from [B]Watchlist[/B]', 'remove_watchlist'),
 				('Add to [B]Collection[/B]', 'add_collection'), ('Remove from [B]Collection[/B]', 'remove_collection'),
 				('Add To [B]Personal List[/B]...', 'add'), ('Remove from [B]Personal List[/B]...', 'remove')]
@@ -457,7 +457,7 @@ def trakt_manager_choice(params):
 	kwargs = {'items': json.dumps(list_items), 'heading': 'FlickList Lists Manager'}
 	choice = kodi_utils.select_dialog([i[1] for i in choices], **kwargs)
 	if choice == None: return
-	from apis import flicklist_api as trakt_api
+	from apis import flicklist_api as fl_api
 	if media_type == 'movie': key, media_key, media_id = ('movies', 'tmdb', int(tmdb_id))
 	else:
 		key = 'shows'
@@ -465,13 +465,13 @@ def trakt_manager_choice(params):
 		media_id, media_key = next(item for item in media_ids if item[0] not in ('None', None, ''))
 		if media_id in (tmdb_id, tvdb_id): media_id = int(media_id)
 	data = {key: [{'ids': {media_key: media_id}}]}
-	if choice == 'add_watchlist': return trakt_api.add_to_watchlist(data)
-	if choice == 'remove_watchlist': return trakt_api.remove_from_watchlist(data)
-	if choice == 'add_collection': return trakt_api.add_to_collection(data)
-	if choice == 'remove_collection': return trakt_api.remove_from_collection(data)
-	selected = trakt_api.get_trakt_list_selection(['personal'])
+	if choice == 'add_watchlist': return fl_api.add_to_watchlist(data)
+	if choice == 'remove_watchlist': return fl_api.remove_from_watchlist(data)
+	if choice == 'add_collection': return fl_api.add_to_collection(data)
+	if choice == 'remove_collection': return fl_api.remove_from_collection(data)
+	selected = fl_api.get_fl_list_selection(['personal'])
 	if selected == None: return
-	trakt_api.add_to_list(selected['user'], selected['slug'], data) if choice == 'add' else trakt_api.remove_from_list(selected['user'], selected['slug'], data)
+	fl_api.add_to_list(selected['user'], selected['slug'], data) if choice == 'add' else fl_api.remove_from_list(selected['user'], selected['slug'], data)
 
 def episode_groups_choice(params):
 	from modules.metadata import episode_groups
@@ -843,7 +843,7 @@ def options_menu_choice(params, meta=None):
 	tmdb_id, content, poster = params_get('tmdb_id', None), params_get('content', None), params_get('poster', None)
 	is_external, from_extras = params_get('is_external') in (True, 'True', 'true'), params_get('from_extras', 'false') == 'true'
 	season, episode = params_get('season', ''), params_get('episode', '')
-	single_ep_list = ('episode.progress', 'episode.recently_watched', 'episode.next_trakt', 'episode.next_fenlight', 'episode.trakt_recently_aired', 'episode.trakt_calendar')
+	single_ep_list = ('episode.progress', 'episode.recently_watched', 'episode.next_fl', 'episode.next_fenlight', 'episode.fl_recently_aired', 'episode.fl_calendar')
 	if not content: content = kodi_utils.container_content()[:-1]
 	menu_type = content
 	if content.startswith('episode.'): content = 'episode'
@@ -857,7 +857,7 @@ def options_menu_choice(params, meta=None):
 	listing_append = listing.append
 	if from_extras:
 		if menu_type in ('movie', 'episode'): listing_append(('Playback Options', 'Scrapers Options', 'playback_choice'))
-		if settings.trakt_user_active(): listing_append(('FL Lists Manager', '', 'trakt_manager'))
+		if settings.fl_user_active(): listing_append(('FL Lists Manager', '', 'fl_manager'))
 		listing_append(('Personal Lists Manager', '', 'personallists_manager_choice'))
 		listing_append(('TMDb Lists Manager', '', 'tmdblists_manager_choice'))
 		listing_append(('Favorites Manager', '', 'favorites_manager_choice'))
@@ -926,8 +926,8 @@ def options_menu_choice(params, meta=None):
 	if choice == 'random':
 		kodi_utils.close_all_dialog()
 		return random_choice({'meta': meta, 'poster': poster})
-	if choice == 'trakt_manager':
-		return trakt_manager_choice({'tmdb_id': tmdb_id, 'imdb_id': imdb_id, 'tvdb_id': tvdb_id or 'None', 'media_type': content, 'icon': poster})
+	if choice == 'fl_manager':
+		return fl_manager_choice({'tmdb_id': tmdb_id, 'imdb_id': imdb_id, 'tvdb_id': tvdb_id or 'None', 'media_type': content, 'icon': poster})
 	if choice == 'personallists_manager_choice':
 		from modules.utils import get_current_timestamp
 		return personallists_manager_choice({'list_type': content, 'tmdb_id': tmdb_id, 'title': title,

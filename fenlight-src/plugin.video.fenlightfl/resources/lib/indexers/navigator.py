@@ -100,33 +100,33 @@ class Navigator:
 		self.end_directory()
 
 	def my_content(self):
-		if s.trakt_user_active(): self.add({'mode': 'navigator.trakt_lists_personal'}, 'FL Lists', 'trakt')
+		if s.fl_user_active(): self.add({'mode': 'navigator.fl_lists_personal'}, 'FL Lists', 'fl')
 		if s.tmdblist_user_active(): self.add({'mode': 'tmdblist.get_tmdb_lists'}, 'TMDb Lists', 'tmdb')
 		self.add({'mode': 'personal_lists.get_personal_lists'}, 'Personal Lists', 'lists')
 		self.add({'mode': 'navigator.discover_contents', 'media_type': 'movie', 'show_new': 'false'}, 'Discover Lists (Movies)', 'movies')
 		self.add({'mode': 'navigator.discover_contents', 'media_type': 'tvshow', 'show_new': 'false'}, 'Discover Lists (TV Shows)', 'tv')
 		self.end_directory()
 
-	def trakt_lists_personal(self):
-		self.add({'mode': 'navigator.trakt_watchlists'}, 'FL Watchlist', 'trakt')
-		self.add({'mode': 'trakt.list.get_trakt_lists', 'list_type': 'my_lists', 'category_name': 'My Lists'}, 'FL My Lists', 'trakt')
-		self.add({'mode': 'navigator.trakt_favorites', 'category_name': 'Favorites'}, 'FL Favorites', 'trakt')
-		self.add({'mode': 'build_my_calendar'}, 'FL Calendar', 'trakt')
+	def fl_lists_personal(self):
+		self.add({'mode': 'navigator.fl_watchlists'}, 'FL Watchlist', 'fl')
+		self.add({'mode': 'fl.list.get_fl_lists', 'list_type': 'my_lists', 'category_name': 'My Lists'}, 'FL My Lists', 'fl')
+		self.add({'mode': 'navigator.fl_favorites', 'category_name': 'Favorites'}, 'FL Favorites', 'fl')
+		self.add({'mode': 'build_my_calendar'}, 'FL Calendar', 'fl')
 		self.end_directory()
 
-	def trakt_watchlists(self):
+	def fl_watchlists(self):
 		self.category_name = 'Watchlist'
-		self.add({'mode': 'build_movie_list', 'action': 'trakt_watchlist', 'category_name': 'Movies Watchlist'}, 'Movies Watchlist', 'trakt')
-		self.add({'mode': 'build_tvshow_list', 'action': 'trakt_watchlist', 'category_name': 'TV Shows Watchlist'}, 'TV Shows Watchlist', 'trakt')
-		self.add({'mode': 'build_movie_list', 'action': 'trakt_watchlist_lists', 'new_page': 'recent', 'category_name': 'Recently Added Movies'}, 'Recently Added Movies', 'trakt')
-		self.add({'mode': 'build_tvshow_list', 'action': 'trakt_watchlist_lists', 'new_page': 'recent', 'category_name': 'Recently Added TV Shows'},
-					'Recently Added TV Shows', 'trakt')
+		self.add({'mode': 'build_movie_list', 'action': 'fl_watchlist', 'category_name': 'Movies Watchlist'}, 'Movies Watchlist', 'fl')
+		self.add({'mode': 'build_tvshow_list', 'action': 'fl_watchlist', 'category_name': 'TV Shows Watchlist'}, 'TV Shows Watchlist', 'fl')
+		self.add({'mode': 'build_movie_list', 'action': 'fl_watchlist_lists', 'new_page': 'recent', 'category_name': 'Recently Added Movies'}, 'Recently Added Movies', 'fl')
+		self.add({'mode': 'build_tvshow_list', 'action': 'fl_watchlist_lists', 'new_page': 'recent', 'category_name': 'Recently Added TV Shows'},
+					'Recently Added TV Shows', 'fl')
 		self.end_directory()
 
-	def trakt_favorites(self):
+	def fl_favorites(self):
 		self.category_name = 'Favorites'
-		self.add({'mode': 'build_movie_list', 'action': 'trakt_favorites', 'category_name': 'Favorite Movies'}, 'Movies', 'trakt')
-		self.add({'mode': 'build_tvshow_list', 'action': 'trakt_favorites', 'category_name': 'Favorite TV Shows'}, 'TV Shows', 'trakt')
+		self.add({'mode': 'build_movie_list', 'action': 'fl_favorites', 'category_name': 'Favorite Movies'}, 'Movies', 'fl')
+		self.add({'mode': 'build_tvshow_list', 'action': 'fl_favorites', 'category_name': 'Favorite TV Shows'}, 'TV Shows', 'fl')
 		self.end_directory()
 
 	def people(self):
@@ -183,7 +183,7 @@ class Navigator:
 		self.add({'mode': 'clear_cache', 'cache': 'list', 'isFolder': 'false'}, 'Clear Lists Cache', 'settings')
 		self.add({'mode': 'clear_cache', 'cache': 'ai_functions', 'isFolder': 'false'}, 'Clear AI Data Cache', 'settings')
 		self.add({'mode': 'clear_cache', 'cache': 'tmdb_list', 'isFolder': 'false'}, 'Clear TMDb Personal List Cache', 'settings')
-		self.add({'mode': 'clear_cache', 'cache': 'trakt', 'isFolder': 'false'}, 'Clear FL Cache', 'settings')
+		self.add({'mode': 'clear_cache', 'cache': 'fl', 'isFolder': 'false'}, 'Clear FL Cache', 'settings')
 		self.add({'mode': 'clear_cache', 'cache': 'imdb', 'isFolder': 'false'}, 'Clear IMDb Cache', 'settings')
 		self.add({'mode': 'clear_cache', 'cache': 'internal_scrapers', 'isFolder': 'false'}, 'Clear Internal Scrapers Cache', 'settings')
 		self.add({'mode': 'clear_cache', 'cache': 'external_scrapers', 'isFolder': 'false'}, 'Clear External Scrapers Cache', 'settings')
@@ -227,8 +227,8 @@ class Navigator:
 		if menu_type == 'movie': mode, action = 'build_movie_list', 'tmdb_movies_certifications'
 		else:
 			mode = 'build_tvshow_list'
-			if menu_type == 'tvshow': action = 'trakt_tv_certifications'
-			else: action = 'trakt_anime_certifications'
+			if menu_type == 'tvshow': action = 'fl_tv_certifications'
+			else: action = 'fl_anime_certifications'
 		for i in function(): self.add({'mode': mode, 'action': action, 'key_id': i['id'], 'name': i['name']}, i['name'], 'certifications')
 		self.end_directory()
 
@@ -323,7 +323,7 @@ class Navigator:
 		'tmdb_keyword_tvshow': ('keyword_tmdb_tvshow_queries', {'mode': 'search.get_key_id', 'search_type': 'tmdb_keyword', 'media_type': 'tvshow', 'isFolder': 'false'}),
 		'easynews_video': ('easynews_video_queries', {'mode': 'search.get_key_id', 'search_type': 'easynews_video', 'isFolder': 'false'}),
 		'easynews_image': ('easynews_image_queries', {'mode': 'search.get_key_id', 'search_type': 'easynews_image', 'isFolder': 'false'}),
-		'trakt_lists': ('trakt_list_queries', {'mode': 'search.get_key_id', 'search_type': 'trakt_lists', 'isFolder': 'false'})}
+		'fl_lists': ('fl_list_queries', {'mode': 'search.get_key_id', 'search_type': 'fl_lists', 'isFolder': 'false'})}
 		setting_id, action_dict = search_mode_dict[self.list_name]
 		url_params = dict(action_dict)
 		data = main_cache.get(setting_id) or []
@@ -466,9 +466,9 @@ class Navigator:
 		recommend_type = s.recommend_service()
 		menu_type = self.params_get('menu_type')
 		action_dict = {'movie':
-		{'mode': 'build_movie_list', 'action': {0: 'tmdb_movies_recommendations', 1: 'imdb_more_like_this', 2: 'ai_similar', 3: 'trakt_movies_related'}, 'media_type': 'movie'},
+		{'mode': 'build_movie_list', 'action': {0: 'tmdb_movies_recommendations', 1: 'imdb_more_like_this', 2: 'ai_similar', 3: 'fl_movies_related'}, 'media_type': 'movie'},
 						'tvshow':
-		{'mode': 'build_tvshow_list', 'action': {0: 'tmdb_tv_recommendations', 1: 'imdb_more_like_this', 2: 'ai_similar', 3: 'trakt_tv_related'}, 'media_type': 'episode'}}
+		{'mode': 'build_tvshow_list', 'action': {0: 'tmdb_tv_recommendations', 1: 'imdb_more_like_this', 2: 'ai_similar', 3: 'fl_tv_related'}, 'media_type': 'episode'}}
 		action_params = action_dict[menu_type]
 		mode, action, media_type = action_params['mode'], action_params['action'][recommend_type], action_params['media_type']
 		recently_watched = get_recently_watched(media_type)
@@ -493,8 +493,8 @@ class Navigator:
 		'because_you_watched': ('Random Because You Watched Lists', nc.random_because_you_watched_lists),
 		'tmdb_lists': ('Random TMDb Lists', nc.random_tmdb_lists),
 		'personal_lists': ('Random Personal Lists', nc.random_personal_lists),
-		'trakt_personal': ('Random FL Lists (Personal)', nc.random_trakt_lists_personal),
-		'trakt_public': ('Random FL Lists (Public)', nc.random_trakt_lists_public)}
+		'fl_personal': ('Random FL Lists (Personal)', nc.random_fl_lists_personal),
+		'fl_public': ('Random FL Lists (Public)', nc.random_fl_lists_public)}
 		self.category_name, function = random_list_dict[self.params_get('menu_type')]
 		func = function()
 		for item in func: self.add(item, item['name'], item['iconImage'])

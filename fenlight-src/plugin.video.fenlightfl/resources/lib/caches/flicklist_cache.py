@@ -1,45 +1,45 @@
 """
-FlickList Cache — Drop-in replacement for trakt_cache.py
+FlickList Cache — Drop-in replacement for fl_cache.py
 
-Uses the same SQLite database ('trakt_db') and table schema.
-All function signatures match trakt_cache.py for seamless import swap.
+Uses the same SQLite database ('fl_db') and table schema.
+All function signatures match fl_cache.py for seamless import swap.
 """
 from threading import Thread
 from caches.base_cache import connect_database
 from modules.kodi_utils import sleep, confirm_dialog, close_all_dialog
 
-class TraktCache:
+class FlCache:
 	def get(self, string):
 		result = None
 		try:
-			dbcon = connect_database('trakt_db')
-			cache_data = dbcon.execute('SELECT data FROM trakt_data WHERE id = ?', (string,)).fetchone()
+			dbcon = connect_database('fl_db')
+			cache_data = dbcon.execute('SELECT data FROM fl_data WHERE id = ?', (string,)).fetchone()
 			if cache_data: result = eval(cache_data[0])
 		except: pass
 		return result
 
 	def set(self, string, data):
 		try:
-			dbcon = connect_database('trakt_db')
-			dbcon.execute('INSERT OR REPLACE INTO trakt_data (id, data) VALUES (?, ?)', (string, repr(data)))
+			dbcon = connect_database('fl_db')
+			dbcon.execute('INSERT OR REPLACE INTO fl_data (id, data) VALUES (?, ?)', (string, repr(data)))
 		except: return None
 
 	def delete(self, string):
 		try:
-			dbcon = connect_database('trakt_db')
-			dbcon.execute('DELETE FROM trakt_data WHERE id = ?', (string,))
+			dbcon = connect_database('fl_db')
+			dbcon.execute('DELETE FROM fl_data WHERE id = ?', (string,))
 		except: pass
 
-trakt_cache = TraktCache()
+fl_cache = FlCache()
 
-class TraktWatched():
+class FlWatched():
 	def set_bulk_tvshow_status(self, insert_list):
 		self._delete('DELETE FROM watched_status', ())
 		self._executemany('INSERT INTO watched_status VALUES (?, ?, ?)', insert_list)
 
 	def set_tvshow_status(self, insert_dict):
-		dbcon = connect_database('trakt_db')
-		dbcon.execute('INSERT OR REPLACE INTO trakt_data (id, data) VALUES (?, ?)', ('trakt_tvshow_status', repr(insert_dict),))
+		dbcon = connect_database('fl_db')
+		dbcon.execute('INSERT OR REPLACE INTO fl_data (id, data) VALUES (?, ?)', ('fl_tvshow_status', repr(insert_dict),))
 
 	def set_bulk_movie_watched(self, insert_list):
 		self._delete('DELETE FROM watched WHERE db_type = ?', ('movie',))
@@ -58,142 +58,142 @@ class TraktWatched():
 		self._executemany('INSERT OR IGNORE INTO progress VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', insert_list)
 
 	def _executemany(self, command, insert_list):
-		dbcon = connect_database('trakt_db')
+		dbcon = connect_database('fl_db')
 		dbcon.executemany(command, insert_list)
 
 	def _delete(self, command, args):
-		dbcon = connect_database('trakt_db')
+		dbcon = connect_database('fl_db')
 		dbcon.execute(command, args)
 		dbcon.execute('VACUUM')
 
-trakt_watched_cache = TraktWatched()
+fl_watched_cache = FlWatched()
 
-def cache_trakt_object(function, string, url):
-	cache = trakt_cache.get(string)
+def cache_fl_object(function, string, url):
+	cache = fl_cache.get(string)
 	if cache is not None: return cache
 	result = function(url)
-	trakt_cache.set(string, result)
+	fl_cache.set(string, result)
 	return result
 
 def set_list_custom_sort(list_id, data):
-	string = 'trakt_list_custom_sort_%s' % list_id
+	string = 'fl_list_custom_sort_%s' % list_id
 	try:
-		dbcon = connect_database('trakt_db')
-		dbcon.execute('INSERT OR REPLACE INTO trakt_data (id, data) VALUES (?, ?)', (string, repr(data)))
+		dbcon = connect_database('fl_db')
+		dbcon.execute('INSERT OR REPLACE INTO fl_data (id, data) VALUES (?, ?)', (string, repr(data)))
 		return True
 	except: return False
 
 def delete_list_custom_sort(list_id):
-	string = 'trakt_list_custom_sort_%s' % list_id
+	string = 'fl_list_custom_sort_%s' % list_id
 	try:
-		dbcon = connect_database('trakt_db')
-		dbcon.execute('DELETE FROM trakt_data WHERE id=?', (string,))
+		dbcon = connect_database('fl_db')
+		dbcon.execute('DELETE FROM fl_data WHERE id=?', (string,))
 		return True
 	except: return False
 
 def get_list_custom_sort(list_id):
-	string = 'trakt_list_custom_sort_%s' % list_id
+	string = 'fl_list_custom_sort_%s' % list_id
 	try:
-		dbcon = connect_database('trakt_db')
-		cache_data = dbcon.execute('SELECT data FROM trakt_data WHERE id = ?', (string,)).fetchone()
+		dbcon = connect_database('fl_db')
+		cache_data = dbcon.execute('SELECT data FROM fl_data WHERE id = ?', (string,)).fetchone()
 		return eval(cache_data[0])
 	except: return {}
 
 def get_all_lists_custom_sort():
 	try:
-		dbcon = connect_database('trakt_db')
-		all_cache_data = dbcon.execute('SELECT data FROM trakt_data WHERE id LIKE %s' % "'trakt_list_custom_sort_%'").fetchall()
+		dbcon = connect_database('fl_db')
+		all_cache_data = dbcon.execute('SELECT data FROM fl_data WHERE id LIKE %s' % "'fl_list_custom_sort_%'").fetchall()
 		all_cache_data = (eval(i[0]) for i in all_cache_data)
 		return dict([(i['list_id'], {'sort_by': i['sort_by'], 'sort_how': i['sort_how']}) for i in all_cache_data])
 	except: return {}
 
 def reset_activity(latest_activities):
-	string = 'trakt_get_activity'
+	string = 'fl_get_activity'
 	try:
-		dbcon = connect_database('trakt_db')
-		data = dbcon.execute('SELECT data FROM trakt_data WHERE id = ?', (string,)).fetchone()
+		dbcon = connect_database('fl_db')
+		data = dbcon.execute('SELECT data FROM fl_data WHERE id = ?', (string,)).fetchone()
 		if data: cached_data = eval(data[0])
 		else: cached_data = default_activities()
-		dbcon.execute('DELETE FROM trakt_data WHERE id=?', (string,))
-		trakt_cache.set(string, latest_activities)
+		dbcon.execute('DELETE FROM fl_data WHERE id=?', (string,))
+		fl_cache.set(string, latest_activities)
 	except: cached_data = default_activities()
 	return cached_data
 
 def clear_daily_cache():
-	clear_trakt_calendar()
-	clear_trakt_list_data('my_lists')
-	clear_trakt_list_data('liked_lists')
-	clear_trakt_list_data('user_lists')
-	clear_trakt_list_contents_data('my_lists')
-	clear_trakt_list_contents_data('liked_lists')
-	clear_trakt_list_contents_data('user_lists')
+	clear_fl_calendar()
+	clear_fl_list_data('my_lists')
+	clear_fl_list_data('liked_lists')
+	clear_fl_list_data('user_lists')
+	clear_fl_list_contents_data('my_lists')
+	clear_fl_list_contents_data('liked_lists')
+	clear_fl_list_contents_data('user_lists')
 
-def clear_trakt_hidden_data(list_type):
-	string = 'trakt_hidden_items_%s' % list_type
+def clear_fl_hidden_data(list_type):
+	string = 'fl_hidden_items_%s' % list_type
 	try:
-		dbcon = connect_database('trakt_db')
-		dbcon.execute('DELETE FROM trakt_data WHERE id=?', (string,))
+		dbcon = connect_database('fl_db')
+		dbcon.execute('DELETE FROM fl_data WHERE id=?', (string,))
 	except: pass
 
-def clear_trakt_collection_watchlist_data(list_type, media_type):
+def clear_fl_collection_watchlist_data(list_type, media_type):
 	if media_type == 'movies': media_type = 'movie'
 	if media_type in ('tvshows', 'shows'): media_type = 'tvshow'
-	string = 'trakt_%s_%s' % (list_type, media_type)
+	string = 'fl_%s_%s' % (list_type, media_type)
 	try:
-		dbcon = connect_database('trakt_db')
-		dbcon.execute('DELETE FROM trakt_data WHERE id=?', (string,))
+		dbcon = connect_database('fl_db')
+		dbcon.execute('DELETE FROM fl_data WHERE id=?', (string,))
 	except: pass
 
-def clear_trakt_calendar():
+def clear_fl_calendar():
 	try:
-		dbcon = connect_database('trakt_db')
-		dbcon.execute('DELETE FROM trakt_data WHERE id LIKE "%s"' % 'trakt_get_my_calendar_%')
+		dbcon = connect_database('fl_db')
+		dbcon.execute('DELETE FROM fl_data WHERE id LIKE "%s"' % 'fl_get_my_calendar_%')
 	except: return
 
-def clear_trakt_list_contents_data(list_type):
-	string = 'trakt_list_contents_' + list_type + '_%'
+def clear_fl_list_contents_data(list_type):
+	string = 'fl_list_contents_' + list_type + '_%'
 	try:
-		dbcon = connect_database('trakt_db')
-		dbcon.execute('DELETE FROM trakt_data WHERE id LIKE "%s"' % string)
+		dbcon = connect_database('fl_db')
+		dbcon.execute('DELETE FROM fl_data WHERE id LIKE "%s"' % string)
 	except: pass
 
-def clear_trakt_list_data(list_type):
-	string = 'trakt_%s' % list_type
+def clear_fl_list_data(list_type):
+	string = 'fl_%s' % list_type
 	try:
-		dbcon = connect_database('trakt_db')
-		dbcon.execute('DELETE FROM trakt_data WHERE id=?', (string,))
+		dbcon = connect_database('fl_db')
+		dbcon.execute('DELETE FROM fl_data WHERE id=?', (string,))
 	except: pass
 
-def clear_trakt_recommendations():
+def clear_fl_recommendations():
 	try:
-		dbcon = connect_database('trakt_db')
-		dbcon.execute('DELETE FROM trakt_data WHERE id LIKE "%s"' % 'trakt_recommendations_%')
+		dbcon = connect_database('fl_db')
+		dbcon.execute('DELETE FROM fl_data WHERE id LIKE "%s"' % 'fl_recommendations_%')
 	except: return
 
-def clear_trakt_favorites():
+def clear_fl_favorites():
 	try:
-		dbcon = connect_database('trakt_db')
-		dbcon.execute('DELETE FROM trakt_data WHERE id LIKE "%s"' % 'trakt_favorites_%')
+		dbcon = connect_database('fl_db')
+		dbcon.execute('DELETE FROM fl_data WHERE id LIKE "%s"' % 'fl_favorites_%')
 	except: return
 
-def clear_all_trakt_cache_data(silent=False, refresh=True):
+def clear_all_fl_cache_data(silent=False, refresh=True):
 	try:
 		start = silent or confirm_dialog()
 		if not start: return False
 		from caches.main_cache import main_cache
 		main_cache_dbcon = connect_database('maincache_db')
-		lists_with_media = main_cache_dbcon.execute('SELECT id FROM maincache WHERE id LIKE %s' % "'trakt_lists_with_media_%'").fetchall()
+		lists_with_media = main_cache_dbcon.execute('SELECT id FROM maincache WHERE id LIKE %s' % "'fl_lists_with_media_%'").fetchall()
 		for item in lists_with_media:
 			try: main_cache.delete(item[0])
 			except: pass
 		main_cache.clean_database()
-		dbcon = connect_database('trakt_db')
+		dbcon = connect_database('fl_db')
 		for table in ('progress', 'watched', 'watched_status'): dbcon.execute('DELETE FROM %s' % table)
-		dbcon.execute('DELETE FROM trakt_data WHERE id NOT LIKE %s' % "'trakt_list_custom_sort_%'")
+		dbcon.execute('DELETE FROM fl_data WHERE id NOT LIKE %s' % "'fl_list_custom_sort_%'")
 		dbcon.execute('VACUUM')
 		if refresh:
-			from apis.flicklist_api import trakt_sync_activities
-			Thread(target=trakt_sync_activities).start()
+			from apis.flicklist_api import fl_sync_activities
+			Thread(target=fl_sync_activities).start()
 		return True
 	except: return False
 
