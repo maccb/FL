@@ -849,7 +849,7 @@ def fl_indicators_movies():
 			return
 		title = item.get('title', '')
 		watched_at = item.get('watched_at', item.get('created_at', ''))
-		insert_append(('movie', tmdb_id, '', '', watched_at, title))
+		insert_append(('movie', str(tmdb_id), '', '', watched_at, title))
 	insert_list = []
 	insert_append = insert_list.append
 	data = call_flicklist('/scrobble/history', params={'media_type': 'movie', 'matched_only': 'true', 'per_page': 5000}, with_auth=True)
@@ -871,15 +871,24 @@ def fl_indicators_tv():
 		episode = item.get('episode_number', 0)
 		watched_at = item.get('watched_at', item.get('created_at', ''))
 		if season and season > 0:
-			insert_append(('episode', tmdb_id, season, episode, watched_at, title))
+			insert_append(('episode', str(tmdb_id), season, episode, watched_at, title))
 	insert_list = []
 	insert_append = insert_list.append
-	data = call_flicklist('/scrobble/history', params={'media_type': 'tv', 'matched_only': 'true', 'per_page': 5000}, with_auth=True)
-	if not data:
-		return
-	items = data.get('results', data.get('items', [])) if isinstance(data, dict) else data
-	threads = list(make_thread_list(_process, items))
-	[i.join() for i in threads]
+	page = 1
+	per_page = 5000
+	while True:
+		data = call_flicklist('/scrobble/history', params={'media_type': 'tv', 'matched_only': 'true', 'per_page': per_page, 'page': page}, with_auth=True)
+		if not data:
+			break
+		items = data.get('results', data.get('items', [])) if isinstance(data, dict) else data
+		if not items:
+			break
+		threads = list(make_thread_list(_process, items))
+		[i.join() for i in threads]
+		total_pages = data.get('total_pages', 1) if isinstance(data, dict) else 1
+		if page >= total_pages:
+			break
+		page += 1
 	flicklist_cache.fl_watched_cache.set_bulk_tvshow_watched(insert_list)
 
 
@@ -917,7 +926,7 @@ def fl_playback_progress():
 				}
 			results.append(progress_item)
 	try:
-		up_next = call_flicklist('/up-next', params={'limit': 500}, with_auth=True)
+		up_next = call_flicklist('/up-next', params={'limit': 40}, with_auth=True)
 	except:
 		up_next = None
 	if up_next:
