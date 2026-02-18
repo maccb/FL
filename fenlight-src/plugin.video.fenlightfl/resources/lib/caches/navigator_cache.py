@@ -7,6 +7,7 @@ class NavigatorCache:
 	{'name': 'TV Shows', 'mode': 'navigator.main', 'action': 'TVShowList', 'iconImage': 'tv'},
 	{'name': 'Anime', 'mode': 'navigator.main', 'action': 'AnimeList', 'iconImage': 'anime'},
 	{'name': 'Calendar', 'mode': 'fl_calendar.build_calendar_days', 'iconImage': 'calender'},
+	{'name': 'Jump Back In', 'mode': 'navigator.jump_back_in', 'iconImage': 'player'},
 	{'name': 'People', 'mode': 'navigator.people', 'iconImage': 'empty_person'},
 	{'name': 'Search', 'mode': 'navigator.search', 'iconImage': 'search'},
 	{'name': 'Discover', 'mode': 'navigator.discover', 'iconImage': 'discover'},
