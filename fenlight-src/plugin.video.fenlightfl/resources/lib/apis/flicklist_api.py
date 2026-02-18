@@ -606,14 +606,15 @@ def add_to_list(user, slug, data):
 	"""Add media to a FlickList user list."""
 	items = []
 	for key in ('movies', 'shows'):
+		media_type = 'movie' if key == 'movies' else 'tv'
 		for item in data.get(key, []):
 			tmdb_id = item.get('ids', {}).get('tmdb')
 			if tmdb_id:
-				items.append({'tmdb_id': tmdb_id})
+				items.append({'tmdb_id': int(tmdb_id), 'media_type': media_type})
 	if not items:
 		return kodi_utils.notification('Error', 3000)
 	for item in items:
-		result = call_flicklist('/user/lists/%s/items' % slug, data={'media_item_id': item['tmdb_id']})
+		result = call_flicklist('/user/lists/%s/items' % slug, data=item)
 	kodi_utils.notification('Success', 3000)
 	fl_sync_activities()
 	return result
@@ -622,12 +623,13 @@ def remove_from_list(user, slug, data):
 	"""Remove media from a FlickList user list."""
 	items = []
 	for key in ('movies', 'shows'):
+		media_type = 'movie' if key == 'movies' else 'tv'
 		for item in data.get(key, []):
 			tmdb_id = item.get('ids', {}).get('tmdb')
 			if tmdb_id:
-				items.append(tmdb_id)
-	for tmdb_id in items:
-		call_flicklist('/user/lists/%s/items/%s' % (slug, tmdb_id), is_delete=True)
+				items.append((tmdb_id, media_type))
+	for tmdb_id, media_type in items:
+		call_flicklist('/user/lists/%s/items/%s?tmdb=true&media_type=%s' % (slug, tmdb_id, media_type), is_delete=True)
 	kodi_utils.notification('Success', 3000)
 	fl_sync_activities()
 	if kodi_utils.path_check('my_lists') or kodi_utils.external():
@@ -636,10 +638,11 @@ def remove_from_list(user, slug, data):
 def add_to_watchlist(data):
 	"""Add to FlickList watchlist."""
 	for key in ('movies', 'shows'):
+		media_type = 'movie' if key == 'movies' else 'tv'
 		for item in data.get(key, []):
 			tmdb_id = item.get('ids', {}).get('tmdb')
 			if tmdb_id:
-				result = call_flicklist('/user/watchlist', data={'media_id': tmdb_id})
+				result = call_flicklist('/user/watchlist', data={'tmdb_id': int(tmdb_id), 'media_type': media_type})
 				if result is None:
 					return kodi_utils.notification('Error', 3000)
 	kodi_utils.notification('Success', 3000)
@@ -648,10 +651,11 @@ def add_to_watchlist(data):
 def remove_from_watchlist(data):
 	"""Remove from FlickList watchlist."""
 	for key in ('movies', 'shows'):
+		media_type = 'movie' if key == 'movies' else 'tv'
 		for item in data.get(key, []):
 			tmdb_id = item.get('ids', {}).get('tmdb')
 			if tmdb_id:
-				call_flicklist('/user/watchlist/%s' % tmdb_id, is_delete=True)
+				call_flicklist('/user/watchlist/%s?tmdb=true&media_type=%s' % (tmdb_id, media_type), is_delete=True)
 	kodi_utils.notification('Success', 3000)
 	fl_sync_activities()
 	if kodi_utils.path_check('fl_watchlist') or kodi_utils.external():
