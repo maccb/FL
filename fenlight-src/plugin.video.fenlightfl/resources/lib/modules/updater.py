@@ -85,16 +85,42 @@ def update_addon(new_version, action, show_after_action=True):
 	kodi_utils.notification('FL Performing Rollback' if action == 5 else 'FL Performing Update', icon=kodi_utils.get_icon('downloads'))
 	zip_name = 'plugin.video.fenlightfl-%s.zip' % new_version
 	url = get_location('%s') % zip_name
+	logger('FL', 'update_addon: URL=%s' % url)
 	kodi_utils.show_busy_dialog()
-	result = requests.get(url, stream=True)
+	try:
+		result = requests.get(url, stream=True)
+		logger('FL', 'update_addon: HTTP status=%s' % result.status_code)
+	except Exception as e:
+		kodi_utils.hide_busy_dialog()
+		logger('FL', 'update_addon: download EXCEPTION: %s' % str(e))
+		return kodi_utils.ok_dialog(heading='FL Updater', text='Error Downloading.[CR]%s' % str(e))
 	kodi_utils.hide_busy_dialog()
-	if result.status_code != 200: return kodi_utils.ok_dialog(heading='FL Updater', text='Error Updating.[CR]Please install new update manually')
+	if result.status_code != 200:
+		logger('FL', 'update_addon: bad status %s' % result.status_code)
+		return kodi_utils.ok_dialog(heading='FL Updater', text='Error Updating (HTTP %s).[CR]Please install new update manually' % result.status_code)
 	zip_location = path.join(kodi_utils.translate_path('special://home/addons/packages/'), zip_name)
-	with open(zip_location, 'wb') as f: shutil.copyfileobj(result.raw, f)
-	shutil.rmtree(path.join(kodi_utils.translate_path('special://home/addons/'), 'plugin.video.fenlightfl'))
-	success = unzip(zip_location, kodi_utils.translate_path('special://home/addons/'), kodi_utils.translate_path('special://home/addons/plugin.video.fenlightfl/'))
+	logger('FL', 'update_addon: zip_location=%s' % zip_location)
+	try:
+		with open(zip_location, 'wb') as f: shutil.copyfileobj(result.raw, f)
+		logger('FL', 'update_addon: zip saved, size=%s' % path.getsize(zip_location))
+	except Exception as e:
+		logger('FL', 'update_addon: save EXCEPTION: %s' % str(e))
+		return kodi_utils.ok_dialog(heading='FL Updater', text='Error Saving Zip.[CR]%s' % str(e))
+	addon_dir = path.join(kodi_utils.translate_path('special://home/addons/'), 'plugin.video.fenlightfl')
+	logger('FL', 'update_addon: removing %s' % addon_dir)
+	try:
+		shutil.rmtree(addon_dir)
+		logger('FL', 'update_addon: rmtree success')
+	except Exception as e:
+		logger('FL', 'update_addon: rmtree EXCEPTION: %s' % str(e))
+		return kodi_utils.ok_dialog(heading='FL Updater', text='Error Removing Old Version.[CR]%s' % str(e))
+	dest = kodi_utils.translate_path('special://home/addons/')
+	dest_check = kodi_utils.translate_path('special://home/addons/plugin.video.fenlightfl/')
+	logger('FL', 'update_addon: unzipping to %s, check=%s' % (dest, dest_check))
+	success = unzip(zip_location, dest, dest_check)
+	logger('FL', 'update_addon: unzip success=%s' % success)
 	kodi_utils.delete_file(zip_location)
-	if not success: return kodi_utils.ok_dialog(heading='FL Updater', text='Error Updating.[CR]Please install new update manually')
+	if not success: return kodi_utils.ok_dialog(heading='FL Updater', text='Error Unzipping.[CR]Please install new update manually')
 	if action == 5:
 		set_setting('update.action', '3')
 		kodi_utils.ok_dialog(heading='FL Updater', text='[CR]Success.[CR]FL rolled back to version [B]%s[/B]' % new_version)
