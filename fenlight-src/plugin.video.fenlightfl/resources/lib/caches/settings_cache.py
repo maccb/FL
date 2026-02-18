@@ -197,7 +197,7 @@ def default_settings():
 {'setting_id': 'update.delay', 'setting_type': 'action', 'setting_default': '10', 'min_value': '10', 'max_value': '300'},
 {'setting_id': 'update.username', 'setting_type': 'string', 'setting_default': 'maccb'},
 {'setting_id': 'update.location', 'setting_type': 'string', 'setting_default': 'FL'},
-{'setting_id': 'watched_indicators', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'FL', '1': 'FlickList'}},
+{'setting_id': 'watched_indicators', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'FenLight FL', '1': 'FlickList'}},
 {'setting_id': 'flicklist.sync_interval', 'setting_type': 'action', 'setting_default': '60', 'min_value': '5', 'max_value': '600'},
 {'setting_id': 'flicklist.refresh_widgets', 'setting_type': 'boolean', 'setting_default': 'true'},
 {'setting_id': 'datetime.offset', 'setting_type': 'action', 'setting_default': '0', 'min_value': '-15', 'max_value': '15'},

@@ -48,7 +48,7 @@
                     <textcolor>FFCCCCCC</textcolor>
                     <align>center</align>
                     <aligny>center</aligny>
-                    <label>[UPPERCASE][B]FL - SETTINGS[/B][/UPPERCASE]</label>
+                    <label>[UPPERCASE][B]FenLight FL - SETTINGS[/B][/UPPERCASE]</label>
                 </control>
             </control>
             <control type="fixedlist" id="2000">
@@ -425,10 +425,10 @@
                      </item>
                       <item>
                           <visible>Container(2000).HasFocus(10)</visible>
-                          <property name="setting_label">Autostart FL When Kodi Starts</property>
+                          <property name="setting_label">Autostart FenLight FL When Kodi Starts</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.auto_start_fenlight)]</property>
-                          <property name="setting_description">Enable this and FL will autostart after running its services upon Kodi start</property>
+                          <property name="setting_description">Enable this and FenLight FL will autostart after running its services upon Kodi start</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=auto_start_fenlight)</onclick>
                       </item>
                       <item>
@@ -436,7 +436,7 @@
                           <property name="setting_label">Assign Addon Icon Image</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.addon_icon_choice_name)]</property>
-                          <property name="setting_description">Choose from assigned custom icons to use with FL</property>
+                          <property name="setting_description">Choose from assigned custom icons to use with FenLight FL</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=addon_icon_choice)</onclick>
                       </item>
                       <item>
@@ -445,7 +445,7 @@
                           <property name="setting_label">Assign Addon Background Image</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.default_addon_fanart)]</property>
-                          <property name="setting_description">Choose any custom background you would like to use within FL</property>
+                          <property name="setting_description">Choose any custom background you would like to use within FenLight FL</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_path&amp;setting_id=default_addon_fanart)</onclick>
                       </item>
                       <item>
@@ -454,7 +454,7 @@
                           <property name="setting_label">Restore Default Background Image</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.default_addon_fanart)]</property>
-                          <property name="setting_description">Restore default FL background</property>
+                          <property name="setting_description">Restore default FenLight FL background</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.restore_setting_default&amp;setting_id=default_addon_fanart)</onclick>
                       </item>
                       <item>
@@ -462,7 +462,7 @@
                           <property name="setting_label">Limit Concurrent Threads</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.limit_concurrent_threads)]</property>
-                          <property name="setting_description">Enable this and FL will limit the threads enacted simultaneously. Best to leave this disabled unless you are having issues with your device not supporting high numbers of concurrent threads in python</property>
+                          <property name="setting_description">Enable this and FenLight FL will limit the threads enacted simultaneously. Best to leave this disabled unless you are having issues with your device not supporting high numbers of concurrent threads in python</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=limit_concurrent_threads)</onclick>
                       </item>
                       <item>
@@ -471,7 +471,7 @@
                           <property name="setting_label">    - Maximum Active Threads</property>
                           <property name="setting_type">numeric</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.max_threads)]</property>
-                          <property name="setting_description">Choose the maximum active concurrent threads FL will be limited to</property>
+                          <property name="setting_description">Choose the maximum active concurrent threads FenLight FL will be limited to</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_numeric&amp;setting_id=max_threads)</onclick>
                       </item>
         <!-- Manage Addon Updates -->
@@ -486,7 +486,7 @@
                           <property name="setting_label">Update Action</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.update.action_name)]</property>
-                          <property name="setting_description">Choose the manner in which FL handles updates</property>
+                          <property name="setting_description">Choose the manner in which FenLight FL handles updates</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_from_list&amp;setting_id=update.action)</onclick>
                       </item>
                       <item>
@@ -495,7 +495,7 @@
                           <property name="setting_label">    - Delay Before Running (secs)</property>
                           <property name="setting_type">numeric</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.update.delay)]</property>
-                          <property name="setting_description">Choose the delay time before FL checks for updates after Kodi start</property>
+                          <property name="setting_description">Choose the delay time before FenLight FL checks for updates after Kodi start</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_numeric&amp;setting_id=update.delay)</onclick>
                       </item>
                       <item>
@@ -504,7 +504,7 @@
                           <property name="setting_label">    - Github Username</property>
                           <property name="setting_type">numeric</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.update.username)]</property>
-                          <property name="setting_description">Leave this setting as default unless you wsh to update FL through a different user repository. If you do, enter the Github Username of the new github location</property>
+                          <property name="setting_description">Leave this setting as default unless you wsh to update FenLight FL through a different user repository. If you do, enter the Github Username of the new github location</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_string&amp;setting_id=update.username)</onclick>
                       </item>
                       <item>
@@ -513,7 +513,7 @@
                           <property name="setting_label">    - Github Repo Address</property>
                           <property name="setting_type">numeric</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.update.location)]</property>
-                          <property name="setting_description">Leave this setting as default unless you wsh to update FL through a different user repository. If you do, enter the Github Repo Address of the new github location</property>
+                          <property name="setting_description">Leave this setting as default unless you wsh to update FenLight FL through a different user repository. If you do, enter the Github Repo Address of the new github location</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_string&amp;setting_id=update.location)</onclick>
                       </item>
         <!-- Watched Indicators -->
@@ -529,13 +529,13 @@
                           <property name="setting_label">Watched Status Provider</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.watched_indicators_name)]</property>
-                          <property name="setting_description">Choose the provider that keeps track of the Movies and Episodes you have watched within FL. Options are the built in method of FL or your FlickList account</property>
+                          <property name="setting_description">Choose the provider that keeps track of the Movies and Episodes you have watched within FenLight FL. Options are the built in method of FenLight FL or your FlickList account</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_from_list&amp;setting_id=watched_indicators)</onclick>
                       </item>
-        <!-- FL Cache -->
+        <!-- FenLight FL Cache -->
                       <item>
                           <visible>Container(2000).HasFocus(10)</visible>
-                          <property name="setting_label">FL Cache</property>
+                          <property name="setting_label">FenLight FL Cache</property>
                           <property name="setting_type">separator</property>
                           <onclick>noop</onclick>
                       </item>
@@ -545,16 +545,16 @@
                           <property name="setting_label">Resync Interval (mins)</property>
                           <property name="setting_type">numeric</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.flicklist.sync_interval)]</property>
-                          <property name="setting_description">Choose how often FL polls your FlickList service for any changes</property>
+                          <property name="setting_description">Choose how often FenLight FL polls your FlickList service for any changes</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_numeric&amp;setting_id=flicklist.sync_interval)</onclick>
                       </item>
                       <item>
                           <visible>Container(2000).HasFocus(10)</visible>
                           <visible>!String.IsEqual(Window(10000).Property(fenlightfl.flicklist.user),empty_setting)</visible>
-                          <property name="setting_label">Refresh Widgets After FL Sync</property>
+                          <property name="setting_label">Refresh Widgets After FenLight FL Sync</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.flicklist.refresh_widgets)]</property>
-                          <property name="setting_description">Enable this and FL will refresh widgets after performing a FlickList Sync if there were any changes</property>
+                          <property name="setting_description">Enable this and FenLight FL will refresh widgets after performing a FlickList Sync if there were any changes</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=flicklist.refresh_widgets)</onclick>
                       </item>
         <!-- UTC Time Offset -->
@@ -664,7 +664,7 @@
                           <property name="setting_label">Movies</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.media_open_action_movie_name)]</property>
-                          <property name="setting_description">Choose the Open Action when a Movie is selected in FL. Choices Are None, Open Extras, Open Movie Set, Both. "Both" will open the Movie Set if available or open Extras</property>
+                          <property name="setting_description">Choose the Open Action when a Movie is selected in FenLight FL. Choices Are None, Open Extras, Open Movie Set, Both. "Both" will open the Movie Set if available or open Extras</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_from_list&amp;setting_id=media_open_action_movie)</onclick>
                       </item>
                       <item>
@@ -672,7 +672,7 @@
                           <property name="setting_label">TV Shows</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.media_open_action_tvshow_name)]</property>
-                          <property name="setting_description">Choose the Open Action when a TV Show is selected in FL. Choices Are None or Open Extras</property>
+                          <property name="setting_description">Choose the Open Action when a TV Show is selected in FenLight FL. Choices Are None or Open Extras</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_from_list&amp;setting_id=media_open_action_tvshow)</onclick>
                       </item>
         <!-- AI Generated Similar Titles -->
@@ -706,7 +706,7 @@
                           <property name="setting_label">Choose Maximum Similar Titles Results</property>
                           <property name="setting_type">numeric</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.ai_model.limit)]</property>
-                          <property name="setting_description">Choose the maximum number of AI Similar Results returned by FL</property>
+                          <property name="setting_description">Choose the maximum number of AI Similar Results returned by FenLight FL</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_numeric&amp;setting_id=ai_model.limit)</onclick>
                       </item>
 <!-- CONTENT 30 -->
@@ -722,7 +722,7 @@
                           <property name="setting_label">Paginate Lists When Available</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.paginate.lists_name)]</property>
-                          <property name="setting_description">Enable this and FL will attempt to paginate lists when possible. This is mainly applicable to personal lists</property>
+                          <property name="setting_description">Enable this and FenLight FL will attempt to paginate lists when possible. This is mainly applicable to personal lists</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_from_list&amp;setting_id=paginate.lists)</onclick>
                       </item>
                       <item>
@@ -731,7 +731,7 @@
                           <property name="setting_label">    - Addon Item Limit</property>
                           <property name="setting_type">numeric</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.paginate.limit_addon)]</property>
-                          <property name="setting_description">Choose the limit of pagination when within FL</property>
+                          <property name="setting_description">Choose the limit of pagination when within FenLight FL</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_numeric&amp;setting_id=paginate.limit_addon)</onclick>
                       </item>
                       <item>
@@ -740,7 +740,7 @@
                           <property name="setting_label">    - Widgets Item Limit</property>
                           <property name="setting_type">numeric</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.paginate.limit_widgets)]</property>
-                          <property name="setting_description">Choose the limit of pagination for FL widgets</property>
+                          <property name="setting_description">Choose the limit of pagination for FenLight FL widgets</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_numeric&amp;setting_id=paginate.limit_widgets)</onclick>
                       </item>
                       <item>
@@ -748,7 +748,7 @@
                           <property name="setting_label">Enable Jump To Navigation</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.paginate.jump_to)]</property>
-                          <property name="setting_description">Enable this and FL include a "Jump To..." item at the end of each page of paginated personal lists. You can use this to jump to a specific page in the list</property>
+                          <property name="setting_description">Enable this and FenLight FL include a "Jump To..." item at the end of each page of paginated personal lists. You can use this to jump to a specific page in the list</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=paginate.jump_to)</onclick>
                       </item>
                       <item>
@@ -756,7 +756,7 @@
                           <property name="setting_label">Ignore Articles when Sorting Lists</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.ignore_articles)]</property>
-                          <property name="setting_description">Enable this and FL will ignore leading words like "The", "A" when sorting lists</property>
+                          <property name="setting_description">Enable this and FenLight FL will ignore leading words like "The", "A" when sorting lists</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=ignore_articles)</onclick>
                       </item>
                       <item>
@@ -764,7 +764,7 @@
                           <property name="setting_label">Service used for Because You Watched</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.recommend_service_name)]</property>
-                          <property name="setting_description">Choose which service provides recommendations for the Because You Watched menus. Options are Recommended (TMDb), More Like This (IMDb), AI Similar (AI), or Related (FL)</property>
+                          <property name="setting_description">Choose which service provides recommendations for the Because You Watched menus. Options are Recommended (TMDb), More Like This (IMDb), AI Similar (AI), or Related (FenLight FL)</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_from_list&amp;setting_id=recommend_service)</onclick>
                       </item>
                       <item>
@@ -804,7 +804,7 @@
                           <property name="setting_label">Show Special Episodes When Available</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.show_specials)]</property>
-                          <property name="setting_description">Enable this and FL will show TV Show Special Episodes</property>
+                          <property name="setting_description">Enable this and FenLight FL will show TV Show Special Episodes</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=show_specials)</onclick>
                       </item>
                       <item>
@@ -812,7 +812,7 @@
                           <property name="setting_label">Use Season Names When Available</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.use_season_name)]</property>
-                          <property name="setting_description">Enable this and FL will use the name of a season when availbale.</property>
+                          <property name="setting_description">Enable this and FenLight FL will use the name of a season when availbale.</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=use_season_name)</onclick>
                       </item>
                       <item>
@@ -820,7 +820,7 @@
                           <property name="setting_label">Flatten TV Show Seasons</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.default_all_episodes_name)]</property>
-                          <property name="setting_description">Choose the times when FL will load all episodes of a TV Show when browsed into</property>
+                          <property name="setting_description">Choose the times when FenLight FL will load all episodes of a TV Show when browsed into</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_from_list&amp;setting_id=default_all_episodes)</onclick>
                       </item>
                       <item>
@@ -828,7 +828,7 @@
                           <property name="setting_label">Avoid Episode Spoilers</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.avoid_episode_spoilers)]</property>
-                          <property name="setting_description">Enable this and FL will hide episode thumb and episode synopsis within FL</property>
+                          <property name="setting_description">Enable this and FenLight FL will hide episode thumb and episode synopsis within FenLight FL</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=avoid_episode_spoilers)</onclick>
                       </item>
                       <item>
@@ -836,15 +836,15 @@
                           <property name="setting_label">Include Anime in TV Show Watched Progress</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.include_anime_tvshow)]</property>
-                          <property name="setting_description">Enable this and FL will include Anime content in your Watched, Progress, Progress Episodes and Next Episodes menus in the main TV Show menu</property>
+                          <property name="setting_description">Enable this and FenLight FL will include Anime content in your Watched, Progress, Progress Episodes and Next Episodes menus in the main TV Show menu</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=include_anime_tvshow)</onclick>
                       </item>
                       <item>
                           <visible>Container(2000).HasFocus(30)</visible>
-                          <property name="setting_label">Include Unaired Media in FL Watchlists</property>
+                          <property name="setting_label">Include Unaired Media in FenLight FL Watchlists</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.show_unaired_watchlist)]</property>
-                          <property name="setting_description">Enable this and FL will display any unaired media in your FL Movie/TV Show Watchlists. Disable this and any unaired Media will be hidden</property>
+                          <property name="setting_description">Enable this and FenLight FL will display any unaired media in your FenLight FL Movie/TV Show Watchlists. Disable this and any unaired Media will be hidden</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=show_unaired_watchlist)</onclick>
                       </item>
                       <item>
@@ -852,7 +852,7 @@
                           <property name="setting_label">Include Adult Results from Media Searches</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.meta_filter)]</property>
-                          <property name="setting_description">Enable this and FL will attempt to filter out adult content from Movie, TV Show and People searches. Success is based purely on the accuracy of TMDbs database. Expect that some adult results may come through and plan accordingly</property>
+                          <property name="setting_description">Enable this and FenLight FL will attempt to filter out adult content from Movie, TV Show and People searches. Success is based purely on the accuracy of TMDbs database. Expect that some adult results may come through and plan accordingly</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=meta_filter)</onclick>
                       </item>
                       <item>
@@ -860,7 +860,7 @@
                           <property name="setting_label">Control Viewtypes within Addon</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.use_viewtypes)]</property>
-                          <property name="setting_description">Enable this and FL will control view types used within the addon. This can be disabled if the skin you are using has a helper that provides a "lock view" type function. If enabled, views can be set in Tools->Set Views within the addon</property>
+                          <property name="setting_description">Enable this and FenLight FL will control view types used within the addon. This can be disabled if the skin you are using has a helper that provides a "lock view" type function. If enabled, views can be set in Tools->Set Views within the addon</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=use_viewtypes)</onclick>
                       </item>
                       <item>
@@ -958,29 +958,29 @@
                           <property name="setting_description">Choose the sort order for your Watched media</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_from_list&amp;setting_id=sort.watched)</onclick>
                       </item>
-        <!-- Contents Sort Order For FL Lists -->
+        <!-- Contents Sort Order For FenLight FL Lists -->
                       <item>
                           <visible>Container(2000).HasFocus(30)</visible>
-                          <property name="setting_label">Contents Sort Order For FL Lists</property>
+                          <property name="setting_label">Contents Sort Order For FenLight FL Lists</property>
                           <property name="setting_type">separator</property>
                           <onclick>noop</onclick>
                       </item>
                       <item>
                           <visible>Container(2000).HasFocus(30)</visible>
                           <visible>!String.IsEqual(Window(10000).Property(fenlightfl.flicklist.user),empty_setting)</visible>
-                          <property name="setting_label">FL Collection</property>
+                          <property name="setting_label">FenLight FL Collection</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.sort.collection_name)]</property>
-                          <property name="setting_description">Choose the sort order for your FL Collection media</property>
+                          <property name="setting_description">Choose the sort order for your FenLight FL Collection media</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_from_list&amp;setting_id=sort.collection)</onclick>
                       </item>
                       <item>
                           <visible>Container(2000).HasFocus(30)</visible>
                           <visible>!String.IsEqual(Window(10000).Property(fenlightfl.flicklist.user),empty_setting)</visible>
-                          <property name="setting_label">FL Watchlist</property>
+                          <property name="setting_label">FenLight FL Watchlist</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.sort.watchlist_name)]</property>
-                          <property name="setting_description">Choose the sort order for your FL Watchlist media</property>
+                          <property name="setting_description">Choose the sort order for your FenLight FL Watchlist media</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_from_list&amp;setting_id=sort.watchlist)</onclick>
                       </item>
         <!-- TMDb Lists -->
@@ -1018,7 +1018,7 @@
                           <property name="setting_label">Show List Author</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.personal_list.show_author)]</property>
-                          <property name="setting_description">Enable this and FL will display the Author of the Personal List</property>
+                          <property name="setting_description">Enable this and FenLight FL will display the Author of the Personal List</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=personal_list.show_author)</onclick>
                       </item>
                       <item>
@@ -1026,7 +1026,7 @@
                           <property name="setting_label">Sort Unseen Lists to Top</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.personal_list.sort_unseen_to_top)]</property>
-                          <property name="setting_description">Enable this and FL will sort all unseen Personal Lists to the top</property>
+                          <property name="setting_description">Enable this and FenLight FL will sort all unseen Personal Lists to the top</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=personal_list.sort_unseen_to_top)</onclick>
                       </item>
                       <item>
@@ -1034,7 +1034,7 @@
                           <property name="setting_label">Highlight Unseen Lists</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.personal_list.highlight_unseen)]</property>
-                          <property name="setting_description">Enable this and FL will highlight Unseen Personal Lists using the chosen highlight</property>
+                          <property name="setting_description">Enable this and FenLight FL will highlight Unseen Personal Lists using the chosen highlight</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=personal_list.highlight_unseen)</onclick>
                       </item>
                       <item>
@@ -1058,7 +1058,7 @@
                           <property name="setting_label">Refresh Widgets on Timer</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.widget_refresh_timer_name)]</property>
-                          <property name="setting_description">Choose whether FL refreshes widgets based on a set timer. You should set a value here if you are using random widgets from FL, and wish for their contents to update between Kodi starts</property>
+                          <property name="setting_description">Choose whether FenLight FL refreshes widgets based on a set timer. You should set a value here if you are using random widgets from FenLight FL, and wish for their contents to update between Kodi starts</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=widget_refresh_timer_choice)</onclick>
                       </item>
                       <item>
@@ -1067,7 +1067,7 @@
                           <property name="setting_label">    - Show Notification after Refresh</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.widget_refresh_notification)]</property>
-                          <property name="setting_description">Enable this and FL will show a notification whenever widgets are refreshed by the timer</property>
+                          <property name="setting_description">Enable this and FenLight FL will show a notification whenever widgets are refreshed by the timer</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=widget_refresh_notification)</onclick>
                       </item>
                       <item>
@@ -1075,7 +1075,7 @@
                           <property name="setting_label">Hide Watched Items in Widgets</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.widget_hide_watched)]</property>
-                          <property name="setting_description">Enable this and watched items will be hidden in FL widgets</property>
+                          <property name="setting_description">Enable this and watched items will be hidden in FenLight FL widgets</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=widget_hide_watched)</onclick>
                       </item>
                       <item>
@@ -1083,7 +1083,7 @@
                           <property name="setting_label">Hide Next Page Item in Widgets</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.widget_hide_next_page)]</property>
-                          <property name="setting_description">Enable this and the "Next Page" item will be hidden in FL widgets</property>
+                          <property name="setting_description">Enable this and the "Next Page" item will be hidden in FenLight FL widgets</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=widget_hide_next_page)</onclick>
                       </item>
         <!-- RPDb Ratings Posters -->
@@ -1123,7 +1123,7 @@
                           <property name="setting_label">Context Menu Options</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">...</property>
-                          <property name="setting_description">Choose the order and availability for Context Menu items for FL media items</property>
+                          <property name="setting_description">Choose the order and availability for Context Menu items for FenLight FL media items</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=context_menu_order_choice)</onclick>
                       </item>
 <!-- SINGLE EPISODE LISTS 40 -->
@@ -1139,7 +1139,7 @@
                           <property name="setting_label">Single Episode Display Format - Within Addon</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.single_ep_display_name)]</property>
-                          <property name="setting_description">Choose the display format FL uses when naming single episodes within the addon. Applicable for lists like Next Episodes, In Progress Episodes etc</property>
+                          <property name="setting_description">Choose the display format FenLight FL uses when naming single episodes within the addon. Applicable for lists like Next Episodes, In Progress Episodes etc</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_from_list&amp;setting_id=single_ep_display)</onclick>
                       </item>
                       <item>
@@ -1147,7 +1147,7 @@
                           <property name="setting_label">Single Episode Display Format - Widgets</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.single_ep_display_widget_name)]</property>
-                          <property name="setting_description">Choose the display format FL uses when naming single episodes for widgets. Applicable for lists like Next Episodes, In Progress Episodes etc</property>
+                          <property name="setting_description">Choose the display format FenLight FL uses when naming single episodes for widgets. Applicable for lists like Next Episodes, In Progress Episodes etc</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_from_list&amp;setting_id=single_ep_display_widget)</onclick>
                       </item>
                       <item>
@@ -1208,10 +1208,10 @@
                       </item>
                       <item>
                           <visible>Container(2000).HasFocus(40)</visible>
-                          <property name="setting_label">Include FL Watchlist/FL Favorites</property>
+                          <property name="setting_label">Include FenLight FL Watchlist/FenLight FL Favorites</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.nextep.include_unwatched_name)]</property>
-                          <property name="setting_description">Choose which lists are included within FL Next Episodes. You can include your FL Watchlist, your FL Favorites, or both. They will show with a DARKGOLDENROD highlight</property>
+                          <property name="setting_description">Choose which lists are included within FenLight FL Next Episodes. You can include your FenLight FL Watchlist, your FenLight FL Favorites, or both. They will show with a DARKGOLDENROD highlight</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_from_list&amp;setting_id=nextep.include_unwatched)</onclick>
                       </item>
                       <item>
@@ -1238,10 +1238,10 @@
                           <property name="setting_description">Enable this to include unaired episodes within Next Episodes. They will show with a RED highlight and become visible within 7 days of their airdate</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=nextep.include_unaired)</onclick>
                       </item>
-        <!-- FL Calendar -->
+        <!-- FenLight FL Calendar -->
                       <item>
                           <visible>Container(2000).HasFocus(40)</visible>
-                          <property name="setting_label">FL Calendar</property>
+                          <property name="setting_label">FenLight FL Calendar</property>
                           <property name="setting_type">separator</property>
                           <onclick>noop</onclick>
                       </item>
@@ -1258,7 +1258,7 @@
                           <property name="setting_label">Sort Order</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.flicklist.calendar_sort_order_name)]</property>
-                          <property name="setting_description">Choose the sort direction of the FL Calendar list. Ascending or Descending</property>
+                          <property name="setting_description">Choose the sort direction of the FenLight FL Calendar list. Ascending or Descending</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_from_list&amp;setting_id=flicklist.calendar_sort_order)</onclick>
                       </item>
                       <item>
@@ -1266,7 +1266,7 @@
                           <property name="setting_label">Show Previous Days</property>
                           <property name="setting_type">numeric</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.flicklist.calendar_previous_days)]</property>
-                          <property name="setting_description">Choose how many previous days will be shown within the FL Calendar</property>
+                          <property name="setting_description">Choose how many previous days will be shown within the FenLight FL Calendar</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_numeric&amp;setting_id=flicklist.calendar_previous_days)</onclick>
                       </item>
                       <item>
@@ -1274,7 +1274,7 @@
                           <property name="setting_label">Show Future Days</property>
                           <property name="setting_type">numeric</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.flicklist.calendar_future_days)]</property>
-                          <property name="setting_description">Choose how many future days will be shown within the FL Calendar</property>
+                          <property name="setting_description">Choose how many future days will be shown within the FenLight FL Calendar</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_numeric&amp;setting_id=flicklist.calendar_future_days)</onclick>
                       </item>
 <!-- META ACCOUNTS 50 -->
@@ -1291,7 +1291,7 @@
                           <property name="setting_label">Authorize</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">...</property>
-                          <property name="setting_description">Authorize your FlickList account and use it within FL</property>
+                          <property name="setting_description">Authorize your FlickList account and use it within FenLight FL</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=fl.fl_authenticate)</onclick>
                       </item>
                       <item>
@@ -1349,7 +1349,7 @@
                           <property name="setting_label">Authorize Account</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">...</property>
-                          <property name="setting_description">Authorize your TMDb account and use it within FL for Lists</property>
+                          <property name="setting_description">Authorize your TMDb account and use it within FenLight FL for Lists</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=tmdblist_api.authenticate)</onclick>
                       </item>
                       <item>
@@ -1403,7 +1403,7 @@
                           <property name="setting_label">API Key</property>
                           <property name="setting_type">numeric</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.google_api)]</property>
-                          <property name="setting_description">Enter here your Gemini/Gemma AI API key. This will allow you to utilize the features within FL that use AI, such as Browse AI Similar</property>
+                          <property name="setting_description">Enter here your Gemini/Gemma AI API key. This will allow you to utilize the features within FenLight FL that use AI, such as Browse AI Similar</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_string&amp;setting_id=google_api)</onclick>
                       </item>
         <!-- GROQ -->
@@ -1418,7 +1418,7 @@
                           <property name="setting_label">API Key</property>
                           <property name="setting_type">numeric</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.groq_api)]</property>
-                          <property name="setting_description">Enter here your Groq AI API key. This will allow you to utilize the features within FL that use AI, such as Browse AI Similar</property>
+                          <property name="setting_description">Enter here your Groq AI API key. This will allow you to utilize the features within FenLight FL that use AI, such as Browse AI Similar</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_string&amp;setting_id=groq_api)</onclick>
                       </item>
 <!-- STREAMING ACCOUNTS 60 -->
@@ -1434,7 +1434,7 @@
                           <property name="setting_label">Enable</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.provider.external)]</property>
-                          <property name="setting_description">Enable this to use external scrapers. No support is provided when you choose to use external scrapers within FL</property>
+                          <property name="setting_description">Enable this to use external scrapers. No support is provided when you choose to use external scrapers within FenLight FL</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=provider.external)</onclick>
                       </item>
                       <item>
@@ -1443,7 +1443,7 @@
                           <property name="setting_label">Choose External Scrapers Module</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.external_scraper.name)]</property>
-                          <property name="setting_description">Choose the external scraper module to use within FL. No support is provided when you choose to use external scrapers within FL</property>
+                          <property name="setting_description">Choose the external scraper module to use within FenLight FL. No support is provided when you choose to use external scrapers within FenLight FL</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=external_scraper_choice)</onclick>
                       </item>
                       <item>
@@ -1454,7 +1454,7 @@
                           <property name="setting_label">Check for cached status of Results (RD &amp; AD)</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.external.cache_check)]</property>
-                          <property name="setting_description">Enable this and FL will get the cached status for Real Debrid and All Debrid results. This will lead to less results overall, but the results displayed SHOULD be cached on their servers. There will also be results filtered out that are cached. Use this knowing that you will get less results</property>
+                          <property name="setting_description">Enable this and FenLight FL will get the cached status for Real Debrid and All Debrid results. This will lead to less results overall, but the results displayed SHOULD be cached on their servers. There will also be results filtered out that are cached. Use this knowing that you will get less results</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=external.cache_check)</onclick>
                       </item>
                       <item>
@@ -1463,7 +1463,7 @@
                           <property name="setting_label">Filter External Scrapers</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.external.filter_sources)]</property>
-                          <property name="setting_description">Enable this and FL will filter the external scrapers based on their priority determined by the scraper pack used</property>
+                          <property name="setting_description">Enable this and FenLight FL will filter the external scrapers based on their priority determined by the scraper pack used</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=external.filter_sources)</onclick>
                       </item>
                       <item>
@@ -1490,7 +1490,7 @@
                           <property name="setting_label">Authorize</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">...</property>
-                          <property name="setting_description">Authorize your Real Debrid account and use it within FL</property>
+                          <property name="setting_description">Authorize your Real Debrid account and use it within FenLight FL</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=real_debrid.authenticate)</onclick>
                       </item>
                       <item>
@@ -1529,7 +1529,7 @@
                           <property name="setting_label">Search Cloud Storage</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.provider.rd_cloud)]</property>
-                          <property name="setting_description">Enable this and FL will search your Real Debrid Cloud for media</property>
+                          <property name="setting_description">Enable this and FenLight FL will search your Real Debrid Cloud for media</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=provider.rd_cloud)</onclick>
                       </item>
                       <item>
@@ -1540,7 +1540,7 @@
                           <property name="setting_label">    - Filter Results by Name</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.rd_cloud.title_filter)]</property>
-                          <property name="setting_description">Enable this and FL will perform extra name matching functions on your Real Debrid Cloud results. Will help to limit incorrect results, but may also filter some relevant results</property>
+                          <property name="setting_description">Enable this and FenLight FL will perform extra name matching functions on your Real Debrid Cloud results. Will help to limit incorrect results, but may also filter some relevant results</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=rd_cloud.title_filter)</onclick>
                       </item>
                       <item>
@@ -1551,7 +1551,7 @@
                           <property name="setting_label">    - Check Before Full Search</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.check.rd_cloud)]</property>
-                          <property name="setting_description">Enable this and FL will search for results in your Real Debrid Cloud before checking other enabled scrapers</property>
+                          <property name="setting_description">Enable this and FenLight FL will search for results in your Real Debrid Cloud before checking other enabled scrapers</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=check.rd_cloud)</onclick>
                       </item>
                       <item>
@@ -1563,7 +1563,7 @@
                           <property name="setting_label">    - Autoplay Cloud Result</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.autoplay.rd_cloud)]</property>
-                          <property name="setting_description">Enable this and FL will Autoplay the top result found from the Real Debrid Cloud</property>
+                          <property name="setting_description">Enable this and FenLight FL will Autoplay the top result found from the Real Debrid Cloud</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=autoplay.rd_cloud)</onclick>
                       </item>
                       <item>
@@ -1574,7 +1574,7 @@
                           <property name="setting_label">    - Show Results at Top</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.results.sort_rdcloud_first)]</property>
-                          <property name="setting_description">Enable this and FL will sort the results from your Real Debrid Cloud to the top of all results</property>
+                          <property name="setting_description">Enable this and FenLight FL will sort the results from your Real Debrid Cloud to the top of all results</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=results.sort_rdcloud_first)</onclick>
                       </item>
                       <item>
@@ -1594,7 +1594,7 @@
                           <property name="setting_label">Use alternate url</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.rd.alternate_base_url)]</property>
-                          <property name="setting_description">Enable this and FL will use an alternate base url for RD. This may circumvent any blocks being performed</property>
+                          <property name="setting_description">Enable this and FenLight FL will use an alternate base url for RD. This may circumvent any blocks being performed</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=rd.alternate_base_url)</onclick>
                       </item>
         <!-- Premiumize -->
@@ -1610,7 +1610,7 @@
                           <property name="setting_label">Authorize</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">...</property>
-                          <property name="setting_description">Authorize your Premiumize account and use it within FL</property>
+                          <property name="setting_description">Authorize your Premiumize account and use it within FenLight FL</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=premiumize.authenticate)</onclick>
                       </item>
                       <item>
@@ -1649,7 +1649,7 @@
                           <property name="setting_label">Search Cloud Storage</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.provider.pm_cloud)]</property>
-                          <property name="setting_description">Enable this and FL will search your Premiumize Cloud for media</property>
+                          <property name="setting_description">Enable this and FenLight FL will search your Premiumize Cloud for media</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=provider.pm_cloud)</onclick>
                       </item>
                       <item>
@@ -1660,7 +1660,7 @@
                           <property name="setting_label">    - Filter Results by Name</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.pm_cloud.title_filter)]</property>
-                          <property name="setting_description">Enable this and FL will perform extra name matching functions on your Premiumize Cloud results. Will help to limit incorrect results, but may also filter some relevant results</property>
+                          <property name="setting_description">Enable this and FenLight FL will perform extra name matching functions on your Premiumize Cloud results. Will help to limit incorrect results, but may also filter some relevant results</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=pm_cloud.title_filter)</onclick>
                       </item>
                       <item>
@@ -1671,7 +1671,7 @@
                           <property name="setting_label">    - Check Before Full Search</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.check.pm_cloud)]</property>
-                          <property name="setting_description">Enable this and FL will search for results in your Premiumize Cloud before checking other enabled scrapers</property>
+                          <property name="setting_description">Enable this and FenLight FL will search for results in your Premiumize Cloud before checking other enabled scrapers</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=check.pm_cloud)</onclick>
                       </item>
                       <item>
@@ -1683,7 +1683,7 @@
                           <property name="setting_label">    - Autoplay Cloud Result</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.autoplay.pm_cloud)]</property>
-                          <property name="setting_description">Enable this and FL will Autoplay the top result found from the Premiumize Cloud</property>
+                          <property name="setting_description">Enable this and FenLight FL will Autoplay the top result found from the Premiumize Cloud</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=autoplay.pm_cloud)</onclick>
                       </item>
                       <item>
@@ -1694,7 +1694,7 @@
                           <property name="setting_label">    - Show Results at Top</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.results.sort_pmcloud_first)]</property>
-                          <property name="setting_description">Enable this and FL will sort the results from your Premiumize Cloud to the top of all results</property>
+                          <property name="setting_description">Enable this and FenLight FL will sort the results from your Premiumize Cloud to the top of all results</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=results.sort_pmcloud_first)</onclick>
                       </item>
                       <item>
@@ -1720,7 +1720,7 @@
                           <property name="setting_label">Authorize</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">...</property>
-                          <property name="setting_description">Authorize your All Debrid account and use it within FL</property>
+                          <property name="setting_description">Authorize your All Debrid account and use it within FenLight FL</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=alldebrid.authenticate)</onclick>
                       </item>
                       <item>
@@ -1759,7 +1759,7 @@
                           <property name="setting_label">Search Cloud Storage</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.provider.ad_cloud)]</property>
-                          <property name="setting_description">Enable this and FL will search your All Debrid Cloud for media</property>
+                          <property name="setting_description">Enable this and FenLight FL will search your All Debrid Cloud for media</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=provider.ad_cloud)</onclick>
                       </item>
                       <item>
@@ -1770,7 +1770,7 @@
                           <property name="setting_label">    - Filter Results by Name</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.ad_cloud.title_filter)]</property>
-                          <property name="setting_description">Enable this and FL will perform extra name matching functions on your All Debrid Cloud results. Will help to limit incorrect results, but may also filter some relevant results</property>
+                          <property name="setting_description">Enable this and FenLight FL will perform extra name matching functions on your All Debrid Cloud results. Will help to limit incorrect results, but may also filter some relevant results</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=ad_cloud.title_filter)</onclick>
                       </item>
                       <item>
@@ -1781,7 +1781,7 @@
                           <property name="setting_label">    - Check Before Full Search</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.check.ad_cloud)]</property>
-                          <property name="setting_description">Enable this and FL will search for results in your All Debrid Cloud before checking other enabled scrapers</property>
+                          <property name="setting_description">Enable this and FenLight FL will search for results in your All Debrid Cloud before checking other enabled scrapers</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=check.ad_cloud)</onclick>
                       </item>
                       <item>
@@ -1793,7 +1793,7 @@
                           <property name="setting_label">    - Autoplay Cloud Result</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.autoplay.ad_cloud)]</property>
-                          <property name="setting_description">Enable this and FL will Autoplay the top result found from the All Debrid Cloud</property>
+                          <property name="setting_description">Enable this and FenLight FL will Autoplay the top result found from the All Debrid Cloud</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=autoplay.ad_cloud)</onclick>
                       </item>
                       <item>
@@ -1804,7 +1804,7 @@
                           <property name="setting_label">    - Show Results at Top</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.results.sort_adcloud_first)]</property>
-                          <property name="setting_description">Enable this and FL will sort the results from your All Debrid Cloud to the top of all results</property>
+                          <property name="setting_description">Enable this and FenLight FL will sort the results from your All Debrid Cloud to the top of all results</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=results.sort_adcloud_first)</onclick>
                       </item>
                       <item>
@@ -1830,7 +1830,7 @@
                           <property name="setting_label">Authorize</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">...</property>
-                          <property name="setting_description">Authorize your Easy Debrid account and use it within FL</property>
+                          <property name="setting_description">Authorize your Easy Debrid account and use it within FenLight FL</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=easydebrid.authenticate)</onclick>
                       </item>
                       <item>
@@ -1875,7 +1875,7 @@
                           <property name="setting_label">Authorize</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">...</property>
-                          <property name="setting_description">Authorize your TorBox account and use it within FL</property>
+                          <property name="setting_description">Authorize your TorBox account and use it within FenLight FL</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=torbox.authenticate)</onclick>
                       </item>
                       <item>
@@ -1914,7 +1914,7 @@
                           <property name="setting_label">Search Cloud Storage</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.provider.tb_cloud)]</property>
-                          <property name="setting_description">Enable this and FL will search your TorBox Cloud for media</property>
+                          <property name="setting_description">Enable this and FenLight FL will search your TorBox Cloud for media</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=provider.tb_cloud)</onclick>
                       </item>
                       <item>
@@ -1925,7 +1925,7 @@
                           <property name="setting_label">    - Filter Results by Name</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.tb_cloud.title_filter)]</property>
-                          <property name="setting_description">Enable this and FL will perform extra name matching functions on your TorBox Cloud results. Will help to limit incorrect results, but may also filter some relevant results</property>
+                          <property name="setting_description">Enable this and FenLight FL will perform extra name matching functions on your TorBox Cloud results. Will help to limit incorrect results, but may also filter some relevant results</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=tb_cloud.title_filter)</onclick>
                       </item>
                       <item>
@@ -1936,7 +1936,7 @@
                           <property name="setting_label">    - Check Before Full Search</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.check.tb_cloud)]</property>
-                          <property name="setting_description">Enable this and FL will search for results in your TorBox Cloud before checking other enabled scrapers</property>
+                          <property name="setting_description">Enable this and FenLight FL will search for results in your TorBox Cloud before checking other enabled scrapers</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=check.tb_cloud)</onclick>
                       </item>
                       <item>
@@ -1948,7 +1948,7 @@
                           <property name="setting_label">    - Autoplay Cloud Result</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.autoplay.tb_cloud)]</property>
-                          <property name="setting_description">Enable this and FL will Autoplay the top result found from the TorBox Cloud</property>
+                          <property name="setting_description">Enable this and FenLight FL will Autoplay the top result found from the TorBox Cloud</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=autoplay.tb_cloud)</onclick>
                       </item>
                       <item>
@@ -1959,7 +1959,7 @@
                           <property name="setting_label">    - Show Results at Top</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.results.sort_tbcloud_first)]</property>
-                          <property name="setting_description">Enable this and FL will sort the results from your TorBox Cloud to the top of all results</property>
+                          <property name="setting_description">Enable this and FenLight FL will sort the results from your TorBox Cloud to the top of all results</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=results.sort_tbcloud_first)</onclick>
                       </item>
                       <item>
@@ -2012,7 +2012,7 @@
                           <property name="setting_label">Filter Results by Name</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.easynews.title_filter)]</property>
-                          <property name="setting_description">Enable this and FL will perform extra name matching functions on your Easynews results. Will help to limit incorrect results, but may also filter some relevant results</property>
+                          <property name="setting_description">Enable this and FenLight FL will perform extra name matching functions on your Easynews results. Will help to limit incorrect results, but may also filter some relevant results</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=easynews.title_filter)</onclick>
                       </item>
                       <item>
@@ -2022,7 +2022,7 @@
                           <property name="setting_label">Filter Languages</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.easynews.filter_lang)]</property>
-                          <property name="setting_description">Enable this and FL will perform extra language filtering on your Easynews results. Will help to limit incorrect results, but may also filter some relevant results</property>
+                          <property name="setting_description">Enable this and FenLight FL will perform extra language filtering on your Easynews results. Will help to limit incorrect results, but may also filter some relevant results</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=easynews.filter_lang)</onclick>
                       </item>
                       <item>
@@ -2043,7 +2043,7 @@
                           <property name="setting_label">Check Before Full Search</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.check.easynews)]</property>
-                          <property name="setting_description">Enable this and FL will search for results from your Easynews service before checking other enabled scrapers</property>
+                          <property name="setting_description">Enable this and FenLight FL will search for results from your Easynews service before checking other enabled scrapers</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=check.easynews)</onclick>
                       </item>
                       <item>
@@ -2054,7 +2054,7 @@
                           <property name="setting_label">    - Autoplay Result</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.autoplay.easynews)]</property>
-                          <property name="setting_description">Enable this and FL will Autoplay the top result found from Easynews</property>
+                          <property name="setting_description">Enable this and FenLight FL will Autoplay the top result found from Easynews</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=autoplay.easynews)</onclick>
                       </item>
                       <item>
@@ -2097,7 +2097,7 @@
                           <property name="setting_label">Filter Results by Name</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.folders.title_filter)]</property>
-                          <property name="setting_description">Enable this and FL will perform extra name matching functions on your local media folders results. Will help to limit incorrect results, but may also filter some relevant results</property>
+                          <property name="setting_description">Enable this and FenLight FL will perform extra name matching functions on your local media folders results. Will help to limit incorrect results, but may also filter some relevant results</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=folders.title_filter)</onclick>
                       </item>
                       <item>
@@ -2106,7 +2106,7 @@
                           <property name="setting_label">Check Before Full Search</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.check.folders)]</property>
-                          <property name="setting_description">Enable this and FL will search for results from your local media folders before checking other enabled scrapers</property>
+                          <property name="setting_description">Enable this and FenLight FL will search for results from your local media folders before checking other enabled scrapers</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=check.folders)</onclick>
                       </item>
                       <item>
@@ -2116,7 +2116,7 @@
                           <property name="setting_label">    - Autoplay Result</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.autoplay.folders)]</property>
-                          <property name="setting_description">Enable this and FL will Autoplay the top result found from Local Folders</property>
+                          <property name="setting_description">Enable this and FenLight FL will Autoplay the top result found from Local Folders</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=autoplay.folders)</onclick>
                       </item>
                       <item>
@@ -2125,7 +2125,7 @@
                           <property name="setting_label">Show Results at Top</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.results.sort_folders_first)]</property>
-                          <property name="setting_description">Enable this and FL will sort the results from your local media folders to the top of all results</property>
+                          <property name="setting_description">Enable this and FenLight FL will sort the results from your local media folders to the top of all results</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=results.sort_folders_first)</onclick>
                       </item>
                       <item>
@@ -2134,7 +2134,7 @@
                           <property name="setting_label">Ignore Quality and Size Filters</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.results.folders_ignore_filters)]</property>
-                          <property name="setting_description">Enable this and FL will ignore any Quality or Size filters when processing local media folders results</property>
+                          <property name="setting_description">Enable this and FenLight FL will ignore any Quality or Size filters when processing local media folders results</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=results.folders_ignore_filters)</onclick>
                       </item>
                       <item>
@@ -2159,7 +2159,7 @@
                           <property name="setting_label">Scraper Timeout</property>
                           <property name="setting_type">numeric</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.results.timeout)]</property>
-                          <property name="setting_description">Choose the amount of time FL will allow all scrapers to search for results</property>
+                          <property name="setting_description">Choose the amount of time FenLight FL will allow all scrapers to search for results</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_numeric&amp;setting_id=results.timeout)</onclick>
                       </item>
                       <item>
@@ -2167,7 +2167,7 @@
                           <property name="setting_label">Results Display Format</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.results.list_format)]</property>
-                          <property name="setting_description">Choose the format in which FL will display the results of a source search. Lists, Rows and WideList are provided</property>
+                          <property name="setting_description">Choose the format in which FenLight FL will display the results of a source search. Lists, Rows and WideList are provided</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=results_format_choice)</onclick>
                       </item>
         <!-- General -->
@@ -2229,7 +2229,7 @@
                           <property name="setting_label">Results Sorting</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.results.sort_order_display)]</property>
-                          <property name="setting_description">Choose the priority ordering performed by FL before displaying source results</property>
+                          <property name="setting_description">Choose the priority ordering performed by FenLight FL before displaying source results</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=results_sorting_choice)</onclick>
                       </item>
                       <item>
@@ -2246,7 +2246,7 @@
                           <property name="setting_label">    - Internet Speed (Mbit/s)</property>
                           <property name="setting_type">numeric</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.results.line_speed)]</property>
-                          <property name="setting_description">Enter here your internet line speed. It is a good idea to choose a value slightly below your true internet speed, although FL will still reduce this value by 10% before filtering results by size</property>
+                          <property name="setting_description">Enter here your internet line speed. It is a good idea to choose a value slightly below your true internet speed, although FenLight FL will still reduce this value by 10% before filtering results by size</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_numeric&amp;setting_id=results.line_speed)</onclick>
                       </item>
                       <item>
@@ -2291,7 +2291,7 @@
                           <property name="setting_label">    - Include Results with Unknown Size</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.results.size_unknown)]</property>
-                          <property name="setting_description">Enable this and FL will include results where the size of the file is unknown</property>
+                          <property name="setting_description">Enable this and FenLight FL will include results where the size of the file is unknown</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=results.size_unknown)</onclick>
                       </item>
                       <item>
@@ -2299,7 +2299,7 @@
                           <property name="setting_label">Use Weighted Value for Size Sorting</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.results.size_sort_weighted)]</property>
-                          <property name="setting_description">Enable this and FL will weight HEVC file sizes as being equal to 2x a non-HEVC file size when sorting results</property>
+                          <property name="setting_description">Enable this and FenLight FL will weight HEVC file sizes as being equal to 2x a non-HEVC file size when sorting results</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=results.size_sort_weighted)</onclick>
                       </item>
                       <item>
@@ -2315,7 +2315,7 @@
                           <property name="setting_label">Limit Results Per Quality</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.results.limit_number_quality_name)]</property>
-                          <property name="setting_description">Choose whether FL limits the number of results shown. If a number is selected, each Quality in the results will be limited to that number of results. For example, if you choose 20 Per Quality, then FL will display 20x4K results, 20x1080p results etc</property>
+                          <property name="setting_description">Choose whether FenLight FL limits the number of results shown. If a number is selected, each Quality in the results will be limited to that number of results. For example, if you choose 20 Per Quality, then FenLight FL will display 20x4K results, 20x1080p results etc</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=limit_number_quality_choice)</onclick>
                       </item>
                       <item>
@@ -2323,7 +2323,7 @@
                           <property name="setting_label">Limit Results Total</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.results.limit_number_total_name)]</property>
-                          <property name="setting_description">Choose whether FL limits the number of results shown</property>
+                          <property name="setting_description">Choose whether FenLight FL limits the number of results shown</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=limit_number_total_choice)</onclick>
                       </item>
                       <item>
@@ -2605,7 +2605,7 @@
                           <property name="setting_label">Automatically Resume Playback</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.auto_resume_movie_name)]</property>
-                          <property name="setting_description">Choose when FL will automatically resume playback of an in-progress Movie</property>
+                          <property name="setting_description">Choose when FenLight FL will automatically resume playback of an in-progress Movie</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_from_list&amp;setting_id=auto_resume_movie)</onclick>
                       </item>
                       <item>
@@ -2613,7 +2613,7 @@
                           <property name="setting_label">Show Credits Stinger Alert</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.stinger_alert.show)]</property>
-                          <property name="setting_description">Enable this and FL will show an alert towards the end of a movie if the movie contains during or after credit stingers</property>
+                          <property name="setting_description">Enable this and FenLight FL will show an alert towards the end of a movie if the movie contains during or after credit stingers</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=stinger_alert.show)</onclick>
                       </item>
                       <item>
@@ -2622,7 +2622,7 @@
                           <property name="setting_label">    - Show Alert After (%) Playback</property>
                           <property name="setting_type">numeric</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.stinger_alert.window_percentage)]</property>
-                          <property name="setting_description">Choose when FL will show the Credit Stingers Alert</property>
+                          <property name="setting_description">Choose when FenLight FL will show the Credit Stingers Alert</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_numeric&amp;setting_id=stinger_alert.window_percentage)</onclick>
                       </item>
                       <item>
@@ -2631,7 +2631,7 @@
                           <property name="setting_label">    - Use Chapter Info For Alert When Available</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.stinger_alert.use_chapters)]</property>
-                          <property name="setting_description">Enable this and FL will attempt to use video file Chapter information to ascertain when to show the Credit Stingers Alert. If unsuccessful, then the percentage of playback value will be used instead</property>
+                          <property name="setting_description">Enable this and FenLight FL will attempt to use video file Chapter information to ascertain when to show the Credit Stingers Alert. If unsuccessful, then the percentage of playback value will be used instead</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=stinger_alert.use_chapters)</onclick>
                       </item>
         <!-- Playback Episodes -->
@@ -2673,7 +2673,7 @@
                           <property name="setting_label">Autoplay Next Episode</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.autoplay_next_episode)]</property>
-                          <property name="setting_description">Enable this and FL will automatically play the next episode of a TV Show at the end of the episode currently being watched</property>
+                          <property name="setting_description">Enable this and FenLight FL will automatically play the next episode of a TV Show at the end of the episode currently being watched</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=autoplay_next_episode)</onclick>
                       </item>
                       <item>
@@ -2701,7 +2701,7 @@
                           <property name="setting_label">    - Show Alert After (%) Playback</property>
                           <property name="setting_type">numeric</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.autoplay_next_window_percentage)]</property>
-                          <property name="setting_description">Choose when FL will show the Next Episode Alert</property>
+                          <property name="setting_description">Choose when FenLight FL will show the Next Episode Alert</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_numeric&amp;setting_id=autoplay_next_window_percentage)</onclick>
                       </item>
                       <item>
@@ -2710,7 +2710,7 @@
                           <property name="setting_label">    - Use Chapter Info For Alert When Available</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.autoplay_use_chapters)]</property>
-                          <property name="setting_description">Enable this and FL will attempt to use video file Chapter information to ascertain when to show the Next Episode alert. If unsuccessful, then the percentage of playback value will be used instead</property>
+                          <property name="setting_description">Enable this and FenLight FL will attempt to use video file Chapter information to ascertain when to show the Next Episode alert. If unsuccessful, then the percentage of playback value will be used instead</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=autoplay_use_chapters)</onclick>
                       </item>
                       <item>
@@ -2719,7 +2719,7 @@
                           <property name="setting_label">    - Check Still Watching After... (0=Off)</property>
                           <property name="setting_type">numeric</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.autoplay_watching_check)]</property>
-                          <property name="setting_description">Choose after how many auto played episodes FL will ask if you are still watching. Set to 0 to disable</property>
+                          <property name="setting_description">Choose after how many auto played episodes FenLight FL will ask if you are still watching. Set to 0 to disable</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_numeric&amp;setting_id=autoplay_watching_check)</onclick>
                       </item>
                       <item>
@@ -2728,7 +2728,7 @@
                           <property name="setting_label">Autoscrape Next Episode</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.autoscrape_next_episode)]</property>
-                          <property name="setting_description">Enable this and FL will automatically search for sources for the next episode of a TV Show towards the end of the episode currently being watched</property>
+                          <property name="setting_description">Enable this and FenLight FL will automatically search for sources for the next episode of a TV Show towards the end of the episode currently being watched</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=autoscrape_next_episode)</onclick>
                       </item>
                       <item>
@@ -2737,7 +2737,7 @@
                           <property name="setting_label">    - Show Notification After (%) Playback</property>
                           <property name="setting_type">numeric</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.autoscrape_next_window_percentage)]</property>
-                          <property name="setting_description">Choose when FL will show the Next Episode Alert</property>
+                          <property name="setting_description">Choose when FenLight FL will show the Next Episode Alert</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_numeric&amp;setting_id=autoscrape_next_window_percentage)</onclick>
                       </item>
                       <item>
@@ -2746,7 +2746,7 @@
                           <property name="setting_label">    - Use Chapter Info For Alert When Available</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.autoscrape_use_chapters)]</property>
-                          <property name="setting_description">Enable this and FL will attempt to use video file Chapter information to ascertain when to show the Next Episode alert. If unsuccessful, then the percentage of playback value will be used instead</property>
+                          <property name="setting_description">Enable this and FenLight FL will attempt to use video file Chapter information to ascertain when to show the Next Episode alert. If unsuccessful, then the percentage of playback value will be used instead</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=autoscrape_use_chapters)</onclick>
                       </item>
                       <item>
@@ -2754,7 +2754,7 @@
                           <property name="setting_label">Automatically Resume Playback</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.auto_resume_episode_name)]</property>
-                          <property name="setting_description">Choose when FL will automatically resume playback of an in-progress Episode</property>
+                          <property name="setting_description">Choose when FenLight FL will automatically resume playback of an in-progress Episode</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_from_list&amp;setting_id=auto_resume_episode)</onclick>
                       </item>
         <!-- Playback Utilities -->
@@ -2769,7 +2769,7 @@
                           <property name="setting_label">Limit Resolve Attempts to Selected Result</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.playback.limit_resolve)]</property>
-                          <property name="setting_description">Enable this and FL will limit the playback attempts to only the source result chosen. If disabled, FL will potentially try 15 results of similar properties to your chosen source result until it is able to successfully resolve and playback</property>
+                          <property name="setting_description">Enable this and FenLight FL will limit the playback attempts to only the source result chosen. If disabled, FenLight FL will potentially try 15 results of similar properties to your chosen source result until it is able to successfully resolve and playback</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=playback.limit_resolve)</onclick>
                       </item>
                       <item>
@@ -2779,7 +2779,7 @@
                           <property name="setting_label">Easynews Playback Method</property>
                           <property name="setting_type">action</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.easynews.playback_method_name)]</property>
-                          <property name="setting_description">Choose the method for FL to use to attempt optimal Easynews playback. RETRY will retry once the link if it fails to resolve (slow). NO SEEK will tell Kodi the stream is not seekable. This results in quick and consistent resolving of the stream, but you will be unable to seek the stream outside of the cached data. Both is to use both methods. None is to use none of the methods.</property>
+                          <property name="setting_description">Choose the method for FenLight FL to use to attempt optimal Easynews playback. RETRY will retry once the link if it fails to resolve (slow). NO SEEK will tell Kodi the stream is not seekable. This results in quick and consistent resolving of the stream, but you will be unable to seek the stream outside of the cached data. Both is to use both methods. None is to use none of the methods.</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_from_list&amp;setting_id=easynews.playback_method)</onclick>
                       </item>
                       <item>
@@ -2790,7 +2790,7 @@
                           <property name="setting_label">    - Exclude NO SEEK for My Services Menu Playback</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.easynews.playback_method_limited)]</property>
-                          <property name="setting_description">Enable this and FL will not use the NO SEEK Easynews Playback Method when resolving regular files from the My Services->Easynews location</property>
+                          <property name="setting_description">Enable this and FenLight FL will not use the NO SEEK Easynews Playback Method when resolving regular files from the My Services->Easynews location</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=easynews.playback_method_limited)</onclick>
                       </item>
                       <item>
@@ -2798,7 +2798,7 @@
                           <property name="setting_label">Check Volume Before Start of Playback</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.playback.volumecheck_enabled)]</property>
-                          <property name="setting_description">Enable this and FL will attempt to check the current level of volume within Kodi, and adjust it downwards if it is exceeding a set level</property>
+                          <property name="setting_description">Enable this and FenLight FL will attempt to check the current level of volume within Kodi, and adjust it downwards if it is exceeding a set level</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=playback.volumecheck_enabled)</onclick>
                       </item>
                       <item>
@@ -2815,7 +2815,7 @@
                           <property name="setting_label">Auto Enable Subtitles</property>
                           <property name="setting_type">boolean</property>
                           <property name="setting_value">$INFO[Window(10000).Property(fenlightfl.playback.auto_enable_subs)]</property>
-                          <property name="setting_description">Enable this and FL will automatically enable subtitles when available</property>
+                          <property name="setting_description">Enable this and FenLight FL will automatically enable subtitles when available</property>
                           <onclick>RunPlugin(plugin://plugin.video.fenlightfl/?mode=settings_manager.set_boolean&amp;setting_id=playback.auto_enable_subs)</onclick>
                       </item>
                 </content>

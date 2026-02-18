@@ -2,7 +2,7 @@
 <settings>
 	<!-- General -->
 	<category label="General">
-		<setting label="FL uses it's own settings window." type="text" enable="false" />
-		<setting label="Open FL Settings..." type="action" option="close" action="RunPlugin(plugin://plugin.video.fenlightfl/?mode=open_settings)" />
+		<setting label="FenLight FL uses it's own settings window." type="text" enable="false" />
+		<setting label="Open FenLight FL Settings..." type="action" option="close" action="RunPlugin(plugin://plugin.video.fenlightfl/?mode=open_settings)" />
 	</category>
 </settings>
