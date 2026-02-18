@@ -966,22 +966,23 @@ def fl_get_my_calendar(recently_aired, current_date):
 		data = call_flicklist('/calendar/my/shows/%s/%s' % (start, finish), with_auth=True)
 		if not data:
 			return []
-		items = data if isinstance(data, list) else data.get('results', data.get('items', []))
+		days = data.get('days', []) if isinstance(data, dict) else []
 		results = []
-		for item in items:
-			results.append({
-				'sort_title': '%s s%s e%s' % (item.get('show_title', item.get('title', '')),
-										str(item.get('season_number', item.get('season', 0))).zfill(2),
-										str(item.get('episode_number', item.get('episode', 0))).zfill(2)),
-				'media_ids': {
-					'tmdb': item.get('tmdb_id', 0),
-					'imdb': item.get('imdb_id', ''),
-					'tvdb': item.get('tvdb_id', 0)
-				},
-				'season': item.get('season_number', item.get('season', 0)),
-				'episode': item.get('episode_number', item.get('episode', 0)),
-				'first_aired': item.get('air_date', item.get('first_aired', ''))
-			})
+		for day in days:
+			for item in day.get('items', []):
+				results.append({
+					'sort_title': '%s s%s e%s' % (item.get('show_title', item.get('title', '')),
+											str(item.get('season_number', item.get('season', 0))).zfill(2),
+											str(item.get('episode_number', item.get('episode', 0))).zfill(2)),
+					'media_ids': {
+						'tmdb': item.get('tmdb_id', 0),
+						'imdb': item.get('imdb_id', ''),
+						'tvdb': item.get('tvdb_id', 0)
+					},
+					'season': item.get('season_number', item.get('season', 0)),
+					'episode': item.get('episode_number', item.get('episode', 0)),
+					'first_aired': item.get('air_date', item.get('first_aired', ''))
+				})
 		results = [i for n, i in enumerate(results) if i not in results[n + 1:]]
 		return results
 	start, finish = fl_calendar_days(recently_aired, current_date)
