@@ -7,7 +7,7 @@ class Navigator:
 	def __init__(self, params):
 		self.params = params
 		self.params_get = self.params.get
-		self.category_name = self.params_get('name', 'FL')
+		self.category_name = self.params_get('name', 'FenLight FL')
 		self.list_name = self.params_get('action', 'RootList')
 		self.is_external = k.external()
 		self.make_listitem = k.make_listitem
@@ -110,7 +110,7 @@ class Navigator:
 		self.end_directory()
 
 	def my_content(self):
-		if s.fl_user_active(): self.add({'mode': 'navigator.fl_lists_personal'}, 'FL Lists', 'fl')
+		if s.fl_user_active(): self.add({'mode': 'navigator.fl_lists_personal'}, 'FenLight FL Lists', 'fl')
 		if s.tmdblist_user_active(): self.add({'mode': 'tmdblist.get_tmdb_lists'}, 'TMDb Lists', 'tmdb')
 		self.add({'mode': 'personal_lists.get_personal_lists'}, 'Personal Lists', 'lists')
 		self.add({'mode': 'navigator.discover_contents', 'media_type': 'movie', 'show_new': 'false'}, 'Discover Lists (Movies)', 'movies')
@@ -118,10 +118,10 @@ class Navigator:
 		self.end_directory()
 
 	def fl_lists_personal(self):
-		self.add({'mode': 'navigator.fl_watchlists'}, 'FL Watchlist', 'fl')
-		self.add({'mode': 'fl.list.get_fl_lists', 'list_type': 'my_lists', 'category_name': 'My Lists'}, 'FL My Lists', 'fl')
-		self.add({'mode': 'navigator.fl_favorites', 'category_name': 'Favorites'}, 'FL Favorites', 'fl')
-		self.add({'mode': 'build_my_calendar'}, 'FL Calendar', 'fl')
+		self.add({'mode': 'navigator.fl_watchlists'}, 'FenLight FL Watchlist', 'fl')
+		self.add({'mode': 'fl.list.get_fl_lists', 'list_type': 'my_lists', 'category_name': 'My Lists'}, 'FenLight FL My Lists', 'fl')
+		self.add({'mode': 'navigator.fl_favorites', 'category_name': 'Favorites'}, 'FenLight FL Favorites', 'fl')
+		self.add({'mode': 'build_my_calendar'}, 'FenLight FL Calendar', 'fl')
 		self.end_directory()
 
 	def fl_watchlists(self):
@@ -193,7 +193,7 @@ class Navigator:
 		self.add({'mode': 'clear_cache', 'cache': 'list', 'isFolder': 'false'}, 'Clear Lists Cache', 'settings')
 		self.add({'mode': 'clear_cache', 'cache': 'ai_functions', 'isFolder': 'false'}, 'Clear AI Data Cache', 'settings')
 		self.add({'mode': 'clear_cache', 'cache': 'tmdb_list', 'isFolder': 'false'}, 'Clear TMDb Personal List Cache', 'settings')
-		self.add({'mode': 'clear_cache', 'cache': 'fl', 'isFolder': 'false'}, 'Clear FL Cache', 'settings')
+		self.add({'mode': 'clear_cache', 'cache': 'fl', 'isFolder': 'false'}, 'Clear FenLight FL Cache', 'settings')
 		self.add({'mode': 'clear_cache', 'cache': 'imdb', 'isFolder': 'false'}, 'Clear IMDb Cache', 'settings')
 		self.add({'mode': 'clear_cache', 'cache': 'internal_scrapers', 'isFolder': 'false'}, 'Clear Internal Scrapers Cache', 'settings')
 		self.add({'mode': 'clear_cache', 'cache': 'external_scrapers', 'isFolder': 'false'}, 'Clear External Scrapers Cache', 'settings')
@@ -503,8 +503,8 @@ class Navigator:
 		'because_you_watched': ('Random Because You Watched Lists', nc.random_because_you_watched_lists),
 		'tmdb_lists': ('Random TMDb Lists', nc.random_tmdb_lists),
 		'personal_lists': ('Random Personal Lists', nc.random_personal_lists),
-		'fl_personal': ('Random FL Lists (Personal)', nc.random_fl_lists_personal),
-		'fl_public': ('Random FL Lists (Public)', nc.random_fl_lists_public)}
+		'fl_personal': ('Random FenLight FL Lists (Personal)', nc.random_fl_lists_personal),
+		'fl_public': ('Random FenLight FL Lists (Public)', nc.random_fl_lists_public)}
 		self.category_name, function = random_list_dict[self.params_get('menu_type')]
 		func = function()
 		for item in func: self.add(item, item['name'], item['iconImage'])
