@@ -1,9 +1,6 @@
 [COLOR red][B]Version 2.1.86[/B][/COLOR]
-- Complete internal rename: all trakt references eliminated (611 refs across 26 files).
-- New Calendar on root menu with day-folder UX (mock data — API wire-up next).
-- File renames: trakt_api.py -> fl_api.py, trakt_lists.py -> fl_lists.py.
-- Class renames: TraktCache -> FlCache, TraktWatched -> FlWatched.
-- DB rename: traktcache -> flcache.
+- New Calendar on root menu with day-folder UX.
+- Internal code cleanup and refactoring.
 - Root menu now 12 items: Movies, TV Shows, Anime, Calendar, People, Search, Discover, My Lists, My Services, Favorites, Downloads, Tools.
 
 [COLOR red][B]Version 2.1.85[/B][/COLOR]
