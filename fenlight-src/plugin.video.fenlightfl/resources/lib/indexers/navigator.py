@@ -92,6 +92,16 @@ class Navigator:
 		self.add({'mode': 'torbox.tb_account_info', 'isFolder': 'false'}, 'Account Info', 'torbox')
 		self.end_directory()
 
+	def jump_back_in(self):
+		self.category_name = 'Jump Back In'
+		self.add({'mode': 'build_in_progress_episode'}, 'In Progress Episodes', 'player')
+		self.add({'mode': 'build_movie_list', 'action': 'in_progress_movies', 'name': 'In Progress Movies'}, 'In Progress Movies', 'player')
+		self.add({'mode': 'build_next_episode'}, 'Next Episodes', 'next_episodes')
+		self.add({'mode': 'build_recently_watched_episode'}, 'Recently Watched Episodes', 'watched_recent')
+		self.add({'mode': 'build_movie_list', 'action': 'recent_watched_movies', 'name': 'Recently Watched Movies'}, 'Recently Watched Movies', 'watched_recent')
+		self.add({'mode': 'build_next_episode_manager'}, 'Progress Manager', 'settings2')
+		self.end_directory()
+
 	def favorites(self):
 		self.add({'mode': 'build_movie_list', 'action': 'favorites_movies', 'name': 'Movies'}, 'Movies', 'movies')
 		self.add({'mode': 'build_tvshow_list', 'action': 'favorites_tvshows', 'name': 'TV Shows'}, 'TV Shows', 'tv'),
