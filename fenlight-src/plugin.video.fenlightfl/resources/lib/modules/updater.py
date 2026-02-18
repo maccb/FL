@@ -12,12 +12,18 @@ def get_location(insert=''):
 
 def get_versions():
 	try:
-		result = requests.get(get_location('fen_light_version'))
+		url = get_location('fen_light_version')
+		logger('FL', 'get_versions: URL=%s' % url)
+		result = requests.get(url)
+		logger('FL', 'get_versions: status=%s' % result.status_code)
 		if result.status_code != 200: return None, None
 		online_version = result.text.replace('\n', '')
 		current_version = kodi_utils.addon_version()
+		logger('FL', 'get_versions: current=%s online=%s' % (current_version, online_version))
 		return current_version, online_version
-	except: return None, None
+	except Exception as e:
+		logger('FL', 'get_versions: EXCEPTION: %s' % str(e))
+		return None, None
 
 def get_changes(online_version=None):
 	try:
@@ -39,9 +45,12 @@ def version_check(current_version, online_version):
 	return string_alphanum_to_num(current_version) != string_alphanum_to_num(online_version)
 
 def update_check(action=4):
+	logger('FL', 'update_check: action=%s' % action)
 	if action == 3: return
 	current_version, online_version = get_versions()
-	if not current_version: return
+	if not current_version:
+		logger('FL', 'update_check: get_versions failed')
+		return
 	show_after_action = True
 	if not version_check(current_version, online_version):
 		if action == 4: return kodi_utils.ok_dialog(heading='FL Updater', text='Installed Version: [B]%s[/B][CR]Online Version: [B]%s[/B][CR][CR] %s' \
@@ -60,14 +69,20 @@ def update_check(action=4):
 
 def rollback_check():
 	current_version = get_versions()[0]
+	logger('FL', 'rollback_check: current_version=%s' % current_version)
 	url = 'https://api.github.com/repos/%s/%s/contents/packages' % (get_setting('update.username'), get_setting('update.location'))
+	logger('FL', 'rollback_check: API URL=%s' % url)
 	kodi_utils.show_busy_dialog()
 	results = requests.get(url)
 	kodi_utils.hide_busy_dialog()
+	logger('FL', 'rollback_check: GitHub API status=%s' % results.status_code)
 	if results.status_code != 200: return kodi_utils.ok_dialog(heading='FL Updater', text='Error rolling back.[CR]Please install rollback manually')
 	results = results.json()
+	all_files = [i['name'] for i in results]
+	logger('FL', 'rollback_check: all_files=%s' % str(all_files))
 	results = [i['name'].split('-')[1].replace('.zip', '') for i in results if 'plugin.video.fenlightfl' in i['name'] \
 				and not i['name'].split('-')[1].replace('.zip', '') == current_version]
+	logger('FL', 'rollback_check: available versions=%s' % str(results))
 	if not results: return kodi_utils.ok_dialog(heading='FL Updater', text='No previous versions found.[CR]Please install rollback manually')
 	results.sort(reverse=True)
 	list_items = [{'line1': item, 'icon': kodi_utils.get_icon('downloads')} for item in results]
