@@ -1,3 +1,6 @@
+[COLOR red][B]Version 2.1.89[/B][/COLOR]
+- Added debug logging to update and rollback systems.
+- Improved error reporting during updates.
 [COLOR red][B]Version 2.1.88[/B][/COLOR]
 - Calendar now pulls from your FlickList account. Add shows on flicklist.tv and they appear here.
 - Show posters displayed as folder icons and episode art.
