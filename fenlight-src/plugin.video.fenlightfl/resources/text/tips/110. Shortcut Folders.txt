@@ -1,5 +1,5 @@
 
-Fen Light offers the ability to make your own 'Folders' within the main menus (Root, Movies or TV Shows). This allows you to fill that folder with items from all the other lists, or from Trakt lists. You can name the folders anything, so you can have 'themed' folders with different content.
+Fen Light offers the ability to make your own 'Folders' within the main menus (Root, Movies or TV Shows). This allows you to fill that folder with items from all the other lists, or from FL lists. You can name the folders anything, so you can have 'themed' folders with different content.
 
 To make a new Shortcut Folder, navigate to Tools->Shortcut Folders Manager and select 'Make New Shortcut Folder' to make a new folder. This folder will not yet be assigned to a list.
 

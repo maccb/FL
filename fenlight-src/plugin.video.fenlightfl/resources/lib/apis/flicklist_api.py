@@ -1,12 +1,12 @@
 """
-FlickList API Client — Drop-in replacement for trakt_api.py
+FlickList API Client — Drop-in replacement for fl_api.py
 
-All function signatures match trakt_api.py for seamless import swap.
-Internally calls FlickList API instead of Trakt.
+All function signatures match fl_api.py for seamless import swap.
+Internally calls FlickList API instead of the original API.
 
 FlickList API returns MediaCard: {id, tmdb_id, media_type, title, year, poster_path, ...}
 Paginated: {results: [...], page, total_pages, total_results}
-This module transforms responses to Trakt-compatible shapes for the rest of the addon.
+This module transforms responses to legacy-compatible shapes for the rest of the addon.
 """
 import json
 import time
@@ -25,8 +25,8 @@ API_BASE = 'https://beta.flicklist.tv/api'
 FLICKLIST_CLIENT_ID = 'flicklist_kodi_addon'
 
 
-def _to_trakt_movie(item):
-	"""Transform a FlickList MediaCard to Trakt movie dict."""
+def _to_fl_movie(item):
+	"""Transform a FlickList MediaCard to standard movie dict."""
 	return {
 		'movie': {
 			'title': item.get('title', ''),
@@ -40,8 +40,8 @@ def _to_trakt_movie(item):
 		}
 	}
 
-def _to_trakt_show(item):
-	"""Transform a FlickList MediaCard to Trakt show dict."""
+def _to_fl_show(item):
+	"""Transform a FlickList MediaCard to standard show dict."""
 	return {
 		'show': {
 			'title': item.get('title', ''),
@@ -55,12 +55,12 @@ def _to_trakt_show(item):
 		}
 	}
 
-def _to_trakt_media(item):
+def _to_fl_media(item):
 	"""Auto-detect movie or show and transform."""
 	mtype = item.get('media_type', 'movie')
 	if mtype == 'tv':
-		return _to_trakt_show(item)
-	return _to_trakt_movie(item)
+		return _to_fl_show(item)
+	return _to_fl_movie(item)
 
 def _extract_paginated(data):
 	"""Extract items and page count from FlickList Paginated response."""
@@ -74,14 +74,14 @@ def _extract_paginated(data):
 		return data, '1'
 	return [], '1'
 
-def _media_to_trakt_list(data, media_type='movie'):
-	"""Transform a paginated FlickList response to a list of Trakt-compatible dicts."""
+def _media_to_fl_list(data, media_type='movie'):
+	"""Transform a paginated FlickList response to a list of legacy-compatible dicts."""
 	items, page_count = _extract_paginated(data)
 	if media_type in ('tv', 'show', 'shows'):
-		return [_to_trakt_show(i) for i in items], page_count
+		return [_to_fl_show(i) for i in items], page_count
 	elif media_type == 'mixed':
-		return [_to_trakt_media(i) for i in items], page_count
-	return [_to_trakt_movie(i) for i in items], page_count
+		return [_to_fl_media(i) for i in items], page_count
+	return [_to_fl_movie(i) for i in items], page_count
 
 
 def call_flicklist(path, params=None, data=None, is_delete=False, with_auth=True, method=None, pagination=False, page_no=1):
@@ -140,9 +140,9 @@ def call_flicklist(path, params=None, data=None, is_delete=False, with_auth=True
 		return (result, page_count)
 	return result
 
-def get_trakt(params):
-	"""Generic FlickList API call with Trakt-compatible interface.
-	Called by lists_cache_object and cache_trakt_object as the fetch function."""
+def get_fl(params):
+	"""Generic FlickList API call with legacy-compatible interface.
+	Called by lists_cache_object and cache_fl_object as the fetch function."""
 	path = params.get('fl_path', params.get('path', ''))
 	fl_params = params.get('params', {})
 	result = call_flicklist(path, params=fl_params, data=params.get('data'),
@@ -158,12 +158,12 @@ def get_trakt(params):
 	return result
 
 
-def trakt_get_device_code():
+def fl_get_device_code():
 	"""Request a device authorization code from FlickList."""
 	data = {'client_id': FLICKLIST_CLIENT_ID}
 	return call_flicklist('/auth/device/code', data=data, with_auth=False)
 
-def trakt_get_device_token(device_codes):
+def fl_get_device_token(device_codes):
 	"""Poll for device token after user authorizes."""
 	result = None
 	try:
@@ -215,7 +215,7 @@ def trakt_get_device_token(device_codes):
 		pass
 	return result
 
-def trakt_refresh_token():
+def fl_refresh_token():
 	"""FlickList tokens are long-lived. Check validity and re-auth if needed."""
 	try:
 		token = get_setting('fenlightfl.flicklist.token')
@@ -227,13 +227,13 @@ def trakt_refresh_token():
 	except:
 		pass
 
-def trakt_authenticate(dummy=''):
+def fl_authenticate(dummy=''):
 	"""Run the full FlickList device authorization flow."""
-	code = trakt_get_device_code()
+	code = fl_get_device_code()
 	if not code:
 		kodi_utils.notification('FlickList Error — Could not get device code', 3000)
 		return False
-	token = trakt_get_device_token(code)
+	token = fl_get_device_token(code)
 	if token:
 		set_setting('flicklist.token', token.get('access_token', ''))
 		set_setting('watched_indicators', '1')
@@ -245,121 +245,121 @@ def trakt_authenticate(dummy=''):
 		except:
 			pass
 		kodi_utils.notification('FlickList Account Authorized', 3000)
-		trakt_sync_activities(force_update=True)
+		fl_sync_activities(force_update=True)
 		return True
 	kodi_utils.notification('FlickList Error Authorizing', 3000)
 	return False
 
-def trakt_revoke_authentication(dummy=''):
+def fl_revoke_authentication(dummy=''):
 	"""Clear FlickList authorization."""
 	set_setting('flicklist.user', 'empty_setting')
 	set_setting('flicklist.token', '0')
 	set_setting('flicklist.next_daily_clear', '0')
 	set_setting('watched_indicators', '0')
-	flicklist_cache.clear_all_trakt_cache_data(silent=True, refresh=False)
+	flicklist_cache.clear_all_fl_cache_data(silent=True, refresh=False)
 	kodi_utils.notification('FlickList Account Authorization Reset', 3000)
 
 
-def trakt_movies_related(imdb_id):
+def fl_movies_related(imdb_id):
 	def _process(params):
 		data = call_flicklist('/movies/%s/similar' % imdb_id, with_auth=False)
-		items, _ = _media_to_trakt_list(data, 'movie')
+		items, _ = _media_to_fl_list(data, 'movie')
 		return items[:20]
-	string = 'trakt_movies_related_%s' % imdb_id
+	string = 'fl_movies_related_%s' % imdb_id
 	return lists_cache_object(_process, string, {})
 
-def trakt_movies_trending(page_no):
+def fl_movies_trending(page_no):
 	def _process(params):
 		data = call_flicklist('/movies/trending', params={'page': page_no, 'per_page': 20}, with_auth=False)
-		items, page_count = _media_to_trakt_list(data, 'movie')
-		return (items, page_count)
-	string = 'trakt_movies_trending_%s' % page_no
+		items, _ = _media_to_fl_list(data, 'movie')
+		return items
+	string = 'fl_movies_trending_%s' % page_no
 	return lists_cache_object(_process, string, {})
 
-def trakt_movies_trending_recent(page_no):
+def fl_movies_trending_recent(page_no):
 	current_year = get_datetime().year
 	def _process(params):
 		data = call_flicklist('/movies/trending', params={'page': page_no, 'per_page': 20, 'year_min': current_year - 1, 'year_max': current_year}, with_auth=False)
-		items, page_count = _media_to_trakt_list(data, 'movie')
-		return (items, page_count)
-	string = 'trakt_movies_trending_recent_%s' % page_no
+		items, _ = _media_to_fl_list(data, 'movie')
+		return items
+	string = 'fl_movies_trending_recent_%s' % page_no
 	return lists_cache_object(_process, string, {})
 
-def trakt_movies_top10_boxoffice(page_no):
+def fl_movies_top10_boxoffice(page_no):
 	def _process(params):
 		data = call_flicklist('/movies/now-playing', params={'per_page': 10}, with_auth=False)
-		items, _ = _media_to_trakt_list(data, 'movie')
+		items, _ = _media_to_fl_list(data, 'movie')
 		return items[:10]
-	string = 'trakt_movies_top10_boxoffice'
+	string = 'fl_movies_top10_boxoffice'
 	return lists_cache_object(_process, string, {})
 
-def trakt_movies_most_watched(page_no):
+def fl_movies_most_watched(page_no):
 	def _process(params):
 		data = call_flicklist('/movies/trending', params={'page': page_no, 'per_page': 20, 'sort': 'popularity'}, with_auth=False)
-		items, page_count = _media_to_trakt_list(data, 'movie')
-		return (items, page_count)
-	string = 'trakt_movies_most_watched_%s' % page_no
+		items, _ = _media_to_fl_list(data, 'movie')
+		return items
+	string = 'fl_movies_most_watched_%s' % page_no
 	return lists_cache_object(_process, string, {})
 
-def trakt_movies_most_favorited(page_no):
+def fl_movies_most_favorited(page_no):
 	def _process(params):
 		data = call_flicklist('/movies/top-rated', params={'page': page_no, 'per_page': 20}, with_auth=False)
-		items, page_count = _media_to_trakt_list(data, 'movie')
-		return (items, page_count)
-	string = 'trakt_movies_most_favorited%s' % page_no
+		items, _ = _media_to_fl_list(data, 'movie')
+		return items
+	string = 'fl_movies_most_favorited%s' % page_no
 	return lists_cache_object(_process, string, {})
 
 
-def trakt_tv_related(imdb_id):
+def fl_tv_related(imdb_id):
 	def _process(params):
 		data = call_flicklist('/shows/%s/similar' % imdb_id, with_auth=False)
-		items, _ = _media_to_trakt_list(data, 'tv')
+		items, _ = _media_to_fl_list(data, 'tv')
 		return items[:20]
-	string = 'trakt_tv_related_%s' % imdb_id
+	string = 'fl_tv_related_%s' % imdb_id
 	return lists_cache_object(_process, string, {})
 
-def trakt_tv_trending(page_no):
+def fl_tv_trending(page_no):
 	def _process(params):
 		data = call_flicklist('/shows/trending', params={'page': page_no, 'per_page': 20}, with_auth=False)
-		items, page_count = _media_to_trakt_list(data, 'tv')
-		return (items, page_count)
-	string = 'trakt_tv_trending_%s' % page_no
+		items, _ = _media_to_fl_list(data, 'tv')
+		return items
+	string = 'fl_tv_trending_%s' % page_no
 	return lists_cache_object(_process, string, {})
 
-def trakt_tv_trending_recent(page_no):
+def fl_tv_trending_recent(page_no):
 	current_year = get_datetime().year
 	def _process(params):
 		data = call_flicklist('/shows/trending', params={'page': page_no, 'per_page': 20, 'year_min': current_year - 1, 'year_max': current_year}, with_auth=False)
-		items, page_count = _media_to_trakt_list(data, 'tv')
-		return (items, page_count)
-	string = 'trakt_tv_trending_recent_%s' % page_no
+		items, _ = _media_to_fl_list(data, 'tv')
+		return items
+	string = 'fl_tv_trending_recent_%s' % page_no
 	return lists_cache_object(_process, string, {})
 
-def trakt_tv_most_watched(page_no):
+def fl_tv_most_watched(page_no):
 	def _process(params):
 		data = call_flicklist('/shows/trending', params={'page': page_no, 'per_page': 20, 'sort': 'popularity'}, with_auth=False)
-		items, page_count = _media_to_trakt_list(data, 'tv')
-		return (items, page_count)
-	string = 'trakt_tv_most_watched_%s' % page_no
+		items, _ = _media_to_fl_list(data, 'tv')
+		return items
+	string = 'fl_tv_most_watched_%s' % page_no
 	return lists_cache_object(_process, string, {})
 
-def trakt_tv_most_favorited(page_no):
+def fl_tv_most_favorited(page_no):
 	def _process(params):
 		data = call_flicklist('/shows/top-rated', params={'page': page_no, 'per_page': 20}, with_auth=False)
-		items, page_count = _media_to_trakt_list(data, 'tv')
-		return (items, page_count)
-	string = 'trakt_tv_most_favorited_%s' % page_no
+		items, _ = _media_to_fl_list(data, 'tv')
+		return items
+	string = 'fl_tv_most_favorited_%s' % page_no
 	return lists_cache_object(_process, string, {})
 
-def trakt_tv_certifications(certification, page_no):
+def fl_tv_certifications(certification, page_no):
 	def _process(params):
 		data = call_flicklist('/discover', params={'type': 'tv', 'certification': certification, 'page': page_no, 'per_page': 20}, with_auth=False)
-		items, page_count = _media_to_trakt_list(data, 'tv')
-		return (items, page_count)
-	string = 'trakt_tv_certifications_%s_%s' % (certification, page_no)
+		items, _ = _media_to_fl_list(data, 'tv')
+		return items
+	string = 'fl_tv_certifications_%s_%s' % (certification, page_no)
 	return lists_cache_object(_process, string, {})
 
-def trakt_tv_search(query, page_no):
+def fl_tv_search(query, page_no):
 	def _process(dummy_arg):
 		data = call_flicklist('/search', params={'q': query, 'type': 'tv', 'page': page_no, 'per_page': 20}, with_auth=False,
 							pagination=True, page_no=page_no)
@@ -368,54 +368,54 @@ def trakt_tv_search(query, page_no):
 		else:
 			raw, page_count = data, 1
 		items, _ = _extract_paginated(raw)
-		trakt_items = [_to_trakt_show(i) for i in items]
-		return (trakt_items, str(page_count))
-	string = 'trakt_tv_search_%s_%s' % (query, page_no)
+		fl_items = [_to_fl_show(i) for i in items]
+		return (fl_items, str(page_count))
+	string = 'fl_tv_search_%s_%s' % (query, page_no)
 	return cache_object(_process, string, 'dummy_arg', False, 24)
 
 
-def trakt_anime_trending(page_no):
+def fl_anime_trending(page_no):
 	def _process(params):
 		data = call_flicklist('/anime/trending', params={'page': page_no, 'per_page': 20}, with_auth=False)
-		items, page_count = _media_to_trakt_list(data, 'tv')
-		return (items, page_count)
-	string = 'trakt_anime_trending_%s' % page_no
+		items, _ = _media_to_fl_list(data, 'tv')
+		return items
+	string = 'fl_anime_trending_%s' % page_no
 	return lists_cache_object(_process, string, {})
 
-def trakt_anime_trending_recent(page_no):
+def fl_anime_trending_recent(page_no):
 	current_year = get_datetime().year
 	def _process(params):
 		data = call_flicklist('/anime/trending', params={'page': page_no, 'per_page': 20, 'year_min': current_year - 1, 'year_max': current_year}, with_auth=False)
-		items, page_count = _media_to_trakt_list(data, 'tv')
-		return (items, page_count)
-	string = 'trakt_anime_trending_recent_%s' % page_no
+		items, _ = _media_to_fl_list(data, 'tv')
+		return items
+	string = 'fl_anime_trending_recent_%s' % page_no
 	return lists_cache_object(_process, string, {})
 
-def trakt_anime_most_watched(page_no):
+def fl_anime_most_watched(page_no):
 	def _process(params):
 		data = call_flicklist('/anime/trending', params={'page': page_no, 'per_page': 20, 'sort': 'popularity'}, with_auth=False)
-		items, page_count = _media_to_trakt_list(data, 'tv')
-		return (items, page_count)
-	string = 'trakt_anime_most_watched_%s' % page_no
+		items, _ = _media_to_fl_list(data, 'tv')
+		return items
+	string = 'fl_anime_most_watched_%s' % page_no
 	return lists_cache_object(_process, string, {})
 
-def trakt_anime_most_favorited(page_no):
+def fl_anime_most_favorited(page_no):
 	def _process(params):
 		data = call_flicklist('/anime/top-rated', params={'page': page_no, 'per_page': 20}, with_auth=False)
-		items, page_count = _media_to_trakt_list(data, 'tv')
-		return (items, page_count)
-	string = 'trakt_anime_most_favorited_%s' % page_no
+		items, _ = _media_to_fl_list(data, 'tv')
+		return items
+	string = 'fl_anime_most_favorited_%s' % page_no
 	return lists_cache_object(_process, string, {})
 
-def trakt_anime_certifications(certification, page_no):
+def fl_anime_certifications(certification, page_no):
 	def _process(params):
 		data = call_flicklist('/discover', params={'type': 'tv', 'genre': 16, 'certification': certification, 'page': page_no, 'per_page': 20}, with_auth=False)
-		items, page_count = _media_to_trakt_list(data, 'tv')
-		return (items, page_count)
-	string = 'trakt_anime_certifications_%s_%s' % (certification, page_no)
+		items, _ = _media_to_fl_list(data, 'tv')
+		return items
+	string = 'fl_anime_certifications_%s_%s' % (certification, page_no)
 	return lists_cache_object(_process, string, {})
 
-def trakt_anime_search(query, page_no):
+def fl_anime_search(query, page_no):
 	def _process(dummy_arg):
 		data = call_flicklist('/search', params={'q': query, 'type': 'tv', 'genre': 'anime', 'page': page_no, 'per_page': 20},
 							with_auth=False, pagination=True, page_no=page_no)
@@ -424,24 +424,24 @@ def trakt_anime_search(query, page_no):
 		else:
 			raw, page_count = data, 1
 		items, _ = _extract_paginated(raw)
-		trakt_items = [_to_trakt_show(i) for i in items]
-		return (trakt_items, str(page_count))
-	string = 'trakt_anime_search_%s_%s' % (query, page_no)
+		fl_items = [_to_fl_show(i) for i in items]
+		return (fl_items, str(page_count))
+	string = 'fl_anime_search_%s_%s' % (query, page_no)
 	return cache_object(_process, string, 'dummy_arg', False, 24)
 
 
-def trakt_recommendations(media_type):
+def fl_recommendations(media_type):
 	def _process(params):
 		endpoint = '/movies/top-rated' if media_type in ('movie', 'movies') else '/shows/top-rated'
 		data = call_flicklist(endpoint, params={'per_page': 50}, with_auth=True)
 		mtype = 'movie' if media_type in ('movie', 'movies') else 'tv'
-		items, _ = _media_to_trakt_list(data, mtype)
+		items, _ = _media_to_fl_list(data, mtype)
 		return items
-	string = 'trakt_recommendations_%s' % media_type
-	return flicklist_cache.cache_trakt_object(_process, string, {})
+	string = 'fl_recommendations_%s' % media_type
+	return flicklist_cache.cache_fl_object(_process, string, {})
 
 
-def trakt_watched_status_mark(action, media, media_id, tvdb_id=0, season=None, episode=None, key='tmdb'):
+def fl_watched_status_mark(action, media, media_id, tvdb_id=0, season=None, episode=None, key='tmdb'):
 	"""Mark media as watched/unwatched on FlickList."""
 	try:
 		if action == 'mark_as_watched':
@@ -474,7 +474,7 @@ def trakt_watched_status_mark(action, media, media_id, tvdb_id=0, season=None, e
 		kodi_utils.logger('FlickList watched_status_mark error', str(e))
 		return False
 
-def trakt_progress(action, media, media_id, percent, season=None, episode=None, resume_id=None, refresh_trakt=False):
+def fl_progress(action, media, media_id, percent, season=None, episode=None, resume_id=None, refresh_fl=False):
 	"""Set or clear playback progress on FlickList."""
 	try:
 		if action == 'clear_progress':
@@ -492,19 +492,19 @@ def trakt_progress(action, media, media_id, percent, season=None, episode=None, 
 			if episode is not None:
 				data['episode'] = int(episode)
 			call_flicklist('/scrobble/event', data=data)
-		if refresh_trakt:
-			trakt_sync_activities()
+		if refresh_fl:
+			fl_sync_activities()
 	except Exception as e:
 		kodi_utils.logger('FlickList progress error', str(e))
 
-def trakt_official_status(media_type):
+def fl_official_status(media_type):
 	"""Always returns True — FlickList handles all scrobbling directly.
-	This function existed in Trakt to check if script.trakt was active.
+	This function existed in the original addon to check if an external scrobbler was active.
 	Since we ARE the tracker, always return True (meaning: go ahead and track)."""
 	return True
 
 
-def trakt_get_hidden_items(list_type):
+def fl_get_hidden_items(list_type):
 	"""Get hidden/dropped items from FlickList up-next."""
 	try:
 		data = call_flicklist('/up-next', params={'include_dropped': 'true'}, with_auth=True)
@@ -525,27 +525,27 @@ def hide_unhide_progress_items(params):
 			call_flicklist('/up-next/%s/undrop' % media_id, method='post')
 	except:
 		pass
-	trakt_sync_activities()
+	fl_sync_activities()
 	kodi_utils.kodi_refresh()
 
 
-def trakt_collection_lists(media_type, list_type=None):
+def fl_collection_lists(media_type, list_type=None):
 	"""FlickList watchlist with status=watching serves as 'collection'."""
-	data = trakt_fetch_collection_watchlist('collection', media_type)
+	data = fl_fetch_collection_watchlist('collection', media_type)
 	if list_type == 'recent':
 		data.sort(key=lambda k: k.get('collected_at', ''), reverse=True)
 		data = data[:20]
 	return data
 
-def trakt_watchlist_lists(media_type, list_type=None):
-	data = trakt_fetch_collection_watchlist('watchlist', media_type)
+def fl_watchlist_lists(media_type, list_type=None):
+	data = fl_fetch_collection_watchlist('watchlist', media_type)
 	if list_type == 'recent':
 		data.sort(key=lambda k: k.get('collected_at', ''), reverse=True)
 		data = data[:20]
 	return data
 
-def trakt_collection(media_type, dummy_arg):
-	data = trakt_fetch_collection_watchlist('collection', media_type)
+def fl_collection(media_type, dummy_arg):
+	data = fl_fetch_collection_watchlist('collection', media_type)
 	sort_order = settings.lists_sort_order('collection')
 	if sort_order == 0:
 		data = sort_for_article(data, 'title', settings.ignore_articles())
@@ -555,8 +555,8 @@ def trakt_collection(media_type, dummy_arg):
 		data.sort(key=lambda k: k.get('released', ''), reverse=True)
 	return data
 
-def trakt_watchlist(media_type, dummy_arg):
-	data = trakt_fetch_collection_watchlist('watchlist', media_type)
+def fl_watchlist(media_type, dummy_arg):
+	data = fl_fetch_collection_watchlist('watchlist', media_type)
 	if not settings.show_unaired_watchlist():
 		current_date = get_datetime()
 		str_format = '%Y-%m-%d' if media_type in ('movie', 'movies') else '%Y-%m-%dT%H:%M:%S.%fZ'
@@ -570,8 +570,8 @@ def trakt_watchlist(media_type, dummy_arg):
 		data.sort(key=lambda k: k.get('released', ''), reverse=True)
 	return data
 
-def trakt_fetch_collection_watchlist(list_type, media_type):
-	"""Fetch watchlist from FlickList and transform to Trakt-compatible shape."""
+def fl_fetch_collection_watchlist(list_type, media_type):
+	"""Fetch watchlist from FlickList and transform to legacy-compatible shape."""
 	def _process(params):
 		data = call_flicklist('/user/watchlist', params={'status': 'watching' if list_type == 'collection' else None}, with_auth=True)
 		if not data:
@@ -599,8 +599,8 @@ def trakt_fetch_collection_watchlist(list_type, media_type):
 		string_insert = 'movie'
 	else:
 		string_insert = 'tvshow'
-	string = 'trakt_%s_%s' % (list_type, string_insert)
-	return flicklist_cache.cache_trakt_object(_process, string, {})
+	string = 'fl_%s_%s' % (list_type, string_insert)
+	return flicklist_cache.cache_fl_object(_process, string, {})
 
 def add_to_list(user, slug, data):
 	"""Add media to a FlickList user list."""
@@ -615,7 +615,7 @@ def add_to_list(user, slug, data):
 	for item in items:
 		result = call_flicklist('/user/lists/%s/items' % slug, data={'media_item_id': item['tmdb_id']})
 	kodi_utils.notification('Success', 3000)
-	trakt_sync_activities()
+	fl_sync_activities()
 	return result
 
 def remove_from_list(user, slug, data):
@@ -629,7 +629,7 @@ def remove_from_list(user, slug, data):
 	for tmdb_id in items:
 		call_flicklist('/user/lists/%s/items/%s' % (slug, tmdb_id), is_delete=True)
 	kodi_utils.notification('Success', 3000)
-	trakt_sync_activities()
+	fl_sync_activities()
 	if kodi_utils.path_check('my_lists') or kodi_utils.external():
 		kodi_utils.kodi_refresh()
 
@@ -643,7 +643,7 @@ def add_to_watchlist(data):
 				if result is None:
 					return kodi_utils.notification('Error', 3000)
 	kodi_utils.notification('Success', 3000)
-	trakt_sync_activities()
+	fl_sync_activities()
 
 def remove_from_watchlist(data):
 	"""Remove from FlickList watchlist."""
@@ -653,8 +653,8 @@ def remove_from_watchlist(data):
 			if tmdb_id:
 				call_flicklist('/user/watchlist/%s' % tmdb_id, is_delete=True)
 	kodi_utils.notification('Success', 3000)
-	trakt_sync_activities()
-	if kodi_utils.path_check('trakt_watchlist') or kodi_utils.external():
+	fl_sync_activities()
+	if kodi_utils.path_check('fl_watchlist') or kodi_utils.external():
 		kodi_utils.kodi_refresh()
 
 def add_to_collection(data):
@@ -665,7 +665,7 @@ def remove_from_collection(data):
 	return remove_from_watchlist(data)
 
 
-def trakt_favorites(media_type, dummy_arg):
+def fl_favorites(media_type, dummy_arg):
 	def _process(params):
 		data = call_flicklist('/user/favorites', with_auth=True)
 		if not data:
@@ -684,10 +684,10 @@ def trakt_favorites(media_type, dummy_arg):
 				})
 		return results
 	media_type_key = 'movies' if media_type in ('movie', 'movies') else 'shows'
-	string = 'trakt_favorites_%s' % media_type_key
-	return flicklist_cache.cache_trakt_object(_process, string, {})
+	string = 'fl_favorites_%s' % media_type_key
+	return flicklist_cache.cache_fl_object(_process, string, {})
 
-def trakt_get_lists(list_type, page_no='1'):
+def fl_get_lists(list_type, page_no='1'):
 	"""Get user's FlickList lists."""
 	if list_type in ('trending', 'popular'):
 		return []
@@ -703,7 +703,7 @@ def trakt_get_lists(list_type, page_no='1'):
 					'name': item.get('name', item.get('title', '')),
 					'ids': {
 						'slug': str(item.get('id', '')),
-						'trakt': item.get('id', 0)
+						'fl': item.get('id', 0)
 					},
 					'user': {'ids': {'slug': item.get('user_id', '')}},
 					'item_count': item.get('item_count', 0),
@@ -713,12 +713,12 @@ def trakt_get_lists(list_type, page_no='1'):
 				})
 			return results
 		if list_type == 'my_lists':
-			string = 'trakt_my_lists'
+			string = 'fl_my_lists'
 		else:
-			string = 'trakt_liked_lists'
-		return flicklist_cache.cache_trakt_object(_process, string, {})
+			string = 'fl_liked_lists'
+		return flicklist_cache.cache_fl_object(_process, string, {})
 
-def get_trakt_list_contents(list_type, user, slug, with_auth, list_id=None, sort_by='default', sort_how='default'):
+def get_fl_list_contents(list_type, user, slug, with_auth, list_id=None, sort_by='default', sort_how='default'):
 	"""Get items from a FlickList list."""
 	skip_sort = sort_by == 'skip'
 	custom_sort = not skip_sort and sort_by != 'default'
@@ -764,8 +764,8 @@ def get_trakt_list_contents(list_type, user, slug, with_auth, list_id=None, sort
 			except:
 				pass
 		return results
-	string = 'trakt_list_contents_%s_%s_%s' % (list_type, user, slug)
-	data = flicklist_cache.cache_trakt_object(_fetch, string, {})
+	string = 'fl_list_contents_%s_%s_%s' % (list_type, user, slug)
+	data = flicklist_cache.cache_fl_object(_fetch, string, {})
 	if not skip_sort and data:
 		if not custom_sort and isinstance(data, dict):
 			sort_by = data.get('sort_by', 'rank')
@@ -775,7 +775,7 @@ def get_trakt_list_contents(list_type, user, slug, with_auth, list_id=None, sort
 			data = sort_list(sort_by if sort_by != 'default' else 'rank', sort_how if sort_how != 'default' else 'asc', data, settings.ignore_articles())
 	return data if isinstance(data, list) else []
 
-def get_trakt_list_selection(included_lists):
+def get_fl_list_selection(included_lists):
 	"""List selection dialog for FlickList lists."""
 	def default_lists():
 		return [
@@ -783,9 +783,9 @@ def get_trakt_list_selection(included_lists):
 			{'name': 'TV Show Watchlist', 'display': '[B][I]TV SHOW WATCHLIST [/I][/B]', 'user': 'Watchlist', 'slug': 'Watchlist', 'list_type': 'watchlist', 'media_type': 'show'}
 		]
 	def personal_lists():
-		my_lists = trakt_get_lists('my_lists')
+		my_lists = fl_get_lists('my_lists')
 		_lists = [{'name': item['name'], 'display': '[B]PERSONAL:[/B] [I]%s[/I]' % item['name'].upper(), 'user': item['user']['ids']['slug'],
-			'slug': item['ids']['slug'], 'list_type': 'my_lists', 'list_id': item['ids']['trakt'], 'item_count': item.get('item_count', 0)} for item in my_lists]
+			'slug': item['ids']['slug'], 'list_type': 'my_lists', 'list_id': item['ids']['fl'], 'item_count': item.get('item_count', 0)} for item in my_lists]
 		_lists.sort(key=lambda k: k['name'])
 		return _lists
 	def liked_lists():
@@ -801,7 +801,7 @@ def get_trakt_list_selection(included_lists):
 		return None
 	return selection
 
-def make_new_trakt_list(params):
+def make_new_fl_list(params):
 	"""Create a new FlickList list."""
 	list_title = kodi_utils.kodi_dialog().input('')
 	if not list_title:
@@ -809,35 +809,35 @@ def make_new_trakt_list(params):
 	list_name = unquote(list_title)
 	data = {'name': list_name, 'privacy': 'private'}
 	call_flicklist('/user/lists', data=data)
-	trakt_sync_activities()
+	fl_sync_activities()
 	kodi_utils.notification('Success', 3000)
 	kodi_utils.kodi_refresh()
 
-def delete_trakt_list(params):
+def delete_fl_list(params):
 	"""Delete a FlickList list."""
 	list_slug = params['list_slug']
 	if not kodi_utils.confirm_dialog():
 		return
 	call_flicklist('/user/lists/%s' % list_slug, is_delete=True)
-	trakt_sync_activities()
+	fl_sync_activities()
 	kodi_utils.notification('Success', 3000)
 	kodi_utils.kodi_refresh()
 
-def trakt_like_a_list(params):
+def fl_like_a_list(params):
 	"""FlickList doesn't have list liking yet — no-op."""
 	kodi_utils.notification('Not available yet', 3000)
 	return False
 
-def trakt_search_lists(search_title, page_no):
+def fl_search_lists(search_title, page_no):
 	"""FlickList doesn't have public list search yet — return empty."""
 	return []
 
-def trakt_lists_with_media(media_type, imdb_id):
+def fl_lists_with_media(media_type, imdb_id):
 	"""FlickList doesn't have 'lists containing this media' yet — return empty."""
 	return []
 
 
-def trakt_indicators_movies():
+def fl_indicators_movies():
 	"""Fetch watched movies from FlickList and store in local cache."""
 	def _process(item):
 		tmdb_id = item.get('tmdb_id')
@@ -854,9 +854,9 @@ def trakt_indicators_movies():
 	items = data.get('results', data.get('items', [])) if isinstance(data, dict) else data
 	threads = list(make_thread_list(_process, items))
 	[i.join() for i in threads]
-	flicklist_cache.trakt_watched_cache.set_bulk_movie_watched(insert_list)
+	flicklist_cache.fl_watched_cache.set_bulk_movie_watched(insert_list)
 
-def trakt_indicators_tv():
+def fl_indicators_tv():
 	"""Fetch watched TV episodes from FlickList and store in local cache."""
 	def _process(item):
 		tmdb_id = item.get('tmdb_id')
@@ -876,10 +876,10 @@ def trakt_indicators_tv():
 	items = data.get('results', data.get('items', [])) if isinstance(data, dict) else data
 	threads = list(make_thread_list(_process, items))
 	[i.join() for i in threads]
-	flicklist_cache.trakt_watched_cache.set_bulk_tvshow_watched(insert_list)
+	flicklist_cache.fl_watched_cache.set_bulk_tvshow_watched(insert_list)
 
 
-def trakt_playback_progress():
+def fl_playback_progress():
 	"""Get in-progress items from FlickList."""
 	data = call_flicklist('/sync/playback', with_auth=True)
 	if not data:
@@ -911,10 +911,10 @@ def trakt_playback_progress():
 		results.append(progress_item)
 	return results
 
-def trakt_progress_movies(progress_info):
+def fl_progress_movies(progress_info):
 	"""Process movie progress and store in cache."""
 	def _process(item):
-		tmdb_id = get_trakt_movie_id(item['movie']['ids'])
+		tmdb_id = get_fl_movie_id(item['movie']['ids'])
 		if not tmdb_id:
 			return
 		obj = ('movie', str(tmdb_id), '', '', str(round(item['progress'], 1)), 0, item['paused_at'], item['id'], item['movie']['title'])
@@ -926,12 +926,12 @@ def trakt_progress_movies(progress_info):
 		return
 	threads = list(make_thread_list(_process, progress_items))
 	[i.join() for i in threads]
-	flicklist_cache.trakt_watched_cache.set_bulk_movie_progress(insert_list)
+	flicklist_cache.fl_watched_cache.set_bulk_movie_progress(insert_list)
 
-def trakt_progress_tv(progress_info):
+def fl_progress_tv(progress_info):
 	"""Process TV progress and store in cache."""
 	def _process_tmdb_ids(item):
-		tmdb_id = get_trakt_tvshow_id(item['ids'])
+		tmdb_id = get_fl_tvshow_id(item['ids'])
 		tmdb_list_append((tmdb_id, item['title']))
 	def _process():
 		for item in tmdb_list:
@@ -958,10 +958,10 @@ def trakt_progress_tv(progress_info):
 	threads = list(make_thread_list(_process_tmdb_ids, all_shows))
 	[i.join() for i in threads]
 	insert_list = list(_process())
-	flicklist_cache.trakt_watched_cache.set_bulk_tvshow_progress(insert_list)
+	flicklist_cache.fl_watched_cache.set_bulk_tvshow_progress(insert_list)
 
 
-def trakt_get_my_calendar(recently_aired, current_date):
+def fl_get_my_calendar(recently_aired, current_date):
 	def _process(dummy):
 		data = call_flicklist('/calendar/my/shows/%s/%s' % (start, finish), with_auth=True)
 		if not data:
@@ -984,11 +984,11 @@ def trakt_get_my_calendar(recently_aired, current_date):
 			})
 		results = [i for n, i in enumerate(results) if i not in results[n + 1:]]
 		return results
-	start, finish = trakt_calendar_days(recently_aired, current_date)
-	string = 'trakt_get_my_calendar_%s_%s' % (start, finish)
-	return flicklist_cache.cache_trakt_object(_process, string, 'dummy')
+	start, finish = fl_calendar_days(recently_aired, current_date)
+	string = 'fl_get_my_calendar_%s_%s' % (start, finish)
+	return flicklist_cache.cache_fl_object(_process, string, 'dummy')
 
-def trakt_calendar_days(recently_aired, current_date):
+def fl_calendar_days(recently_aired, current_date):
 	if recently_aired:
 		start = (current_date - timedelta(days=14)).strftime('%Y-%m-%d')
 		finish = '14'
@@ -1000,7 +1000,7 @@ def trakt_calendar_days(recently_aired, current_date):
 	return start, finish
 
 
-def trakt_comments(media_type, imdb_id):
+def fl_comments(media_type, imdb_id):
 	"""FlickList doesn't have comments yet — return empty."""
 	return []
 
@@ -1085,14 +1085,14 @@ def scrobble_heartbeat(media_type, tmdb_id, progress, current_time=None, duratio
 		pass
 
 
-def trakt_get_activity():
+def fl_get_activity():
 	"""Get last activity timestamps from FlickList."""
 	data = call_flicklist('/sync/last-activities', with_auth=True)
 	if data:
 		return data
 	return flicklist_cache.default_activities()
 
-def trakt_sync_activities(force_update=False):
+def fl_sync_activities(force_update=False):
 	"""Sync watched/progress/lists data from FlickList."""
 	def clear_properties(media_type):
 		for item in ((True, True), (True, False), (False, True), (False, False)):
@@ -1107,16 +1107,16 @@ def trakt_sync_activities(force_update=False):
 		return result
 	def _check_daily_expiry():
 		return int(time.time()) >= int(get_setting('fenlightfl.flicklist.next_daily_clear', '0'))
-	trakt_refresh_token()
+	fl_refresh_token()
 	if force_update:
-		flicklist_cache.clear_all_trakt_cache_data(silent=True, refresh=False)
+		flicklist_cache.clear_all_fl_cache_data(silent=True, refresh=False)
 	elif _check_daily_expiry():
 		flicklist_cache.clear_daily_cache()
 		set_setting('flicklist.next_daily_clear', str(int(time.time()) + (24 * 3600)))
 	if not settings.flicklist_user_active() and not force_update:
 		return 'no account'
 	try:
-		latest = trakt_get_activity()
+		latest = fl_get_activity()
 	except:
 		return 'failed'
 	cached = flicklist_cache.reset_activity(latest)
@@ -1133,26 +1133,26 @@ def trakt_sync_activities(force_update=False):
 	cached_lists = cached.get('lists', {})
 	latest_lists = latest.get('lists', {})
 	if _compare(latest.get('recommendations', fallback_date), cached.get('recommendations', fallback_date)):
-		flicklist_cache.clear_trakt_recommendations()
+		flicklist_cache.clear_fl_recommendations()
 	if _compare(latest.get('favorites', fallback_date), cached.get('favorites', fallback_date)):
-		flicklist_cache.clear_trakt_favorites()
+		flicklist_cache.clear_fl_favorites()
 	if _compare(latest_movies.get('collected_at', fallback_date), cached_movies.get('collected_at', fallback_date)):
-		flicklist_cache.clear_trakt_collection_watchlist_data('collection', 'movie')
+		flicklist_cache.clear_fl_collection_watchlist_data('collection', 'movie')
 	if _compare(latest_episodes.get('collected_at', fallback_date), cached_episodes.get('collected_at', fallback_date)):
-		flicklist_cache.clear_trakt_collection_watchlist_data('collection', 'tvshow')
+		flicklist_cache.clear_fl_collection_watchlist_data('collection', 'tvshow')
 	if _compare(latest_movies.get('watchlisted_at', fallback_date), cached_movies.get('watchlisted_at', fallback_date)):
-		flicklist_cache.clear_trakt_collection_watchlist_data('watchlist', 'movie')
+		flicklist_cache.clear_fl_collection_watchlist_data('watchlist', 'movie')
 	if _compare(latest_shows.get('watchlisted_at', fallback_date), cached_shows.get('watchlisted_at', fallback_date)):
-		flicklist_cache.clear_trakt_collection_watchlist_data('watchlist', 'tvshow')
+		flicklist_cache.clear_fl_collection_watchlist_data('watchlist', 'tvshow')
 	if _compare(latest_shows.get('dropped_at', fallback_date), cached_shows.get('dropped_at', fallback_date)):
 		clear_properties('episode')
-		flicklist_cache.clear_trakt_hidden_data('dropped')
+		flicklist_cache.clear_fl_hidden_data('dropped')
 	if _compare(latest_movies.get('watched_at', fallback_date), cached_movies.get('watched_at', fallback_date)):
 		clear_properties('movie')
-		trakt_indicators_movies()
+		fl_indicators_movies()
 	if _compare(latest_episodes.get('watched_at', fallback_date), cached_episodes.get('watched_at', fallback_date)):
 		clear_properties('episode')
-		trakt_indicators_tv()
+		fl_indicators_tv()
 	if _compare(latest_movies.get('paused_at', fallback_date), cached_movies.get('paused_at', fallback_date)):
 		refresh_movies_progress = True
 	if _compare(latest_episodes.get('paused_at', fallback_date), cached_episodes.get('paused_at', fallback_date)):
@@ -1162,21 +1162,21 @@ def trakt_sync_activities(force_update=False):
 	if _compare(latest_lists.get('liked_at', fallback_date), cached_lists.get('liked_at', fallback_date)):
 		lists_actions.append('liked_lists')
 	if refresh_movies_progress or refresh_shows_progress:
-		progress_info = trakt_playback_progress()
+		progress_info = fl_playback_progress()
 		if refresh_movies_progress:
 			clear_properties('movie')
-			trakt_progress_movies(progress_info)
+			fl_progress_movies(progress_info)
 		if refresh_shows_progress:
 			clear_properties('episode')
-			trakt_progress_tv(progress_info)
+			fl_progress_tv(progress_info)
 	if lists_actions:
 		for item in lists_actions:
-			flicklist_cache.clear_trakt_list_data(item)
-			flicklist_cache.clear_trakt_list_contents_data(item)
+			flicklist_cache.clear_fl_list_data(item)
+			flicklist_cache.clear_fl_list_contents_data(item)
 	return 'success'
 
 
-def get_trakt_movie_id(item):
+def get_fl_movie_id(item):
 	if item.get('tmdb'):
 		return item['tmdb']
 	tmdb_id = None
@@ -1189,7 +1189,7 @@ def get_trakt_movie_id(item):
 			pass
 	return tmdb_id
 
-def get_trakt_tvshow_id(item):
+def get_fl_tvshow_id(item):
 	if item.get('tmdb'):
 		return item['tmdb']
 	tmdb_id = None
@@ -1209,7 +1209,7 @@ def get_trakt_tvshow_id(item):
 				tmdb_id = None
 	return tmdb_id
 
-def make_trakt_slug(name):
+def make_fl_slug(name):
 	"""Generate a URL slug from a title."""
 	import re
 	name = name.strip()

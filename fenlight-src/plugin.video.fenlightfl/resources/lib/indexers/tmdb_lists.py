@@ -162,7 +162,7 @@ def adjust_tmdb_list_properties(params):
 	if custom_poster: choices.append(('Delete Custom Poster', '', 'delete_poster'))
 	if custom_fanart: choices.append(('Delete Custom Fanart', '', 'delete_fanart'))
 	choices.extend([('Empty List Contents', 'Delete All Contents of %s' % current_name, 'empty_contents'),
-					('Import FL List', 'Import an FL List into %s' % current_name, 'import_trakt')])
+					('Import FL List', 'Import an FL List into %s' % current_name, 'import_fl')])
 	list_items = [{'line1': item[0], 'line2': item[1] or item[0]} for item in choices]
 	kwargs = {'items': json.dumps(list_items), 'heading': 'TMDb List Properties', 'multi_line': 'true', 'narrow_window': 'true'}
 	action = kodi_utils.select_dialog([i[2] for i in choices], **kwargs)
@@ -205,8 +205,8 @@ def adjust_tmdb_list_properties(params):
 	elif action == 'empty_contents':
 		if not clear_tmdb_list(current_name, list_id): return adjust_tmdb_list_properties(params)
 		params.update({'refresh_cache': 'true'})
-	elif action == 'import_trakt':
-		import_trakt_list_tmdb({'list_name': current_name, 'list_id': list_id})
+	elif action == 'import_fl':
+		import_fl_list_tmdb({'list_name': current_name, 'list_id': list_id})
 		params.update({'refresh_cache': 'true'})
 	return adjust_tmdb_list_properties(params)
 
@@ -268,8 +268,8 @@ def make_new_tmdb_list(params):
 	external_creation = params.get('external_creation', 'false') == 'true'
 	if not external_creation and kodi_utils.confirm_dialog(heading='TMDb Lists', text='Import a FL List to populate this new list?',
 																				ok_label='Yes', cancel_label='No'):
-		from apis.flicklist_api import get_trakt_list_selection
-		chosen_list = get_trakt_list_selection(['default', 'personal'])
+		from apis.flicklist_api import get_fl_list_selection
+		chosen_list = get_fl_list_selection(['default', 'personal'])
 		if chosen_list == None: return
 		suggested_list_name = chosen_list.get('name')
 	list_name = kodi_utils.kodi_dialog().input('Please Choose a Name for the New TMDb List', defaultt=suggested_list_name)
@@ -282,7 +282,7 @@ def make_new_tmdb_list(params):
 		kodi_utils.notification('Error Creating List')
 		return None
 	if chosen_list:
-		new_contents = process_trakt_list(chosen_list)
+		new_contents = process_fl_list(chosen_list)
 		success = process_add_to_list(data.get('id'), new_contents)
 	tmdb_lists_cache.clear_all_lists()
 	if not external_creation: kodi_utils.kodi_refresh()
@@ -360,45 +360,45 @@ def cache_delete_list_tmdb(params):
 	kodi_utils.notification('Success')
 	kodi_utils.kodi_refresh()
 
-def import_trakt_list_tmdb(params):
+def import_fl_list_tmdb(params):
 	if not list_change_warning(params['list_name']): return None
-	from apis.flicklist_api import get_trakt_list_selection
+	from apis.flicklist_api import get_fl_list_selection
 	list_id = params.get('list_id', '')
-	chosen_list = get_trakt_list_selection(['default', 'personal'])
+	chosen_list = get_fl_list_selection(['default', 'personal'])
 	if chosen_list == None: return None
 	if kodi_utils.confirm_dialog(heading='TMDb Lists', text='Rename List to Match FL List Name?', ok_label='Yes', cancel_label='No'): rename_list = True
 	else: rename_list = False
-	trakt_list_name = chosen_list.get('name')
-	new_contents = process_trakt_list(chosen_list)
+	fl_list_name = chosen_list.get('name')
+	new_contents = process_fl_list(chosen_list)
 	success = process_add_to_list(list_id, new_contents)
 	if success and rename_list:
-			tmdb_list_api.rename_list(list_id, trakt_list_name)
+			tmdb_list_api.rename_list(list_id, fl_list_name)
 	kodi_utils.notification('Success. Items added' if success else 'Error adding items', 2000)
 
-def process_trakt_list(chosen_list):
-	from apis.flicklist_api import trakt_fetch_collection_watchlist, get_trakt_list_contents
+def process_fl_list(chosen_list):
+	from apis.flicklist_api import fl_fetch_collection_watchlist, get_fl_list_contents
 	tmdb_media_converter = {'movie': 'movie', 'tvshow': 'tv', 'show': 'tv'}
 	media_type_check = {'movie': 'movie', 'show': 'tvshow', 'tvshow': 'tvshow'}
 	new_contents = []
 	new_contents_append = new_contents.append
-	trakt_list_type, trakt_list_name = chosen_list.get('list_type'), chosen_list.get('name')
-	if trakt_list_type in ('collection', 'watchlist'):
-		trakt_media_type = chosen_list.get('media_type')
-		result = trakt_fetch_collection_watchlist(trakt_list_type, trakt_media_type)
+	fl_list_type, fl_list_name = chosen_list.get('list_type'), chosen_list.get('name')
+	if fl_list_type in ('collection', 'watchlist'):
+		fl_media_type = chosen_list.get('media_type')
+		result = fl_fetch_collection_watchlist(fl_list_type, fl_media_type)
 		try:
-			sort_order = lists_sort_order(trakt_list_type)
+			sort_order = lists_sort_order(fl_list_type)
 			if sort_order == 0: result = sort_for_article(result, 'title', ignore_articles())
 			elif sort_order == 1: result.sort(key=lambda k: k['collected_at'], reverse=True)
 			else: result.sort(key=lambda k: k.get('released'), reverse=True)
 		except: pass
 	else:
-		result = get_trakt_list_contents(trakt_list_type, chosen_list.get('user'), chosen_list.get('slug'), trakt_list_type == 'my_lists')
+		result = get_fl_list_contents(fl_list_type, chosen_list.get('user'), chosen_list.get('slug'), fl_list_type == 'my_lists')
 		try: result.sort(key=lambda k: (k['order']))
 		except: pass
 	for item in result:
 		try:
-			media_type = item.get('type') or media_type_check[trakt_media_type]
-			if trakt_list_type in ('my_lists', 'liked_lists') and item['type'] not in ('movie', 'show'): continue
+			media_type = item.get('type') or media_type_check[fl_media_type]
+			if fl_list_type in ('my_lists', 'liked_lists') and item['type'] not in ('movie', 'show'): continue
 			media_id = item['media_ids']['tmdb']
 			if media_id in (None, 'None', ''): continue
 			new_contents_append({'media_type': tmdb_media_converter[media_type], 'media_id': media_id})

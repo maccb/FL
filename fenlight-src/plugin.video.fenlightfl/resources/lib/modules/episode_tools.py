@@ -132,7 +132,7 @@ def build_next_episode_manager():
 	show_list = get_next_episodes(0)
 	hidden_list = get_hidden_progress_items(indicators)
 	if indicators == 0: icon, mode = kodi_utils.get_icon('folder'), 'hide_unhide_progress_items'
-	else: icon, mode = kodi_utils.get_icon('trakt'), 'trakt.hide_unhide_progress_items'
+	else: icon, mode = kodi_utils.get_icon('fl'), 'fl.hide_unhide_progress_items'
 	threads = list(make_thread_list(_process, show_list))
 	[i.join() for i in threads]
 	item_list = sorted(list_items, key=lambda k: (title_key(k['sort_title'], ignore_articles())), reverse=False)

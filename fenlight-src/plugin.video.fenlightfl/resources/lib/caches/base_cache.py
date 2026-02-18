@@ -19,8 +19,8 @@ last_played text, resume_id integer, title text, unique (db_type, media_id, seas
 'CREATE TABLE IF NOT EXISTS favourites (db_type text not null, tmdb_id text not null, title text not null, unique (db_type, tmdb_id))',),
 'settings_db': (
 'CREATE TABLE IF NOT EXISTS settings (setting_id text not null unique, setting_type text, setting_default text, setting_value text)',),
-'trakt_db': (
-'CREATE TABLE IF NOT EXISTS trakt_data (id text unique, data text)',
+'fl_db': (
+'CREATE TABLE IF NOT EXISTS fl_data (id text unique, data text)',
 'CREATE TABLE IF NOT EXISTS watched \
 (db_type text not null, media_id text not null, season integer, episode integer, last_played text, title text, unique (db_type, media_id, season, episode))',
 'CREATE TABLE IF NOT EXISTS progress \
@@ -55,7 +55,7 @@ expires integer, unique (provider, db_type, tmdb_id, title, year, season, episod
 
 def locations():
 	return {
-'navigator_db': 'navigator.db', 'watched_db': 'watched.db', 'favorites_db': 'favourites.db', 'settings_db': 'settings.db', 'trakt_db': 'traktcache.db',
+'navigator_db': 'navigator.db', 'watched_db': 'watched.db', 'favorites_db': 'favourites.db', 'settings_db': 'settings.db', 'fl_db': 'flcache.db',
 'maincache_db': 'maincache.db', 'metacache_db': 'metacache.db', 'debridcache_db': 'debridcache.db', 'lists_db': 'lists.db', 'tmdb_lists_db': 'tmdb_lists.db',
 'discover_db': 'discover.db', 'external_db': 'external.db', 'episode_groups_db': 'episode_groups.db', 'personal_lists_db': 'personal_lists.db',
 'random_widgets_db': 'random_widgets.db'
@@ -87,7 +87,7 @@ def get_timestamp(offset=0):
 
 def remove_old_databases():
 	databases_path = path.join(kodi_utils.addon_profile(), 'databases/')
-	current_dbs = ('navigator.db', 'watched.db', 'favourites.db', 'traktcache.db', 'maincache.db', 'lists.db', 'tmdb_lists.db', 'discover.db',
+	current_dbs = ('navigator.db', 'watched.db', 'favourites.db', 'flcache.db', 'maincache.db', 'lists.db', 'tmdb_lists.db', 'discover.db',
 	'metacache.db', 'debridcache.db', 'external.db', 'settings.db', 'episode_groups.db', 'personal_lists_db', 'episode_groups_db', 'personal_lists_db', 'random_widgets_db')
 	try:
 		files = kodi_utils.list_dirs(databases_path)[1]
@@ -99,7 +99,7 @@ def remove_old_databases():
 
 def check_databases_integrity(silent=False):
 	integrity_check = {
-	'settings_db': 1,              'navigator_db': 1,              'watched_db': 3,              'favorites_db': 1,              'trakt_db': 4,
+	'settings_db': 1,              'navigator_db': 1,              'watched_db': 3,              'favorites_db': 1,              'fl_db': 4,
 	'maincache_db': 1,             'metacache_db': 3,              'lists_db': 1,                'tmdb_lists_db': 1,             'discover_db': 1,
 	'debridcache_db': 1,           'external_db': 1,               'episode_groups_db': 1,       'personal_lists_db': 1,         'random_widgets_db': 1
 			}
@@ -183,9 +183,9 @@ def clear_cache(cache_type, silent=False):
 		results = []
 		for item in (external_cache, debrid_cache): results.append(item.clear_cache())
 		success = False not in results
-	elif cache_type == 'trakt':
-		from caches.flicklist_cache import clear_all_trakt_cache_data
-		success = clear_all_trakt_cache_data(silent=silent)
+	elif cache_type == 'fl':
+		from caches.flicklist_cache import clear_all_fl_cache_data
+		success = clear_all_fl_cache_data(silent=silent)
 	elif cache_type == 'imdb':
 		if not _confirm(): return
 		from apis.imdb_api import clear_imdb_cache
@@ -237,7 +237,7 @@ def clear_all_cache():
 	if not kodi_utils.confirm_dialog(): return
 	progressDialog = kodi_utils.progress_dialog()
 	line = 'Clearing....[CR]%s'
-	caches = (('meta', 'Meta Cache'), ('internal_scrapers', 'Internal Scrapers Cache'), ('external_scrapers', 'External Scrapers Cache'), ('trakt', 'FL Cache'),
+	caches = (('meta', 'Meta Cache'), ('internal_scrapers', 'Internal Scrapers Cache'), ('external_scrapers', 'External Scrapers Cache'), ('fl', 'FL Cache'),
 			('imdb', 'IMDb Cache'), ('list', 'List Data Cache'), ('ai_functions', 'AI Data Cache'), ('tmdb_list', 'TMDb Personal List Cache'), ('main', 'Main Cache'),
 			('pm_cloud', 'Premiumize Cloud'), ('rd_cloud', 'Real Debrid Cloud'), ('ad_cloud', 'All Debrid Cloud'), ('ed_cloud', 'Easy Debrid Cloud'),
 			('tb_cloud', 'TorBox Cloud'))

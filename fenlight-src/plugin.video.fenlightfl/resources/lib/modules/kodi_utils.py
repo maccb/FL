@@ -5,25 +5,25 @@ from urllib.parse import urlencode, unquote
 def random_valid_type_check():
 	return {'build_movie_list': 'movie', 'build_tvshow_list': 'tvshow', 'build_season_list': 'season', 'build_episode_list': 'episode',
 	'build_in_progress_episode': 'single_episode', 'build_recently_watched_episode': 'single_episode', 'build_next_episode': 'single_episode',
-	'build_my_calendar': 'single_episode', 'build_trakt_lists': 'trakt_list',
-	'trakt.list.build_trakt_list': 'trakt_list', 'build_trakt_lists_contents': 'trakt_list', 'personal_lists.build_personal_list': 'personal_list',
+	'build_my_calendar': 'single_episode', 'build_fl_lists': 'fl_list',
+	'fl.list.build_fl_list': 'fl_list', 'build_fl_lists_contents': 'fl_list', 'personal_lists.build_personal_list': 'personal_list',
 	'build_personal_lists_contents': 'personal_list', 'tmdblist.build_tmdb_list': 'tmdb_list', 'build_tmdb_lists_contents': 'tmdb_list'}
 
 def random_episodes_check():
 	return {'build_in_progress_episode': 'episode.progress', 'build_recently_watched_episode': 'episode.recently_watched',
-	'build_next_episode': 'episode.next', 'build_my_calendar': 'episode.trakt'}
+	'build_next_episode': 'episode.next', 'build_my_calendar': 'episode.fl'}
 
 def extras_button_label_values():
 	return {'movie':
 				{'movies_play': 'Play', 'show_trailers': 'Trailer', 'show_images': 'Images',  'show_extrainfo': 'Extra Info', 'show_genres': 'Genres',
 				'show_director': 'Director', 'show_options': 'Options', 'show_recommended': 'Recommended', 'show_more_like_this': 'More Like This',
-				'show_trakt_manager': 'FL Lists', 'show_personallists_manager': 'Personal Lists', 'show_tmdb_manager': 'TMDb Lists', 'show_favorites_manager': 'Favorites Lists',
-				'playback_choice': 'Play Options', 'show_plot': 'Plot', 'show_keywords': 'Keywords', 'show_in_trakt_lists': 'In FL Lists', 'close_all': 'Close'},
+				'show_fl_manager': 'FL Lists', 'show_personallists_manager': 'Personal Lists', 'show_tmdb_manager': 'TMDb Lists', 'show_favorites_manager': 'Favorites Lists',
+				'playback_choice': 'Play Options', 'show_plot': 'Plot', 'show_keywords': 'Keywords', 'show_in_fl_lists': 'In FL Lists', 'close_all': 'Close'},
 			'tvshow':
 				{'tvshow_browse': 'Browse', 'show_trailers': 'Trailer', 'show_images': 'Images', 'show_extrainfo': 'Extra Info', 'show_genres': 'Genres',
 				'play_nextep': 'Play Next', 'show_options': 'Options', 'show_recommended': 'Recommended', 'show_more_like_this': 'More Like This',
-				'show_trakt_manager': 'FL Lists', 'show_personallists_manager': 'Personal Lists', 'show_tmdb_manager': 'TMDb Lists', 'show_favorites_manager': 'Favorites Lists',
-				'play_random_episode': 'Play Random', 'show_plot': 'Plot', 'show_keywords': 'Keywords', 'show_in_trakt_lists': 'In FL Lists', 'close_all': 'Close'}}
+				'show_fl_manager': 'FL Lists', 'show_personallists_manager': 'Personal Lists', 'show_tmdb_manager': 'TMDb Lists', 'show_favorites_manager': 'Favorites Lists',
+				'play_random_episode': 'Play Random', 'show_plot': 'Plot', 'show_keywords': 'Keywords', 'show_in_fl_lists': 'In FL Lists', 'close_all': 'Close'}}
 
 def extras_items():
 	return ('Plot', 'Cast', 'Recommended', 'Related', 'More Like This', 'Similar', 'Reviews', 'Comments', 'Trivia', 'Blunders', 'Parental Guide', 'In FL Lists', 'Videos',
@@ -32,7 +32,7 @@ def extras_items():
 def context_menu_items():
 	return {'extras': 'Extras', 'options': 'Options', 'playback_options': 'Play Options', 'browse_movie_set': 'Browse Movie Set', 'browse_seasons': 'Browse TV Seasons',
 			'browse_episodes': 'Browse Season Episodes', 'recommended': 'Browse Recommended', 'related': 'Browse Related', 'more_like_this': 'Browse More Like This',
-			'similar': 'Browse Similar', 'in_trakt_list': 'In FL Lists', 'trakt_manager':'FL Lists Manager', 'personal_manager': 'Personal Lists Manager',
+			'similar': 'Browse Similar', 'in_fl_list': 'In FL Lists', 'fl_manager':'FL Lists Manager', 'personal_manager': 'Personal Lists Manager',
 			'tmdb_manager': 'TMDb Lists Manager', 'favorites_manager': 'Favorites Manager', 'mark_watched': 'Mark Watched/Unwatched',
 			'unmark_previous_episode': 'Unmark Previous Watched Episode', 'exit': 'Exit List', 'refresh': 'Refresh Widgets', 'reload': 'Reload Widgets'}
 

@@ -1,7 +1,7 @@
 from threading import Thread
 from datetime import datetime, timedelta
 from windows.base_window import BaseDialog, window_manager, window_player
-from apis import tmdb_api, imdb_api, omdb_api, ai_api, flicklist_api as trakt_api
+from apis import tmdb_api, imdb_api, omdb_api, ai_api, flicklist_api as fl_api
 from indexers import dialogs, people
 from indexers.images import Images
 from modules import kodi_utils, settings, watched_status
@@ -74,7 +74,7 @@ class Extras(BaseDialog):
 					list_item, position = self.get_listitem(focus_id), self.get_position(focus_id)
 					chosen = self.get_attribute(self, list_item.getProperty(self.item_action_dict[focus_id]))[self.get_position(focus_id)]
 					user, list_slug = chosen['user']['ids']['slug'], chosen['ids']['slug']
-					function, new_value = (trakt_api.trakt_like_a_list, 'true') if list_item.getProperty('liked_status') == 'false' else (trakt_api.trakt_unlike_a_list, 'false')
+					function, new_value = (fl_api.fl_like_a_list, 'true') if list_item.getProperty('liked_status') == 'false' else (fl_api.fl_unlike_a_list, 'false')
 					new_value = 'true' if list_item.getProperty('liked_status') == 'false' else 'false'
 					if function({'user': user, 'list_slug': list_slug, 'refresh': 'false'}): list_item.setProperty('liked_status', new_value)
 				except: return self.notification('Error with FL List')
@@ -109,7 +109,7 @@ class Extras(BaseDialog):
 					self.close_all()
 					chosen = self.get_attribute(self, chosen_var)[position]
 					list_name, user, slug = chosen['name'], chosen['user']['ids']['slug'], chosen['ids']['slug']
-					self.selected = self.folder_runner({'mode': 'trakt.list.build_trakt_list', 'user': user, 'slug': slug, 'list_type': 'user_lists', 'list_name': list_name})
+					self.selected = self.folder_runner({'mode': 'fl.list.build_fl_list', 'user': user, 'slug': slug, 'list_type': 'user_lists', 'list_name': list_name})
 					self.close()
 				except: return
 			else: return
@@ -169,7 +169,7 @@ class Extras(BaseDialog):
 		if not Extras.related_id in self.enabled_lists: return
 		def builder(position, item):
 			try:
-				details = function('trakt_dict', item, self.tmdb_api_key, self.mpaa_region, self.current_date, current_time=None)					
+				details = function('fl_dict', item, self.tmdb_api_key, self.mpaa_region, self.current_date, current_time=None)					
 				listitem = self.make_listitem()
 				listitem.setProperty('name', details['title'])
 				listitem.setProperty('release_date', details['year'])
@@ -178,8 +178,8 @@ class Extras(BaseDialog):
 				listitem.setProperty('tmdb_id', str(details['tmdb_id']))
 				item_list_append((listitem, position))
 			except: pass
-		if self.media_type == 'movie': data_function, function = trakt_api.trakt_movies_related, movie_meta
-		else: data_function, function = trakt_api.trakt_tv_related, tvshow_meta
+		if self.media_type == 'movie': data_function, function = fl_api.fl_movies_related, movie_meta
+		else: data_function, function = fl_api.fl_tv_related, tvshow_meta
 		data = [i['ids'] for i in data_function(self.imdb_id)]
 		item_list = []
 		item_list_append = item_list.append
@@ -272,9 +272,9 @@ class Extras(BaseDialog):
 					yield listitem
 				except: pass
 		try:
-			self.all_comments = trakt_api.trakt_comments(self.media_type, self.imdb_id)
+			self.all_comments = fl_api.fl_comments(self.media_type, self.imdb_id)
 			item_list = list(builder())
-			self.setProperty('trakt_comments.number', 'x%s' % len(item_list))
+			self.setProperty('fl_comments.number', 'x%s' % len(item_list))
 			self.item_action_dict[Extras.comments_id] = 'content_list'
 			self.add_items(Extras.comments_id, item_list)
 		except: pass
@@ -297,14 +297,14 @@ class Extras(BaseDialog):
 					yield listitem
 				except: pass
 		try:
-			icon = kodi_utils.get_icon('trakt')
-			liked_lists = trakt_api.trakt_get_lists('liked_lists')
+			icon = kodi_utils.get_icon('fl')
+			liked_lists = fl_api.fl_get_lists('liked_lists')
 			try: liked_lists = [(i['list']['ids']['slug'], i['list']['user']['ids']['slug']) for i in liked_lists]
 			except: liked_lists = []
 			template, replacements = '%02d.[CR][B]%s[/B]%s[CR][CR]by %s[CR](x%02d)', (('-', ' '), ('_', ' '), ('.', ' '))
-			self.all_in_lists = trakt_api.trakt_lists_with_media(self.media_type, self.imdb_id)
+			self.all_in_lists = fl_api.fl_lists_with_media(self.media_type, self.imdb_id)
 			item_list = list(builder())
-			self.setProperty('trakt_in_lists.number', 'x%s' % len(item_list))
+			self.setProperty('fl_in_lists.number', 'x%s' % len(item_list))
 			self.item_action_dict[Extras.in_lists_id] = 'content_list'
 			self.add_items(Extras.in_lists_id, item_list)
 		except: pass
@@ -650,15 +650,15 @@ class Extras(BaseDialog):
 		self.selected = self.folder_runner({'mode': mode, 'action': 'imdb_more_like_this', 'key_id': self.imdb_id, 'name': 'More Like This based on %s' % self.title})
 		self.close()
 
-	def show_in_trakt_lists(self):
+	def show_in_fl_lists(self):
 		self.close_all()
 		media_type = 'movies' if self.media_type == 'movie' else 'shows'
-		self.selected = self.folder_runner({'mode': 'trakt.list.in_trakt_lists', 'media_type': media_type,
+		self.selected = self.folder_runner({'mode': 'fl.list.in_fl_lists', 'media_type': media_type,
 											'imdb_id': self.imdb_id, 'category_name': '%s In FL Lists' % self.title})
 		self.close()
 
-	def show_trakt_manager(self):
-		return dialogs.trakt_manager_choice({'tmdb_id': self.tmdb_id, 'imdb_id': self.imdb_id, 'tvdb_id': self.meta_get('tvdb_id', 'None'),
+	def show_fl_manager(self):
+		return dialogs.fl_manager_choice({'tmdb_id': self.tmdb_id, 'imdb_id': self.imdb_id, 'tvdb_id': self.meta_get('tvdb_id', 'None'),
 											'media_type': self.media_type, 'icon': self.poster})
 
 	def show_personallists_manager(self):

@@ -140,15 +140,15 @@ def build_single_episode(list_type, params={}):
 		try:
 			cat_name = {'episode.progress': 'In Progress Episodes',
 						'episode.recently_watched': 'Recently Watched Episodes',
-						'episode.next_trakt': 'Next Episodes', 'episode.next_fenlight': 'Next Episodes',
-						'episode.trakt': {'true': 'Recently Aired Episodes', None: 'FL Calendar'}}[list_type]
+						'episode.next_fl': 'Next Episodes', 'episode.next_fenlight': 'Next Episodes',
+						'episode.fl': {'true': 'Recently Aired Episodes', None: 'FL Calendar'}}[list_type]
 			if isinstance(cat_name, dict): cat_name = cat_name[params.get('recently_aired')]
 		except: cat_name = 'Episodes'
 		return cat_name
 	def _process(_position, ep_data):
 		try:
 			ep_data_get = ep_data.get
-			meta = tvshow_meta('trakt_dict', ep_data_get('media_ids'), api_key, mpaa_region_value, current_date, current_time, is_anime_list=is_anime_list)
+			meta = tvshow_meta('fl_dict', ep_data_get('media_ids'), api_key, mpaa_region_value, current_date, current_time, is_anime_list=is_anime_list)
 			if not meta: return
 			meta_get = meta.get
 			cm = []
@@ -214,7 +214,7 @@ def build_single_episode(list_type, params={}):
 				elif unaired: highlight_start, highlight_end = '[COLOR red]', '[/COLOR]'
 				else: highlight_start, highlight_end = '', ''
 				display = '%s%s%s%s%s%s' % (display_premiered, title_str, highlight_start, seas_ep, ep_name, highlight_end)
-			elif list_type_compare == 'trakt_calendar':
+			elif list_type_compare == 'fl_calendar':
 				if episode_date: display_premiered = make_day(current_date, episode_date)
 				else: display_premiered = 'UNKNOWN'
 				display = '[%s] %s%s%s' % (display_premiered, title_str, seas_ep, ep_name)
@@ -316,13 +316,13 @@ def build_single_episode(list_type, params={}):
 		if settings.nextep_limit_history(): data = data[:settings.nextep_limit()]
 		hidden_list = ws.get_hidden_progress_items(watched_indicators)
 		if hidden_list: data = [i for i in data if not i['media_ids']['tmdb'] in hidden_list]
-		if watched_indicators == 1: resformat, resinsert, list_type = '%Y-%m-%dT%H:%M:%S.%fZ', '2000-01-01T00:00:00.000Z', 'episode.next_trakt'
+		if watched_indicators == 1: resformat, resinsert, list_type = '%Y-%m-%dT%H:%M:%S.%fZ', '2000-01-01T00:00:00.000Z', 'episode.next_fl'
 		else: resformat, resinsert, list_type = '%Y-%m-%d %H:%M:%S', '2000-01-01 00:00:00', 'episode.next_fenlight'
 		if include_unwatched != 0:
 			if include_unwatched in (1, 3):
-				from apis.flicklist_api import trakt_watchlist
+				from apis.flicklist_api import fl_watchlist
 				try:
-					watchlist = trakt_watchlist('tvshow', '')
+					watchlist = fl_watchlist('tvshow', '')
 					unwatched.extend([{'media_ids': i['media_ids'], 'season': 1, 'episode': 0, 'unwatched': True, 'title': i['title']} for i in watchlist])
 				except: pass
 			if include_unwatched in (2, 3):
@@ -335,13 +335,13 @@ def build_single_episode(list_type, params={}):
 			data += unwatched
 	elif list_type == 'episode.progress': data = ws.get_in_progress_episodes()
 	elif list_type == 'episode.recently_watched': data = ws.get_recently_watched('episode', short_list=True)
-	elif list_type == 'episode.trakt':
-		from apis.flicklist_api import trakt_get_my_calendar
+	elif list_type == 'episode.fl':
+		from apis.flicklist_api import fl_get_my_calendar
 		recently_aired = params.get('recently_aired', None)
-		data = trakt_get_my_calendar(recently_aired, get_datetime())
+		data = fl_get_my_calendar(recently_aired, get_datetime())
 		hidden_list = ws.get_hidden_progress_items(watched_indicators)
 		if hidden_list: data = [i for i in data if not i['media_ids']['tmdb'] in hidden_list]
-		list_type = 'episode.trakt_recently_aired' if recently_aired else 'episode.trakt_calendar'
+		list_type = 'episode.fl_recently_aired' if recently_aired else 'episode.fl_calendar'
 		if settings.flatten_episodes():
 			try:
 				duplicates = set()
@@ -375,14 +375,14 @@ def build_single_episode(list_type, params={}):
 		item_list = airing_today + item_list
 	else:
 		item_list.sort(key=lambda i: i['sort_order'])
-		if list_type_compare in ('trakt_calendar', 'trakt_recently_aired'):
-			if list_type_compare == 'trakt_calendar': reverse = settings.calendar_sort_order() == 0
+		if list_type_compare in ('fl_calendar', 'fl_recently_aired'):
+			if list_type_compare == 'fl_calendar': reverse = settings.calendar_sort_order() == 0
 			else: reverse = True
 			try: item_list = sorted(item_list, key=lambda i: i.get('first_aired', '2100-12-31'), reverse=reverse)
 			except:
 				item_list = [i for i in item_list if i.get('first_aired') not in (None, 'None', '')]
 				item_list = sorted(item_list, key=lambda i: i.get('first_aired'), reverse=reverse)
-			if list_type_compare == 'trakt_calendar':
+			if list_type_compare == 'fl_calendar':
 				airing_today = sorted([i for i in item_list if date_difference(current_date, jsondate_to_datetime(i.get('first_aired', '2100-12-31'), '%Y-%m-%d').date(), 0)],
 										key=lambda i: i['first_aired'])
 				item_list = [i for i in item_list if not i in airing_today]
