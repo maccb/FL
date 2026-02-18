@@ -884,35 +884,71 @@ def fl_indicators_tv():
 
 
 def fl_playback_progress():
-	"""Get in-progress items from FlickList."""
-	data = call_flicklist('/sync/playback', with_auth=True)
-	if not data:
-		return []
-	items = data if isinstance(data, list) else data.get('results', data.get('items', []))
+	"""Get in-progress items from FlickList.
+	Merges two sources:
+	  1. /sync/playback — actual resume points from active scrobble sessions
+	  2. /up-next — shows with watch progress (next episode to watch)
+	"""
 	results = []
-	for item in items:
-		mtype = item.get('media_type', 'movie')
-		progress_item = {
-			'progress': item.get('progress', 0),
-			'paused_at': item.get('updated_at', item.get('paused_at', '')),
-			'id': item.get('id', 0),
-			'type': mtype
-		}
-		if mtype in ('movie',):
-			progress_item['movie'] = {
-				'title': item.get('title', ''),
-				'ids': {'tmdb': item.get('tmdb_id', 0), 'imdb': item.get('imdb_id', ''), 'tvdb': 0}
+	data = call_flicklist('/sync/playback', with_auth=True)
+	if data:
+		items = data if isinstance(data, list) else data.get('results', data.get('items', []))
+		for item in items:
+			mtype = item.get('media_type', 'movie')
+			progress_item = {
+				'progress': item.get('progress', 0),
+				'paused_at': item.get('updated_at', item.get('paused_at', '')),
+				'id': item.get('id', 0),
+				'type': mtype
 			}
-		else:
-			progress_item['show'] = {
-				'title': item.get('title', item.get('show_title', '')),
-				'ids': {'tmdb': item.get('tmdb_id', 0), 'imdb': item.get('imdb_id', ''), 'tvdb': item.get('tvdb_id', 0)}
-			}
-			progress_item['episode'] = {
-				'season': item.get('season_number', item.get('season', 0)),
-				'number': item.get('episode_number', item.get('episode', 0))
-			}
-		results.append(progress_item)
+			if mtype in ('movie',):
+				progress_item['movie'] = {
+					'title': item.get('title', ''),
+					'ids': {'tmdb': item.get('tmdb_id', 0), 'imdb': item.get('imdb_id', ''), 'tvdb': 0}
+				}
+			else:
+				progress_item['show'] = {
+					'title': item.get('title', item.get('show_title', '')),
+					'ids': {'tmdb': item.get('tmdb_id', 0), 'imdb': item.get('imdb_id', ''), 'tvdb': item.get('tvdb_id', 0)}
+				}
+				progress_item['episode'] = {
+					'season': item.get('season_number', item.get('season', 0)),
+					'number': item.get('episode_number', item.get('episode', 0))
+				}
+			results.append(progress_item)
+	try:
+		up_next = call_flicklist('/up-next', params={'limit': 500}, with_auth=True)
+	except:
+		up_next = None
+	if up_next:
+		up_items = up_next.get('items', up_next) if isinstance(up_next, dict) else up_next
+		if isinstance(up_items, list):
+			existing_tmdb = set()
+			for r in results:
+				if r.get('type') == 'episode' and 'show' in r:
+					existing_tmdb.add(r['show']['ids'].get('tmdb', 0))
+			for item in up_items:
+				tmdb_id = item.get('tmdb_id', 0)
+				if not tmdb_id or tmdb_id in existing_tmdb:
+					continue
+				season = item.get('next_season_number', 0)
+				episode = item.get('next_episode_number', 0)
+				if not season or season < 1 or not episode or episode < 1:
+					continue
+				results.append({
+					'progress': 2,
+					'paused_at': item.get('last_watched_at', ''),
+					'id': item.get('media_item_id', 0),
+					'type': 'episode',
+					'show': {
+						'title': item.get('title', ''),
+						'ids': {'tmdb': tmdb_id, 'imdb': '', 'tvdb': 0}
+					},
+					'episode': {
+						'season': season,
+						'number': episode
+					}
+				})
 	return results
 
 def fl_progress_movies(progress_info):
@@ -1129,6 +1165,9 @@ def fl_sync_activities(force_update=False):
 	if not _compare(latest.get('all', fallback_date), cached.get('all', fallback_date)):
 		return 'not needed'
 	lists_actions, refresh_movies_progress, refresh_shows_progress = [], False, False
+	if force_update:
+		refresh_movies_progress = True
+		refresh_shows_progress = True
 	cached_movies = cached.get('movies', {})
 	latest_movies = latest.get('movies', {})
 	cached_shows = cached.get('shows', {})
@@ -1158,6 +1197,7 @@ def fl_sync_activities(force_update=False):
 	if _compare(latest_episodes.get('watched_at', fallback_date), cached_episodes.get('watched_at', fallback_date)):
 		clear_properties('episode')
 		fl_indicators_tv()
+		refresh_shows_progress = True
 	if _compare(latest_movies.get('paused_at', fallback_date), cached_movies.get('paused_at', fallback_date)):
 		refresh_movies_progress = True
 	if _compare(latest_episodes.get('paused_at', fallback_date), cached_episodes.get('paused_at', fallback_date)):
