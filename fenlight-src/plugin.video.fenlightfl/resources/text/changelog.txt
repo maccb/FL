@@ -2,6 +2,12 @@
 [I]Built on the shoulders of TikiPeter & AnonyMouse — true legends.[/I]
 
 
+[COLOR dodgerblue][B]Version 2.1.92[/B][/COLOR]
+[I]Respect where it's due.[/I]
+[B]Needed:[/B]
+- One more small fix we missed — all good now.
+
+
 
 [COLOR dodgerblue][B]Version 2.1.91[/B][/COLOR]
 [I]For the ones who build quietly and let the work speak.[/I]
