@@ -18,9 +18,23 @@ class SetAddonConstants:
 	def run(self):
 		kodi_utils.logger('FL', 'SetAddonConstants Service Starting')
 		import random
+		kodi_version = kodi_utils.addon_info('version')
+		try:
+			import xml.etree.ElementTree as ET
+			addon_xml_path = os.path.join(kodi_utils.addon_info('path'), 'addon.xml')
+			tree = ET.parse(addon_xml_path)
+			disk_version = tree.getroot().attrib.get('version', kodi_version)
+			kodi_utils.logger('FL', 'Version check: kodi=%s disk=%s' % (kodi_version, disk_version))
+			if disk_version != kodi_version:
+				kodi_utils.logger('FL', 'Version mismatch detected — forcing addon rescan')
+				kodi_utils.update_local_addons()
+				kodi_utils.disable_enable_addon()
+				kodi_version = disk_version
+		except Exception as e:
+			kodi_utils.logger('FL', 'Version check exception: %s' % str(e))
 		addon_items = [
 			('fenlightfl.playback_key', str(random.randint(1000, 10000))),
-			('fenlightfl.addon_version', kodi_utils.addon_info('version')),
+			('fenlightfl.addon_version', kodi_version),
 			('fenlightfl.addon_path', kodi_utils.addon_info('path')),
 			('fenlightfl.addon_profile', kodi_utils.translate_path(kodi_utils.addon_info('profile'))),
 			('fenlightfl.addon_icon', kodi_utils.translate_path(kodi_utils.addon_info('icon'))),
