@@ -3,6 +3,11 @@
 
 
 
+[COLOR dodgerblue][B]Version 2.1.91[/B][/COLOR]
+[I]For the ones who build quietly and let the work speak.[/I]
+[B]Needed:[/B]
+- Fixed a minor uncaught error that could cause unexpected issues.
+
 [COLOR dodgerblue][B]Version 2.1.90 — Stability & Sync Improvements[/B][/COLOR]
 [I]This one goes out to all the Geo Metro owners out there. You know who you are.[/I]
 [B]Critical:[/B]
@@ -42,3 +47,8 @@
 - Search, Discover, People, and My Lists from FlickList.
 - Full FenLight FL branding throughout settings and menus.
 - Works alongside original FenLight AM — both can be installed simultaneously.
+
+
+[COLOR darkgoldenrod][B]FenLight FL[/B][/COLOR] is a fork of [COLOR dodgerblue]Fen Light[/COLOR] by [COLOR dodgerblue]AnonyMouse[/COLOR],
+which itself carries on the legacy of [COLOR dodgerblue]FEN[/COLOR] by [COLOR dodgerblue]Tiki Peter[/COLOR].
+We stand on the shoulders of giants. Thank you both.
