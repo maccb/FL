@@ -1,5 +1,5 @@
 [COLOR dodgerblue][B]FenLight FL Changelog[/B][/COLOR]
-[I]Built on the shoulders of Tiki Peter & AnonyMouse — true legends.[/I]
+[I]Built on the shoulders of TikiPeter & AnonyMouse — true legends.[/I]
 
 
 
@@ -50,5 +50,5 @@
 
 
 [COLOR darkgoldenrod][B]FenLight FL[/B][/COLOR] is a fork of [COLOR dodgerblue]Fen Light[/COLOR] by [COLOR dodgerblue]AnonyMouse[/COLOR],
-which itself carries on the legacy of [COLOR dodgerblue]FEN[/COLOR] by [COLOR dodgerblue]Tiki Peter[/COLOR].
+which itself carries on the legacy of [COLOR dodgerblue]FEN[/COLOR] by [COLOR dodgerblue]TikiPeter[/COLOR].
 We stand on the shoulders of giants. Thank you both.
