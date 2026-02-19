@@ -1,3 +1,19 @@
+[COLOR red][B]Version 2.1.90 — Stability & Sync Improvements[/B][/COLOR]
+[I]This one goes out to all the Geo Metro owners out there. You know who you are.[/I]
+
+[B]Critical:[/B]
+- Fixed sync engine not detecting new activity — watchlists, favorites, and watched status now refresh properly.
+- Fixed items not being removed from watchlists and favorites.
+- Fixed API errors causing crashes instead of retrying gracefully.
+
+[B]Moderate:[/B]
+- Fixed date/time handling for international formats.
+- Improved cache refresh timing.
+
+[B]Needed:[/B]
+- UI polish and label improvements throughout settings and menus.
+
+[I]Built on the shoulders of Tiki Peter & AnonyMouse — true legends.[/I]
 [COLOR red][B]Version 2.1.89[/B][/COLOR]
 - Added debug logging to update and rollback systems.
 - Improved error reporting during updates.
