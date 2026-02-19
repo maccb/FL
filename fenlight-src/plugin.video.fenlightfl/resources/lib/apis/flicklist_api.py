@@ -107,12 +107,14 @@ def call_flicklist(path, params=None, data=None, is_delete=False, with_auth=True
 			else:
 				resp = requests.get(url, params=params, headers=headers, timeout=15)
 		elif data is not None:
-			resp = requests.post(url, json=data, headers=headers, timeout=15)
+			if is_delete:
+				resp = requests.delete(url, json=data, headers=headers, timeout=15)
+			else:
+				resp = requests.post(url, json=data, headers=headers, timeout=15)
 		elif is_delete:
 			resp = requests.delete(url, headers=headers, timeout=15)
 		else:
 			resp = requests.get(url, params=params, headers=headers, timeout=15)
-		resp.raise_for_status()
 	except Exception as e:
 		kodi_utils.logger('FlickList Error', str(e))
 		if pagination:
@@ -128,6 +130,11 @@ def call_flicklist(path, params=None, data=None, is_delete=False, with_auth=True
 		kodi_utils.sleep(retry_after * 1000)
 		return call_flicklist(path, params=params, data=data, is_delete=is_delete,
 							with_auth=with_auth, method=method, pagination=pagination, page_no=page_no)
+	if resp.status_code >= 400:
+		kodi_utils.logger('FlickList Error', 'HTTP %d for %s' % (resp.status_code, path))
+		if pagination:
+			return (None, page_no)
+		return None
 	try:
 		result = resp.json()
 	except:
@@ -559,8 +566,7 @@ def fl_watchlist(media_type, dummy_arg):
 	data = fl_fetch_collection_watchlist('watchlist', media_type)
 	if not settings.show_unaired_watchlist():
 		current_date = get_datetime()
-		str_format = '%Y-%m-%d' if media_type in ('movie', 'movies') else '%Y-%m-%dT%H:%M:%S.%fZ'
-		data = [i for i in data if i.get('released', None) and js2date(i.get('released'), str_format, remove_time=True) <= current_date]
+		data = [i for i in data if i.get('released', None) and js2date(i.get('released'), '%Y-%m-%d', remove_time=True) <= current_date]
 	sort_order = settings.lists_sort_order('watchlist')
 	if sort_order == 0:
 		data = sort_for_article(data, 'title', settings.ignore_articles())
@@ -573,7 +579,10 @@ def fl_watchlist(media_type, dummy_arg):
 def fl_fetch_collection_watchlist(list_type, media_type):
 	"""Fetch watchlist from FlickList and transform to legacy-compatible shape."""
 	def _process(params):
-		data = call_flicklist('/user/watchlist', params={'status': 'watching' if list_type == 'collection' else None}, with_auth=True)
+		fetch_params = {}
+		if list_type == 'collection':
+			fetch_params['status'] = 'watching'
+		data = call_flicklist('/user/watchlist', params=fetch_params, with_auth=True)
 		if not data:
 			return []
 		items = data if isinstance(data, list) else data.get('results', data.get('items', []))
@@ -584,6 +593,8 @@ def fl_fetch_collection_watchlist(list_type, media_type):
 				continue
 			if media_type in ('show', 'shows', 'tvshow') and mtype not in ('tv', 'show'):
 				continue
+			yr = item.get('year', '')
+			released = '%s-01-01' % yr if yr else ''
 			results.append({
 				'media_ids': {
 					'tmdb': item.get('tmdb_id', ''),
@@ -591,8 +602,8 @@ def fl_fetch_collection_watchlist(list_type, media_type):
 					'tvdb': item.get('tvdb_id', '')
 				},
 				'title': item.get('title', ''),
-				'collected_at': item.get('updated_at', item.get('created_at', '')),
-				'released': item.get('year', '')
+				'collected_at': item.get('added_at', item.get('updated_at', item.get('created_at', ''))),
+				'released': released
 			})
 		return results
 	if media_type in ('movie', 'movies'):
@@ -1149,9 +1160,21 @@ def fl_sync_activities(force_update=False):
 			kodi_utils.clear_property('1_%s_%s_%s_watched' % (media_type, item[0], item[1]))
 	def _get_timestamp(date_time):
 		return int(time.mktime(date_time.timetuple()))
+	def _parse_ts(ts_string):
+		"""Parse ISO 8601 timestamp — handles both with and without fractional seconds."""
+		for fmt in ('%Y-%m-%dT%H:%M:%S.%fZ', '%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%dT%H:%M:%S.%f', '%Y-%m-%dT%H:%M:%S'):
+			try:
+				return js2date(ts_string, fmt)
+			except:
+				continue
+		return None
 	def _compare(latest, cached):
 		try:
-			result = _get_timestamp(js2date(latest, '%Y-%m-%dT%H:%M:%S.%fZ')) > _get_timestamp(js2date(cached, '%Y-%m-%dT%H:%M:%S.%fZ'))
+			latest_dt = _parse_ts(latest)
+			cached_dt = _parse_ts(cached)
+			if latest_dt is None or cached_dt is None:
+				return True
+			result = _get_timestamp(latest_dt) > _get_timestamp(cached_dt)
 		except:
 			result = True
 		return result
@@ -1162,7 +1185,7 @@ def fl_sync_activities(force_update=False):
 		flicklist_cache.clear_all_fl_cache_data(silent=True, refresh=False)
 	elif _check_daily_expiry():
 		flicklist_cache.clear_daily_cache()
-		set_setting('flicklist.next_daily_clear', str(int(time.time()) + (24 * 3600)))
+		set_setting('fenlightfl.flicklist.next_daily_clear', str(int(time.time()) + (24 * 3600)))
 	if not settings.flicklist_user_active() and not force_update:
 		return 'no account'
 	try:
@@ -1185,21 +1208,19 @@ def fl_sync_activities(force_update=False):
 	latest_episodes = latest.get('episodes', {})
 	cached_lists = cached.get('lists', {})
 	latest_lists = latest.get('lists', {})
-	if _compare(latest.get('recommendations', fallback_date), cached.get('recommendations', fallback_date)):
-		flicklist_cache.clear_fl_recommendations()
-	if _compare(latest.get('favorites', fallback_date), cached.get('favorites', fallback_date)):
+	latest_fav = latest.get('favorites', fallback_date)
+	if isinstance(latest_fav, dict):
+		latest_fav = latest_fav.get('updated_at', fallback_date)
+	cached_fav = cached.get('favorites', fallback_date)
+	if isinstance(cached_fav, dict):
+		cached_fav = cached_fav.get('updated_at', fallback_date)
+	if _compare(latest_fav, cached_fav):
 		flicklist_cache.clear_fl_favorites()
-	if _compare(latest_movies.get('collected_at', fallback_date), cached_movies.get('collected_at', fallback_date)):
-		flicklist_cache.clear_fl_collection_watchlist_data('collection', 'movie')
-	if _compare(latest_episodes.get('collected_at', fallback_date), cached_episodes.get('collected_at', fallback_date)):
-		flicklist_cache.clear_fl_collection_watchlist_data('collection', 'tvshow')
-	if _compare(latest_movies.get('watchlisted_at', fallback_date), cached_movies.get('watchlisted_at', fallback_date)):
-		flicklist_cache.clear_fl_collection_watchlist_data('watchlist', 'movie')
 	if _compare(latest_shows.get('watchlisted_at', fallback_date), cached_shows.get('watchlisted_at', fallback_date)):
+		flicklist_cache.clear_fl_collection_watchlist_data('collection', 'movie')
+		flicklist_cache.clear_fl_collection_watchlist_data('collection', 'tvshow')
+		flicklist_cache.clear_fl_collection_watchlist_data('watchlist', 'movie')
 		flicklist_cache.clear_fl_collection_watchlist_data('watchlist', 'tvshow')
-	if _compare(latest_shows.get('dropped_at', fallback_date), cached_shows.get('dropped_at', fallback_date)):
-		clear_properties('episode')
-		flicklist_cache.clear_fl_hidden_data('dropped')
 	if _compare(latest_movies.get('watched_at', fallback_date), cached_movies.get('watched_at', fallback_date)):
 		clear_properties('movie')
 		fl_indicators_movies()
@@ -1211,10 +1232,6 @@ def fl_sync_activities(force_update=False):
 		refresh_movies_progress = True
 	if _compare(latest_episodes.get('paused_at', fallback_date), cached_episodes.get('paused_at', fallback_date)):
 		refresh_shows_progress = True
-	if _compare(latest_lists.get('updated_at', fallback_date), cached_lists.get('updated_at', fallback_date)):
-		lists_actions.append('my_lists')
-	if _compare(latest_lists.get('liked_at', fallback_date), cached_lists.get('liked_at', fallback_date)):
-		lists_actions.append('liked_lists')
 	if refresh_movies_progress or refresh_shows_progress:
 		progress_info = fl_playback_progress()
 		if refresh_movies_progress:
@@ -1223,6 +1240,9 @@ def fl_sync_activities(force_update=False):
 		if refresh_shows_progress:
 			clear_properties('episode')
 			fl_progress_tv(progress_info)
+	if _compare(latest_lists.get('updated_at', fallback_date), cached_lists.get('updated_at', fallback_date)):
+		lists_actions.append('my_lists')
+		lists_actions.append('liked_lists')
 	if lists_actions:
 		for item in lists_actions:
 			flicklist_cache.clear_fl_list_data(item)

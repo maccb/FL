@@ -198,86 +198,29 @@ def clear_all_fl_cache_data(silent=False, refresh=True):
 	except: return False
 
 def default_activities():
+	"""Default activity timestamps — matches FlickList API /sync/last-activities shape.
+	API returns: { all, movies: {watched_at, paused_at}, episodes: {watched_at, paused_at},
+	              shows: {watchlisted_at}, lists: {updated_at}, favorites: "timestamp" }
+	"""
 	return {
-			'all': '2024-01-22T00:22:21.000Z',
+			'all': '2020-01-01T00:00:01.000Z',
 			'movies':
 				{
 				'watched_at': '2020-01-01T00:00:01.000Z',
-				'collected_at': '2020-01-01T00:00:01.000Z',
-				'rated_at': '2020-01-01T00:00:01.000Z',
-				'watchlisted_at': '2020-01-01T00:00:01.000Z',
-				'favorited_at': '2020-01-01T00:00:01.000Z',
-				'recommendations_at': '2020-01-01T00:00:01.000Z',
-				'commented_at': '2020-01-01T00:00:01.000Z',
-				'paused_at': '2020-01-01T00:00:01.000Z',
-				'hidden_at': '2020-01-01T00:00:01.000Z'
+				'paused_at': '2020-01-01T00:00:01.000Z'
 				},
 			'episodes':
 				{
 				'watched_at': '2020-01-01T00:00:01.000Z',
-				'collected_at': '2020-01-01T00:00:01.000Z',
-				'rated_at': '2020-01-01T00:00:01.000Z',
-				'watchlisted_at': '2020-01-01T00:00:01.000Z',
-				'commented_at': '2020-01-01T00:00:01.000Z',
 				'paused_at': '2020-01-01T00:00:01.000Z'
 				},
 			'shows':
 				{
-				'rated_at': '2020-01-01T00:00:01.000Z',
-				'watchlisted_at': '2020-01-01T00:00:01.000Z',
-				'favorited_at': '2020-01-01T00:00:01.000Z',
-				'recommendations_at': '2020-01-01T00:00:01.000Z',
-				'commented_at': '2020-01-01T00:00:01.000Z',
-				'dropped_at': '2020-01-01T00:00:01.000Z'
-				},
-			'seasons':
-				{
-				'rated_at': '2020-01-01T00:00:01.000Z',
-				'watchlisted_at': '2020-01-01T00:00:01.000Z',
-				'commented_at': '2020-01-01T00:00:01.000Z',
-				'hidden_at': '2020-01-01T00:00:01.000Z'
-				},
-			'comments':
-				{
-				'liked_at': '2020-01-01T00:00:01.000Z',
-				'blocked_at': '2020-01-01T00:00:01.000Z'
+				'watchlisted_at': '2020-01-01T00:00:01.000Z'
 				},
 			'lists':
 				{
-				'liked_at': '2020-01-01T00:00:01.000Z',
-				'updated_at': '2020-01-01T00:00:01.000Z',
-				'commented_at': '2020-01-01T00:00:01.000Z'
-				},
-			'watchlist':
-				{
 				'updated_at': '2020-01-01T00:00:01.000Z'
 				},
-			'favorites':
-				{
-				'updated_at': '2020-01-01T00:00:01.000Z'
-				},
-			'recommendations':
-				{
-				'updated_at': '2020-01-01T00:00:01.000Z'
-				},
-			'collaborations':
-				{
-				'updated_at': '2020-01-01T00:00:01.000Z'
-				},
-			'account':
-				{
-				'settings_at': '2020-01-01T00:00:01.000Z',
-				'followed_at': '2020-01-01T00:00:01.000Z',
-				'following_at': '2020-01-01T00:00:01.000Z',
-				'pending_at': '2020-01-01T00:00:01.000Z',
-				'requested_at': '2020-01-01T00:00:01.000Z'
-				},
-			'saved_filters':
-				{
-				'updated_at': '2020-01-01T00:00:01.000Z'
-				},
-			'notes':
-				{
-				'updated_at': '2020-01-01T00:00:01.000Z'
-				}
+			'favorites': '2020-01-01T00:00:01.000Z'
 			}
