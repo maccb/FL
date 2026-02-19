@@ -8,8 +8,8 @@ Fen Light FL replaces Trakt with FlickList for watch tracking. Same great addon,
 
 ## Credits
 
-- **AnonyMouse** — Original Fen Light AM author. All the hard work is theirs.
-- **Tiki Peter** — Created the original Fen / Fen Light that this lineage descends from.
+- **TikiPeter** — made FEN and Fen Light
+- **AnonyMouse** — keeps Fen Light AM alive
 
 ## Install
 

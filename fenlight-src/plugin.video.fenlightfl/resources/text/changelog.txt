@@ -49,6 +49,5 @@
 - Works alongside original FenLight AM — both can be installed simultaneously.
 
 
-[COLOR darkgoldenrod][B]FenLight FL[/B][/COLOR] is a fork of [COLOR dodgerblue]Fen Light[/COLOR] by [COLOR dodgerblue]AnonyMouse[/COLOR],
-which itself carries on the legacy of [COLOR dodgerblue]FEN[/COLOR] by [COLOR dodgerblue]TikiPeter[/COLOR].
-We stand on the shoulders of giants. Thank you both.
+[COLOR darkgoldenrod][B]FenLight FL[/B][/COLOR] — a fan fork of [COLOR dodgerblue]Fen Light AM[/COLOR] by [COLOR dodgerblue]AnonyMouse[/COLOR], built on [COLOR dodgerblue]TikiPeter[/COLOR]'s original work.
+Thank you both.
