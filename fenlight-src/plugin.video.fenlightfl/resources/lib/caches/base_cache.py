@@ -127,6 +127,9 @@ def check_databases_integrity(silent=False):
 				dbcon.close()
 				kodi_utils.delete_file(database_location)
 			except: pass
+		else:
+			try: dbcon.close()
+			except: pass
 	database_errors = []
 	for database_name, tables in integrity_check.items(): _process(database_name, tables)
 	if database_errors:
