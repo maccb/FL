@@ -878,10 +878,10 @@ def fl_indicators_tv():
 		if not tmdb_id:
 			return
 		title = item.get('title', '')
-		season = item.get('season_number', 0)
+		season = item.get('season_number')
 		episode = item.get('episode_number', 0)
 		watched_at = item.get('watched_at', item.get('created_at', ''))
-		if season and season > 0:
+		if season is not None and season >= 0:
 			insert_append(('episode', str(tmdb_id), season, episode, watched_at, title))
 	insert_list = []
 	insert_append = insert_list.append
@@ -1162,6 +1162,8 @@ def fl_sync_activities(force_update=False):
 		return int(time.mktime(date_time.timetuple()))
 	def _parse_ts(ts_string):
 		"""Parse ISO 8601 timestamp — handles both with and without fractional seconds."""
+		if ts_string and ts_string.endswith('+00:00'):
+			ts_string = ts_string.replace('+00:00', 'Z')
 		for fmt in ('%Y-%m-%dT%H:%M:%S.%fZ', '%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%dT%H:%M:%S.%f', '%Y-%m-%dT%H:%M:%S'):
 			try:
 				return js2date(ts_string, fmt)
