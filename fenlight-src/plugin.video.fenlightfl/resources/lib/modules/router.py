@@ -289,6 +289,11 @@ def routing(sys):
 	elif mode == 'hide_unhide_progress_items':
 		from modules.watched_status import hide_unhide_progress_items
 		hide_unhide_progress_items(params)
+	elif mode == 'fl_resync':
+		from caches.flicklist_cache import clear_all_fl_cache_data
+		from modules.kodi_utils import notification
+		clear_all_fl_cache_data(silent=True)
+		notification('FlickList resync started')
 	elif mode == 'open_external_scraper_settings':
 		from modules.kodi_utils import external_scraper_settings
 		external_scraper_settings()

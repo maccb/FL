@@ -112,7 +112,7 @@ def call_flicklist(path, params=None, data=None, is_delete=False, with_auth=True
 			else:
 				resp = requests.post(url, json=data, headers=headers, timeout=15)
 		elif is_delete:
-			resp = requests.delete(url, headers=headers, timeout=15)
+			resp = requests.delete(url, params=params, headers=headers, timeout=15)
 		else:
 			resp = requests.get(url, params=params, headers=headers, timeout=15)
 	except Exception as e:
@@ -449,36 +449,51 @@ def fl_recommendations(media_type):
 
 
 def fl_watched_status_mark(action, media, media_id, tvdb_id=0, season=None, episode=None, key='tmdb'):
-	"""Mark media as watched/unwatched on FlickList."""
+	"""Mark media as watched/unwatched on FlickList API.
+	Sends tmdb_id + media_type directly — server resolves internally.
+	This is best-effort — local write happens regardless in watched_status.py."""
 	try:
+		is_tv = media in ('episode', 'shows', 'season')
+		media_type = 'tv' if is_tv else 'movie'
+		tmdb_id = int(media_id)
+		kodi_utils.logger('###FL###', 'watched_status_mark: %s %s tmdb=%s s=%s e=%s' % (action, media, tmdb_id, season, episode))
 		if action == 'mark_as_watched':
-			if media in ('episode',):
-				data = {'media_item_id': int(media_id), 'season_number': int(season), 'episode_number': int(episode)}
-				if key == 'tmdb':
-					data = {'tmdb_id': int(media_id), 'season_number': int(season), 'episode_number': int(episode)}
+			if media == 'episode':
+				data = {'tmdb_id': tmdb_id, 'media_type': media_type}
+				if season is not None: data['season_number'] = int(season)
+				if episode is not None: data['episode_number'] = int(episode)
 				result = call_flicklist('/watched', data=data)
-			elif media in ('shows',):
-				result = call_flicklist('/watched/batch', data={'tmdb_id': int(media_id), 'scope': 'show'})
+			elif media == 'shows':
+				result = call_flicklist('/watched/batch', data={'tmdb_id': tmdb_id, 'media_type': media_type, 'scope': 'show'})
 			elif media == 'season':
-				result = call_flicklist('/watched/batch', data={'tmdb_id': int(media_id), 'scope': 'season', 'season_number': int(season)})
+				result = call_flicklist('/watched/batch', data={'tmdb_id': tmdb_id, 'media_type': media_type, 'scope': 'season', 'season_number': int(season)})
 			else:
-				data = {'tmdb_id': int(media_id)}
-				result = call_flicklist('/watched', data=data)
+				result = call_flicklist('/watched', data={'tmdb_id': tmdb_id, 'media_type': media_type})
+			kodi_utils.logger('###FL###', 'watched_status_mark: API result=%s' % (result is not None))
 			return result is not None
 		else:
-			if media in ('episode',):
-				result = call_flicklist('/watched/batch', data={'tmdb_id': int(media_id), 'scope': 'episode',
-								'season_number': int(season), 'episode_number': int(episode)}, is_delete=True)
-			elif media in ('shows',):
-				result = call_flicklist('/watched/batch', data={'tmdb_id': int(media_id), 'scope': 'show'}, is_delete=True)
+			if media == 'episode':
+				delete_data = {'tmdb_id': tmdb_id, 'media_type': media_type, 'scope': 'episode'}
+				if season is not None: delete_data['season_number'] = int(season)
+				if episode is not None: delete_data['episode_number'] = int(episode)
+				kodi_utils.logger('###FL###', 'unwatch episode: batch delete data=%s' % delete_data)
+				result = call_flicklist('/watched/batch', data=delete_data, is_delete=True)
+				kodi_utils.logger('###FL###', 'unwatch episode: batch delete result=%s' % result)
+				return True
+			elif media == 'shows':
+				check = call_flicklist('/watched/check', params={'tmdb_id': tmdb_id, 'media_type': media_type})
+				if check and isinstance(check, dict):
+					for sn in check.get('season_progress', {}):
+						call_flicklist('/watched/batch', data={'tmdb_id': tmdb_id, 'media_type': media_type, 'season_number': int(sn)}, is_delete=True)
+				return True
 			elif media == 'season':
-				result = call_flicklist('/watched/batch', data={'tmdb_id': int(media_id), 'scope': 'season',
-								'season_number': int(season)}, is_delete=True)
+				result = call_flicklist('/watched/batch', data={'tmdb_id': tmdb_id, 'media_type': media_type, 'season_number': int(season)}, is_delete=True)
+				return result is not None
 			else:
-				result = call_flicklist('/watched/batch', data={'tmdb_id': int(media_id), 'scope': 'movie'}, is_delete=True)
-			return result is not None
+				call_flicklist('/watched/%s' % tmdb_id, params={'tmdb': 'true', 'media_type': media_type}, is_delete=True)
+				return True
 	except Exception as e:
-		kodi_utils.logger('FlickList watched_status_mark error', str(e))
+		kodi_utils.logger('###FL###', 'watched_status_mark ERROR: %s' % str(e))
 		return False
 
 def fl_progress(action, media, media_id, percent, season=None, episode=None, resume_id=None, refresh_fl=False):

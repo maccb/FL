@@ -182,6 +182,7 @@ class Navigator:
 		self.end_directory()
 
 	def maintenance(self):
+		self.add({'mode': 'fl_resync', 'isFolder': 'false'}, '[B]Resync FlickList[/B]', 'settings')
 		self.add({'mode': 'check_databases_integrity_cache', 'isFolder': 'false'}, 'Check for Corrupt Databases', 'settings')
 		self.add({'mode': 'clean_databases_cache', 'isFolder': 'false'}, 'Clean Databases', 'settings')
 		self.add({'mode': 'sync_settings', 'silent': 'false', 'isFolder': 'false'}, 'Remake Settings Cache', 'settings')
