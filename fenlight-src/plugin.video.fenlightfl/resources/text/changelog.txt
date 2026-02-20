@@ -2,6 +2,16 @@
 [I]Built on the shoulders of TikiPeter & AnonyMouse. True legends.[/I]
 
 
+[COLOR dodgerblue][B]Version 2.1.94[/B][/COLOR]
+[I]nondo[/I]
+[B]Needed:[/B]
+- No more "Resume from 2%?" popups when starting a new show.
+- Only episodes with real progress above 3% will show the resume option.
+- Next episode suggestions no longer create false resume points.
+- Dialog for resuming playback now ignores tiny progress values.
+- Our up-next feature still works, just without the annoying interruption.
+
+
 [COLOR dodgerblue][B]Version 2.1.93[/B][/COLOR]
 [I]They say water is the essence of life. Nah, it's just really well-treated sewage.[/I]
 [B]Critical:[/B]
