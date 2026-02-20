@@ -1,25 +1,25 @@
 [COLOR dodgerblue][B]FenLight FL Changelog[/B][/COLOR]
-[I]Built on the shoulders of TikiPeter & AnonyMouse — true legends.[/I]
+[I]Built on the shoulders of TikiPeter & AnonyMouse. True legends.[/I]
 
 
 [COLOR dodgerblue][B]Version 2.1.93[/B][/COLOR]
-[I]They say water is the essence of life. Nah — it's just really well-treated sewage.[/I]
+[I]They say water is the essence of life. Nah, it's just really well-treated sewage.[/I]
 [B]Critical:[/B]
 - Fixed unmarking a single episode as watched accidentally removing all watched history for the entire show.
 
 [B]Moderate:[/B]
-- Fixed mark watched not working on episodes — checkmarks now appear immediately.
+- Fixed mark watched not working on episodes. Checkmarks now appear immediately.
 - Removed ability for episodes to not show watched status during certain conditions.
 
 [B]Needed:[/B]
-- Added Resync FlickList button under Tools → Database & Cache Maintenance — pulls fresh data from your FlickList account.
+- Added Resync FlickList button under Tools > Database & Cache Maintenance. Pulls fresh data from your FlickList account.
 - Code cleanup and internal improvements.
 
 
 [COLOR dodgerblue][B]Version 2.1.92[/B][/COLOR]
 [I]Respect where it's due.[/I]
 [B]Needed:[/B]
-- One more small fix we missed — all good now.
+- One more small fix we missed. All good now.
 
 
 
@@ -28,10 +28,10 @@
 [B]Needed:[/B]
 - Fixed a minor uncaught error that could cause unexpected issues.
 
-[COLOR dodgerblue][B]Version 2.1.90 — Stability & Sync Improvements[/B][/COLOR]
+[COLOR dodgerblue][B]Version 2.1.90. Stability & Sync Improvements[/B][/COLOR]
 [I]This one goes out to all the Geo Metro owners out there. You know who you are.[/I]
 [B]Critical:[/B]
-- Fixed sync engine not detecting new activity — watchlists, favorites, and watched status now refresh properly.
+- Fixed sync engine not detecting new activity. Watchlists, favorites, and watched status now refresh properly.
 - Fixed items not being removed from watchlists and favorites.
 - Fixed API errors causing crashes instead of retrying gracefully.
 [B]Moderate:[/B]
@@ -47,27 +47,27 @@
 [COLOR dodgerblue][B]Version 2.1.88[/B][/COLOR]
 - Calendar now pulls from your FlickList account. Add shows on flicklist.tv and they appear here.
 - Show posters displayed as folder icons and episode art.
-- Auth check on calendar — prompts login if needed.
+- Auth check on calendar. Prompts login if needed.
 - Empty calendar shows helpful message instead of blank screen.
 
 [COLOR dodgerblue][B]Version 2.1.86[/B][/COLOR]
 - New Calendar on root menu with day-folder UX.
 - Internal code cleanup and refactoring.
 
-[COLOR dodgerblue][B]Version 2.1.85 — Initial Release[/B][/COLOR]
+[COLOR dodgerblue][B]Version 2.1.85. Initial Release[/B][/COLOR]
 [I]Where it all began.[/I]
-- FlickList integration — track your watching history across all your devices.
-- Device code authentication — scan QR or enter code at flicklist.tv/link.
-- Real-time scrobbling — playback start, pause, resume, and stop events synced automatically.
+- FlickList integration. Track your watching history across all your devices.
+- Device code authentication. Scan QR or enter code at flicklist.tv/link.
+- Real-time scrobbling. Playback start, pause, resume, and stop events synced automatically.
 - Watchlist and favorites sync with your FlickList account.
-- Watched indicators — checkmarks on movies and shows you have finished.
-- In Progress and Jump Back In — pick up where you left off.
+- Watched indicators. Checkmarks on movies and shows you have finished.
+- In Progress and Jump Back In. Pick up where you left off.
 - Browse Similar added to Movie/TV Show context menus and Extras window.
 - Because You Watched recommendations powered by your history.
 - Search, Discover, People, and My Lists from FlickList.
 - Full FenLight FL branding throughout settings and menus.
-- Works alongside original FenLight AM — both can be installed simultaneously.
+- Works alongside original FenLight AM. Both can be installed simultaneously.
 
 
-[COLOR darkgoldenrod][B]FenLight FL[/B][/COLOR] — a fan fork of [COLOR dodgerblue]Fen Light AM[/COLOR] by [COLOR dodgerblue]AnonyMouse[/COLOR], built on [COLOR dodgerblue]TikiPeter[/COLOR]'s original work.
+[COLOR darkgoldenrod][B]FenLight FL[/B][/COLOR], a fan fork of [COLOR dodgerblue]Fen Light AM[/COLOR] by [COLOR dodgerblue]AnonyMouse[/COLOR], built on [COLOR dodgerblue]TikiPeter[/COLOR]'s original work.
 Thank you both.

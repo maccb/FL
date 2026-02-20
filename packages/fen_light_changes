@@ -1,30 +1,30 @@
 [COLOR red][B]Version 2.1.93[/B][/COLOR]
-[I]They say water is the essence of life. Nah — it's just really well-treated sewage.[/I]
+[I]They say water is the essence of life. Nah, it's just really well-treated sewage.[/I]
 [B]Critical:[/B]
 - Fixed unmarking a single episode as watched accidentally removing all watched history for the entire show.
 
 [B]Moderate:[/B]
-- Fixed mark watched not working on episodes — checkmarks now appear immediately.
+- Fixed mark watched not working on episodes. Checkmarks now appear immediately.
 - Removed ability for episodes to not show watched status during certain conditions.
 
 [B]Needed:[/B]
-- Added Resync FlickList button under Tools → Database & Cache Maintenance — pulls fresh data from your FlickList account.
+- Added Resync FlickList button under Tools > Database & Cache Maintenance. Pulls fresh data from your FlickList account.
 - Code cleanup and internal improvements.
 
 [COLOR red][B]Version 2.1.92[/B][/COLOR]
 [I]Respect where it's due.[/I]
 [B]Needed:[/B]
-- One more small fix we missed — all good now.
+- One more small fix we missed. All good now.
 
 [COLOR red][B]Version 2.1.91[/B][/COLOR]
 [I]For the ones who build quietly and let the work speak.[/I]
 [B]Needed:[/B]
 - Fixed a minor uncaught error that could cause unexpected issues.
 
-[COLOR red][B]Version 2.1.90 — Stability & Sync Improvements[/B][/COLOR]
+[COLOR red][B]Version 2.1.90. Stability & Sync Improvements[/B][/COLOR]
 [I]This one goes out to all the Geo Metro owners out there. You know who you are.[/I]
 [B]Critical:[/B]
-- Fixed sync engine not detecting new activity — watchlists, favorites, and watched status now refresh properly.
+- Fixed sync engine not detecting new activity. Watchlists, favorites, and watched status now refresh properly.
 - Fixed items not being removed from watchlists and favorites.
 - Fixed API errors causing crashes instead of retrying gracefully.
 [B]Moderate:[/B]
@@ -40,7 +40,7 @@
 [COLOR red][B]Version 2.1.88[/B][/COLOR]
 - Calendar now pulls from your FlickList account. Add shows on flicklist.tv and they appear here.
 - Show posters displayed as folder icons and episode art.
-- Auth check on calendar — prompts login if needed.
+- Auth check on calendar. Prompts login if needed.
 - Empty calendar shows helpful message instead of blank screen.
 
 [COLOR red][B]Version 2.1.86[/B][/COLOR]
@@ -51,4 +51,4 @@
 - Added "Browse Similar" to Movie/TV Show context menus. Also added to Extras window.
 - Other changes/fixes.
 
-[I]Built on the shoulders of TikiPeter & AnonyMouse — true legends.[/I]
+[I]Built on the shoulders of TikiPeter & AnonyMouse. True legends.[/I]
