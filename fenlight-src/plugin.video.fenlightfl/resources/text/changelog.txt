@@ -3,7 +3,6 @@
 
 
 [COLOR dodgerblue][B]Version 2.1.94[/B][/COLOR]
-[I]nondo[/I]
 [B]Needed:[/B]
 - No more "Resume from 2%?" popups when starting a new show.
 - Only episodes with real progress above 3% will show the resume option.
