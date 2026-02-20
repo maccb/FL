@@ -1,3 +1,16 @@
+[COLOR red][B]Version 2.1.93[/B][/COLOR]
+[I]They say water is the essence of life. Nah — it's just really well-treated sewage.[/I]
+[B]Critical:[/B]
+- Fixed unmarking a single episode as watched accidentally removing all watched history for the entire show.
+
+[B]Moderate:[/B]
+- Fixed mark watched not working on episodes — checkmarks now appear immediately.
+- Removed ability for episodes to not show watched status during certain conditions.
+
+[B]Needed:[/B]
+- Added Resync FlickList button under Tools → Database & Cache Maintenance — pulls fresh data from your FlickList account.
+- Code cleanup and internal improvements.
+
 [COLOR red][B]Version 2.1.92[/B][/COLOR]
 [I]Respect where it's due.[/I]
 [B]Needed:[/B]
