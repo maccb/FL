@@ -1,6 +1,6 @@
 from datetime import datetime
 from threading import Thread
-from apis.flicklist_api import fl_watched_status_mark, fl_progress, fl_get_hidden_items
+from apis.flicklist_api import fl_watched_status_mark, fl_progress, fl_get_hidden_items, fl_official_status
 from caches.base_cache import connect_database, database
 from caches.flicklist_cache import clear_fl_collection_watchlist_data
 from modules.kodi_utils import kodi_progress_background, sleep, get_video_database_path, notification, kodi_refresh
@@ -261,7 +261,7 @@ def mark_movie(params):
 	watched_indicators = settings.watched_indicators()
 	if watched_indicators == 1:
 		if from_playback and fl_official_status(media_type) == False: sleep(1000)
-		elif not fl_watched_status_mark(action, 'movies', tmdb_id): return notification('Error')
+		else: fl_watched_status_mark(action, 'movies', tmdb_id)
 		clear_fl_collection_watchlist_data('watchlist', media_type)
 	watched_status_mark(watched_indicators, media_type, tmdb_id, action, title=title)
 	refresh_container(refresh)
@@ -274,7 +274,7 @@ def mark_tvshow(params):
 	progress_backround = kodi_progress_background()
 	progress_backround.create('[B]Please Wait..[/B]', '')
 	if watched_indicators == 1:
-		if not fl_watched_status_mark(action, 'shows', tmdb_id, tvdb_id): return notification('Error')
+		fl_watched_status_mark(action, 'shows', tmdb_id, tvdb_id)
 		clear_fl_collection_watchlist_data('watchlist', 'tvshow')
 	current_date = get_datetime()
 	insert_list = []
@@ -310,7 +310,7 @@ def mark_season(params):
 	watched_indicators = settings.watched_indicators()
 	heading = '[B]Mark Watched %s[/B]' if action == 'mark_as_watched' else '[B]Mark Unwatched %s[/B]'
 	if watched_indicators == 1:
-		if not fl_watched_status_mark(action, 'season', tmdb_id, tvdb_id, season): return notification('Error')
+		fl_watched_status_mark(action, 'season', tmdb_id, tvdb_id, season)
 		clear_fl_collection_watchlist_data('watchlist', 'tvshow')
 	progress_backround = kodi_progress_background()
 	progress_backround.create('[B]Please Wait..[/B]', '')
@@ -342,7 +342,7 @@ def mark_episode(params):
 	watched_indicators = settings.watched_indicators()
 	if watched_indicators == 1:
 		if from_playback and fl_official_status(media_type) == False: sleep(1000)
-		elif not fl_watched_status_mark(action, media_type, tmdb_id, tvdb_id, season, episode): return notification('Error')
+		else: fl_watched_status_mark(action, media_type, tmdb_id, tvdb_id, season, episode)
 		clear_fl_collection_watchlist_data('watchlist', 'tvshow')
 	watched_status_mark(watched_indicators, media_type, tmdb_id, action, season, episode, title)
 	update_hidden_progress(tmdb_id)
