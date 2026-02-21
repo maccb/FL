@@ -2,6 +2,11 @@
 [I]Built on the shoulders of TikiPeter & AnonyMouse. True legends.[/I]
 
 
+[COLOR dodgerblue][B]Version 2.1.95[/B][/COLOR]
+[B]Needed:[/B]
+- Cleaned up a few tiny buggers. OUR APOLOGIES CANADA!
+
+
 [COLOR dodgerblue][B]Version 2.1.94[/B][/COLOR]
 [B]Needed:[/B]
 - No more "Resume from 2%?" popups when starting a new show.
