@@ -18,7 +18,7 @@ from caches.main_cache import cache_object
 from caches.lists_cache import lists_cache_object
 from modules import kodi_utils, settings
 from modules.metadata import movie_meta_external_id, tvshow_meta_external_id
-from modules.utils import sort_list, sort_for_article, get_datetime, timedelta, replace_html_codes, copy2clip, make_qrcode, make_tinyurl, \
+from modules.utils import sort_list, sort_for_article, get_datetime, timedelta, replace_html_codes, copy2clip, make_qrcode, \
 							make_thread_list, jsondate_to_datetime as js2date
 
 API_BASE = 'https://beta.flicklist.tv/api'
@@ -178,16 +178,11 @@ def fl_get_device_token(device_codes):
 		expires_in = device_codes.get('expires_in', 900)
 		sleep_interval = device_codes.get('interval', 5)
 		user_code = str(device_codes.get('user_code', ''))
-		verification_uri = device_codes.get('verification_uri', 'https://beta.flicklist.tv/link')
+		verification_uri = 'https://beta.flicklist.tv/link'
 		auth_url = '%s?code=%s' % (verification_uri, user_code)
 		qr_code = make_qrcode(auth_url) or ''
-		short_url = make_tinyurl(auth_url)
 		copy2clip(auth_url)
-		if short_url:
-			p_dialog_insert = '[CR]OR....[CR]visit [B]%s[/B]' % short_url
-		else:
-			p_dialog_insert = ''
-		content = 'Enter [B]%s[/B] at [B]%s[/B][CR]OR....[CR]Scan the [B]QR Code[/B]%s' % (user_code, verification_uri, p_dialog_insert)
+		content = 'Enter [B]%s[/B] at [B]%s[/B][CR]OR....[CR]Scan the [B]QR Code[/B]' % (user_code, verification_uri)
 		progressDialog = kodi_utils.progress_dialog('FlickList Authorize', qr_code)
 		progressDialog.update(content, 0)
 		try:
