@@ -2,6 +2,11 @@
 [I]Built on the shoulders of TikiPeter & AnonyMouse. True legends.[/I]
 
 
+[COLOR dodgerblue][B]Version 2.1.96[/B][/COLOR]
+[B]Critical:[/B]
+- Fixed auth bug, trending gifs for everyone! You get a trending gif, YOU get a trending gif...
+
+
 [COLOR dodgerblue][B]Version 2.1.95[/B][/COLOR]
 [B]Needed:[/B]
 - Cleaned up a few tiny buggers. OUR APOLOGIES CANADA!

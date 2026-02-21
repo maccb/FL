@@ -237,13 +237,13 @@ def fl_authenticate(dummy=''):
 		return False
 	token = fl_get_device_token(code)
 	if token:
-		set_setting('flicklist.token', token.get('access_token', ''))
+		set_setting('fenlightfl.flicklist.token', token.get('access_token', ''))
 		set_setting('watched_indicators', '1')
 		kodi_utils.sleep(1000)
 		try:
 			user = call_flicklist('/auth/me', with_auth=True)
 			if user:
-				set_setting('flicklist.user', str(user.get('username', user.get('display_name', ''))))
+				set_setting('fenlightfl.flicklist.user', str(user.get('username', user.get('display_name', ''))))
 		except:
 			pass
 		kodi_utils.notification('FlickList Account Authorized', 3000)
@@ -254,9 +254,9 @@ def fl_authenticate(dummy=''):
 
 def fl_revoke_authentication(dummy=''):
 	"""Clear FlickList authorization."""
-	set_setting('flicklist.user', 'empty_setting')
-	set_setting('flicklist.token', '0')
-	set_setting('flicklist.next_daily_clear', '0')
+	set_setting('fenlightfl.flicklist.user', 'empty_setting')
+	set_setting('fenlightfl.flicklist.token', '0')
+	set_setting('fenlightfl.flicklist.next_daily_clear', '0')
 	set_setting('watched_indicators', '0')
 	flicklist_cache.clear_all_fl_cache_data(silent=True, refresh=False)
 	kodi_utils.notification('FlickList Account Authorization Reset', 3000)
