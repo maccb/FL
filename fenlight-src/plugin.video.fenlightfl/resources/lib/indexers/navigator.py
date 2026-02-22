@@ -110,27 +110,19 @@ class Navigator:
 		self.end_directory()
 
 	def my_content(self):
-		if s.fl_user_active(): self.add({'mode': 'navigator.fl_lists_personal'}, 'FenLight FL Lists', 'fl')
+		if s.fl_user_active():
+			self.add({'mode': 'navigator.fl_watchlists'}, 'Watchlist', 'fl')
+			self.add({'mode': 'navigator.fl_favorites', 'category_name': 'Favorites'}, 'Favorites', 'fl')
+			self.add({'mode': 'fl.list.get_fl_lists', 'list_type': 'my_lists', 'category_name': 'My Lists'}, 'My Lists', 'fl')
 		if s.tmdblist_user_active(): self.add({'mode': 'tmdblist.get_tmdb_lists'}, 'TMDb Lists', 'tmdb')
-		self.add({'mode': 'personal_lists.get_personal_lists'}, 'Personal Lists', 'lists')
-		self.add({'mode': 'navigator.discover_contents', 'media_type': 'movie', 'show_new': 'false'}, 'Discover Lists (Movies)', 'movies')
-		self.add({'mode': 'navigator.discover_contents', 'media_type': 'tvshow', 'show_new': 'false'}, 'Discover Lists (TV Shows)', 'tv')
-		self.end_directory()
-
-	def fl_lists_personal(self):
-		self.add({'mode': 'navigator.fl_watchlists'}, 'FenLight FL Watchlist', 'fl')
-		self.add({'mode': 'fl.list.get_fl_lists', 'list_type': 'my_lists', 'category_name': 'My Lists'}, 'FenLight FL My Lists', 'fl')
-		self.add({'mode': 'navigator.fl_favorites', 'category_name': 'Favorites'}, 'FenLight FL Favorites', 'fl')
-		self.add({'mode': 'build_my_calendar'}, 'FenLight FL Calendar', 'fl')
 		self.end_directory()
 
 	def fl_watchlists(self):
 		self.category_name = 'Watchlist'
-		self.add({'mode': 'build_movie_list', 'action': 'fl_watchlist', 'category_name': 'Movies Watchlist'}, 'Movies Watchlist', 'fl')
-		self.add({'mode': 'build_tvshow_list', 'action': 'fl_watchlist', 'category_name': 'TV Shows Watchlist'}, 'TV Shows Watchlist', 'fl')
+		self.add({'mode': 'build_movie_list', 'action': 'fl_watchlist', 'category_name': 'Movies'}, 'Movies', 'fl')
+		self.add({'mode': 'build_tvshow_list', 'action': 'fl_watchlist', 'category_name': 'TV Shows'}, 'TV Shows', 'fl')
 		self.add({'mode': 'build_movie_list', 'action': 'fl_watchlist_lists', 'new_page': 'recent', 'category_name': 'Recently Added Movies'}, 'Recently Added Movies', 'fl')
-		self.add({'mode': 'build_tvshow_list', 'action': 'fl_watchlist_lists', 'new_page': 'recent', 'category_name': 'Recently Added TV Shows'},
-					'Recently Added TV Shows', 'fl')
+		self.add({'mode': 'build_tvshow_list', 'action': 'fl_watchlist_lists', 'new_page': 'recent', 'category_name': 'Recently Added TV Shows'}, 'Recently Added TV Shows', 'fl')
 		self.end_directory()
 
 	def fl_favorites(self):

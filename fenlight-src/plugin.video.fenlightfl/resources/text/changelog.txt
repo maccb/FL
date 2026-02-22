@@ -2,6 +2,22 @@
 [I]Built on the shoulders of TikiPeter & AnonyMouse. True legends.[/I]
 
 
+[COLOR dodgerblue][B]Version 2.1.98[/B][/COLOR]
+[I]For the ones who scroll back just to see what they missed.[/I]
+[B]Moderate:[/B]
+- Cleaned up the My Lists menu. Less clutter, same stuff.
+- Calendar episodes now play when you click them. No extra steps.
+- Calendar shows checkmarks on stuff you already watched.
+- Calendar lets you browse week by week with Previous/Next buttons.
+- Added "Go to Show" and "Go to Season" in the calendar right-click menu.
+
+[B]Needed:[/B]
+- Fixed crashes when scrolling to the end of long lists.
+- Anime sections actually load now instead of showing like 10 things.
+- Resume progress saves locally as a backup in case the server hiccups.
+- Fixed a crash that could happen when checking movie progress.
+
+
 [COLOR dodgerblue][B]Version 2.1.97[/B][/COLOR]
 [B]Critical:[/B]
 - Fixed a crash that occurred when starting a movie.

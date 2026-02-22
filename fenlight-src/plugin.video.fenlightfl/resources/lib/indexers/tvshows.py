@@ -77,19 +77,22 @@ class TVShows:
 			elif self.action in self.fl_main:
 				self.id_type = 'fl_dict'
 				data = function(page_no)
+				if not data: return
 				try: self.list = [i['show']['ids'] for i in data]
 				except: self.list = [i['ids'] for i in data]
-				if not is_random and self.action != 'fl_recommendations': self.new_page = {'new_page': str(page_no + 1)}
+				if not is_random and self.action != 'fl_recommendations' and len(data) >= 20: self.new_page = {'new_page': str(page_no + 1)}
 			elif self.action in self.fl_special:
 				key_id = self.params_get('key_id', None) or self.params_get('query')
 				if not key_id: return
 				self.id_type = 'fl_dict'
 				data = function(key_id, page_no)
+				if not data: return
 				self.list = [i['show']['ids'] for i in data]
-				if not is_random: self.new_page = {'new_page': str(page_no + 1), 'key_id': key_id}
+				if not is_random and len(data) >= 20: self.new_page = {'new_page': str(page_no + 1), 'key_id': key_id}
 			elif self.action in self.fl_personal:
 				self.id_type = 'fl_dict'
 				data = function('shows', page_no)
+				if not data: return
 				if self.action in ('fl_collection_lists', 'fl_watchlist_lists', 'fl_favorites'): total_pages = 1
 				else: data, total_pages = self.paginate_list(data, page_no)
 				self.list = [i['media_ids'] for i in data]
@@ -102,11 +105,13 @@ class TVShows:
 				if not key_id: return
 				self.id_type = 'fl_dict'
 				data, total_pages = function(key_id, page_no)
+				if not data: return
 				self.list = [i['show']['ids'] for i in data]
 				if int(total_pages) > page_no: self.new_page = {'new_page': str(page_no + 1), 'key_id': key_id}
 			elif self.action == 'fl_recommendations':
 				self.id_type = 'fl_dict'
 				data = function('shows')
+				if not data: return
 				data, total_pages = self.paginate_list(data, page_no)
 				self.list = [i['ids'] for i in data]
 				if total_pages > 2: self.total_pages = total_pages
@@ -124,6 +129,7 @@ class TVShows:
 				key_id = self.params_get('key_id')
 				if not key_id.startswith('tt'): key_id = tvshow_meta('tmdb_id', key_id, settings.tmdb_api_key(), settings.mpaa_region(), get_datetime())['imdb_id']
 				data = function(key_id)
+				if not data: return
 				self.list = [i['ids'] for i in data]
 			elif self.action == 'imdb_more_like_this':
 				from apis.imdb_api import imdb_more_like_this
@@ -139,7 +145,7 @@ class TVShows:
 											'Jump To...', 'item_jump', kodi_utils.get_icon('item_jump_landscape'), isFolder=False)
 			if self.new_page and not self.widget_hide_next_page:
 				self.new_page.update({'mode': 'build_tvshow_list', 'action': self.action, 'category_name': self.category_name})
-				if self.is_anime_list is not None: self.new_page['is_anime_list'] == {True: 'true', False: 'false'}[self.is_anime_list]
+				if self.is_anime_list is not None: self.new_page['is_anime_list'] = {True: 'true', False: 'false'}[self.is_anime_list]
 				kodi_utils.add_dir(handle, self.new_page, 'Next Page (%s) >>' % self.new_page['new_page'], 'nextpage', kodi_utils.get_icon('nextpage_landscape'))
 		except: pass
 		kodi_utils.set_content(handle, 'tvshows')

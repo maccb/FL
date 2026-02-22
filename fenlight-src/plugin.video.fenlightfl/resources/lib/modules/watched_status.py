@@ -244,6 +244,11 @@ def set_bookmark(params):
 		if watched_indicators == 1:
 			if fl_official_status(media_type) == False: return
 			else: fl_progress('set_progress', media_type, tmdb_id, resume_point, season, episode, refresh_fl=True)
+			try:
+				local_db = connect_database('watched_db')
+				local_db.execute('INSERT OR REPLACE INTO progress VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+							(media_type, tmdb_id, season, episode, str(resume_point), str(curr_time), str(datetime.now()), 0, title))
+			except: pass
 		else:
 			erase_bookmark(media_type, tmdb_id, season, episode)
 			last_played = get_last_played_value(watched_indicators)

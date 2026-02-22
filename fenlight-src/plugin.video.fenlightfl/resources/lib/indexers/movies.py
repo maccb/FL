@@ -66,12 +66,14 @@ class Movies:
 			elif self.action in self.fl_main:
 				self.id_type = 'fl_dict'
 				data = function(page_no)
+				if not data: return
 				try: self.list = [i['movie']['ids'] for i in data]
 				except: self.list = [i['ids'] for i in data]
-				if self.action not in ('fl_movies_top10_boxoffice', 'fl_recommendations'): self.new_page = {'new_page': str(page_no + 1)}
+				if self.action not in ('fl_movies_top10_boxoffice', 'fl_recommendations') and len(data) >= 20: self.new_page = {'new_page': str(page_no + 1)}
 			elif self.action in self.fl_personal:
 				self.id_type = 'fl_dict'
 				data = function('movies', page_no)
+				if not data: return
 				if self.action in ('fl_collection_lists', 'fl_watchlist_lists', 'fl_favorites'): total_pages = 1
 				else: data, total_pages = self.paginate_list(data, page_no)
 				self.list = [i['media_ids'] for i in data]
@@ -82,6 +84,7 @@ class Movies:
 			elif self.action == 'fl_recommendations':
 				self.id_type = 'fl_dict'
 				data = function('movies')
+				if not data: return
 				data, total_pages = self.paginate_list(data, page_no)
 				self.list = [i['ids'] for i in data]
 				if total_pages > 2: self.total_pages = total_pages
@@ -103,6 +106,7 @@ class Movies:
 				key_id = self.params_get('key_id')
 				if not key_id.startswith('tt'): key_id = movie_meta('tmdb_id', key_id, settings.tmdb_api_key(), settings.mpaa_region(), get_datetime())['imdb_id']
 				data = function(key_id)
+				if not data: return
 				self.list = [i['ids'] for i in data]
 			elif self.action == 'imdb_more_like_this':
 				from apis.imdb_api import imdb_more_like_this
