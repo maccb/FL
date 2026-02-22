@@ -2,7 +2,7 @@
 import sys
 import json
 from datetime import datetime, timedelta
-from modules import kodi_utils
+from modules import kodi_utils, settings, watched_status as ws
 from apis.flicklist_api import call_flicklist
 from caches.settings_cache import get_setting
 
@@ -99,13 +99,15 @@ def _get_still(item, size='w300'):
 
 
 def build_calendar_days(params):
-	"""Root calendar view: one folder per day, click to see episodes.
-	Fetches from GET /api/calendar/my/shows/{start}/{days}."""
+	"""Root calendar view: 7-day sliding window with Previous/Next Week nav.
+	Offset 0 = current week (yesterday through 5 days ahead).
+	Negative offset = past weeks, positive = future weeks."""
 	handle = int(sys.argv[1])
 	build_url = kodi_utils.build_url
 	make_listitem = kodi_utils.make_listitem
 	add_items = kodi_utils.add_items
 	fanart = kodi_utils.get_addon_fanart()
+	offset = int(params.get('offset', 0))
 
 	if not _is_authenticated():
 		listitem = make_listitem()
@@ -120,10 +122,16 @@ def build_calendar_days(params):
 		kodi_utils.end_directory(handle)
 		return
 
-	calendar_days = _fetch_calendar(previous_days=7, future_days=14)
+	window_start = datetime.now() + timedelta(days=offset - 1)
+	window_end = datetime.now() + timedelta(days=offset + 5)
+	start_str = window_start.strftime('%Y-%m-%d')
+	end_str = window_end.strftime('%Y-%m-%d')
+	days_back = max(0, (datetime.now() - window_start).days + 1)
+	days_fwd = max(0, (window_end - datetime.now()).days + 1)
+	calendar_days = _fetch_calendar(previous_days=days_back, future_days=days_fwd)
 	if calendar_days is None:
 		listitem = make_listitem()
-		listitem.setLabel('[COLOR ffff4444]Could not load calendar — check connection[/COLOR]')
+		listitem.setLabel('[COLOR ffff4444]Could not load calendar - check connection[/COLOR]')
 		listitem.setArt({'icon': kodi_utils.get_icon('calender'), 'fanart': fanart})
 		add_items(handle, [(build_url({}), listitem, False)])
 		kodi_utils.set_content(handle, '')
@@ -131,56 +139,61 @@ def build_calendar_days(params):
 		kodi_utils.end_directory(handle)
 		return
 
+	calendar_days = [d for d in calendar_days if start_str <= d.get('date', '') <= end_str]
+
 	items = []
+
+	if offset > -84:
+		prev_li = make_listitem()
+		prev_li.setLabel('[COLOR ff22d3a7][B]<  Previous Week[/B][/COLOR]')
+		prev_li.setArt({'icon': kodi_utils.get_icon('calender'), 'fanart': fanart})
+		prev_li.getVideoInfoTag(True).setPlot('Show the previous 7 days')
+		items.append((build_url({'mode': 'fl_calendar.build_calendar_days', 'offset': offset - 7}), prev_li, True))
+
+	day_count = 0
 	for day in calendar_days:
 		day_items = day.get('items', [])
 		ep_count = len(day_items)
 		if ep_count == 0:
 			continue
-
+		day_count += 1
 		date_str = day['date']
 		label = _format_day_label(date_str, ep_count)
-
 		show_names = list(dict.fromkeys(i.get('show_title', '') for i in day_items))
 		plot = '\n'.join(show_names[:5])
 		if len(show_names) > 5:
 			plot += '\n+ %d more...' % (len(show_names) - 5)
-
-		url_params = {
-			'mode': 'fl_calendar.build_calendar_day',
-			'date': date_str,
-		}
-
-		url = build_url(url_params)
+		url = build_url({'mode': 'fl_calendar.build_calendar_day', 'date': date_str})
 		listitem = make_listitem()
 		listitem.setLabel(label)
-
 		first_poster = None
 		for di in day_items:
 			first_poster = _get_poster(di)
-			if first_poster:
-				break
+			if first_poster: break
 		icon = first_poster or kodi_utils.get_icon('calender')
 		listitem.setArt({'icon': icon, 'poster': icon, 'thumb': icon, 'fanart': fanart, 'banner': icon})
-		info_tag = listitem.getVideoInfoTag(True)
-		info_tag.setPlot(plot)
-
+		listitem.getVideoInfoTag(True).setPlot(plot)
 		items.append((url, listitem, True))
 
-	if not items:
-		listitem = make_listitem()
-		listitem.setLabel('[COLOR ff888888]No upcoming episodes — add shows on flicklist.tv[/COLOR]')
-		listitem.setArt({'icon': kodi_utils.get_icon('calender'), 'fanart': fanart})
-		info_tag = listitem.getVideoInfoTag(True)
-		info_tag.setPlot('Add shows to your watchlist or tracked list on flicklist.tv\nand their upcoming episodes will appear here.')
-		items.append((build_url({}), listitem, False))
+	if day_count == 0:
+		empty_li = make_listitem()
+		empty_li.setLabel('[COLOR ff888888]No episodes this week[/COLOR]')
+		empty_li.setArt({'icon': kodi_utils.get_icon('calender'), 'fanart': fanart})
+		items.append((build_url({}), empty_li, False))
 
+	if offset < 28:
+		next_li = make_listitem()
+		next_li.setLabel('[COLOR ff22d3a7][B]Next Week  >[/B][/COLOR]')
+		next_li.setArt({'icon': kodi_utils.get_icon('calender'), 'fanart': fanart})
+		next_li.getVideoInfoTag(True).setPlot('Show the next 7 days')
+		items.append((build_url({'mode': 'fl_calendar.build_calendar_days', 'offset': offset + 7}), next_li, True))
+
+	range_label = '%s - %s' % (window_start.strftime('%b %d'), window_end.strftime('%b %d'))
 	add_items(handle, items)
 	kodi_utils.set_content(handle, '')
-	kodi_utils.set_category(handle, 'FL Calendar')
+	kodi_utils.set_category(handle, range_label)
 	kodi_utils.end_directory(handle)
 	kodi_utils.set_view_mode('view.main', '')
-
 
 def build_calendar_day(params):
 	"""Episode list for a specific day. Re-fetches from API to get fresh data."""
@@ -192,7 +205,20 @@ def build_calendar_day(params):
 
 	target_date = params.get('date', '')
 
-	calendar_days = _fetch_calendar(previous_days=7, future_days=14)
+	try:
+		target_dt = datetime.strptime(target_date, '%Y-%m-%d')
+		now = datetime.now()
+		diff_days = (now - target_dt).days
+		if diff_days > 0:
+			prev_days = diff_days + 2
+			fwd_days = 1
+		else:
+			prev_days = 1
+			fwd_days = abs(diff_days) + 2
+	except:
+		prev_days = 7
+		fwd_days = 14
+	calendar_days = _fetch_calendar(previous_days=prev_days, future_days=fwd_days)
 	day_data = None
 	if calendar_days:
 		for day in calendar_days:
@@ -210,13 +236,34 @@ def build_calendar_day(params):
 		return
 
 	items = []
+
+	playback_key = settings.playback_key()
+	play_mode = 'playback.%s' % playback_key
+	try:
+		watched_indicators = settings.watched_indicators()
+		watched_db = ws.get_database(watched_indicators)
+		show_ids = set(ep.get('tmdb_id') for ep in day_data['items'] if ep.get('tmdb_id'))
+		watched_cache = {}
+		for sid in show_ids:
+			try:
+				info = ws.watched_info_episode(str(sid), watched_db)
+				watched_cache[sid] = set(info) if info else set()
+			except: watched_cache[sid] = set()
+	except: watched_cache = {}
 	for ep in day_data['items']:
 		label = _format_episode_label(ep)
 		plot = _format_episode_plot(ep)
 
+		season_num = ep.get('season_number', 1)
+		episode_num = ep.get('episode_number', 1)
+		tmdb_id = ep.get('tmdb_id', 0)
 		url_params = {
-			'mode': 'build_season_list',
-			'tmdb_id': ep.get('tmdb_id', 0),
+			'mode': play_mode,
+			'media_type': 'episode',
+			'tmdb_id': tmdb_id,
+			'season': season_num,
+			'episode': episode_num,
+			playback_key: playback_key,
 		}
 		url = build_url(url_params)
 		listitem = make_listitem()
@@ -231,6 +278,11 @@ def build_calendar_day(params):
 			'fanart': fanart,
 		})
 
+		cm = []
+		cm.append(('[B]Go to Show[/B]', 'Container.Update(%s)' % build_url({'mode': 'build_season_list', 'tmdb_id': tmdb_id})))
+		cm.append(('[B]Go to Season[/B]', 'Container.Update(%s)' % build_url({'mode': 'build_episode_list', 'tmdb_id': tmdb_id, 'season': season_num})))
+		listitem.addContextMenuItems(cm)
+
 		info_tag = listitem.getVideoInfoTag(True)
 		info_tag.setMediaType('episode')
 		info_tag.setTvShowTitle(ep.get('show_title', ''))
@@ -240,8 +292,13 @@ def build_calendar_day(params):
 		info_tag.setPlot(plot)
 		if ep.get('runtime'):
 			info_tag.setDuration(ep['runtime'] * 60)
+		try:
+			s_e = (int(ep.get('season_number', 0)), int(ep.get('episode_number', 0)))
+			if tmdb_id in watched_cache and s_e in watched_cache[tmdb_id]:
+				info_tag.setPlaycount(1)
+		except: pass
 
-		items.append((url, listitem, True))
+		items.append((url, listitem, False))
 
 	add_items(handle, items)
 

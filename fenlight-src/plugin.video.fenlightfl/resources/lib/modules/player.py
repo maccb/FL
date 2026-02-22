@@ -56,6 +56,19 @@ class FenLightPlayer(xbmc.Player):
 		ku.sleep(200)
 		ku.close_all_dialog()
 
+	def _local_safety_write(self):
+		try:
+			from caches.base_cache import connect_database
+			from modules.utils import get_datetime
+			dbcon = connect_database('watched_db')
+			db_type = 'movie' if self.media_type == 'movie' else 'episode'
+			resume_point = round(max(float(self.curr_time) - 5, 0) / float(self.total_time) * 100, 1)
+			season = self.season if self.media_type == 'episode' else ''
+			episode = self.episode if self.media_type == 'episode' else ''
+			dbcon.execute('INSERT OR REPLACE INTO progress VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+				(db_type, str(self.tmdb_id), season, episode, str(resume_point), str(self.curr_time), str(get_datetime()), 0, self.title))
+		except: pass
+
 	def monitor(self):
 		try:
 			ensure_dialog_dead, total_check_time, heartbeat_counter = False, 0, 0
@@ -92,6 +105,9 @@ class FenLightPlayer(xbmc.Player):
 					if heartbeat_counter % 30 == 0 and st.watched_indicators() == 1 and self.current_point != self._last_heartbeat_progress:
 						self._last_heartbeat_progress = self.current_point
 						try: Thread(target=scrobble_heartbeat, args=(self.media_type, self.tmdb_id, self.current_point, self.curr_time, self.total_time, self.season, self.episode)).start()
+						except: pass
+					if heartbeat_counter % 30 == 0 and self.current_point >= 5:
+						try: Thread(target=self._local_safety_write).start()
 						except: pass
 					if self.current_point >= 90:
 						if play_random_continual: self.run_random_continual(); break

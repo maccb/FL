@@ -378,16 +378,15 @@ def fl_tv_search(query, page_no):
 
 def fl_anime_trending(page_no):
 	def _process(params):
-		data = call_flicklist('/anime/trending', params={'page': page_no, 'per_page': 20}, with_auth=False)
+		data = call_flicklist('/anime/browse', params={'page': page_no, 'per_page': 20, 'sort': 'popularity'}, with_auth=False)
 		items, _ = _media_to_fl_list(data, 'tv')
 		return items
 	string = 'fl_anime_trending_%s' % page_no
 	return lists_cache_object(_process, string, {})
 
 def fl_anime_trending_recent(page_no):
-	current_year = get_datetime().year
 	def _process(params):
-		data = call_flicklist('/anime/trending', params={'page': page_no, 'per_page': 20, 'year_min': current_year - 1, 'year_max': current_year}, with_auth=False)
+		data = call_flicklist('/anime/browse', params={'page': page_no, 'per_page': 20, 'sort': 'year'}, with_auth=False)
 		items, _ = _media_to_fl_list(data, 'tv')
 		return items
 	string = 'fl_anime_trending_recent_%s' % page_no
@@ -395,7 +394,7 @@ def fl_anime_trending_recent(page_no):
 
 def fl_anime_most_watched(page_no):
 	def _process(params):
-		data = call_flicklist('/anime/trending', params={'page': page_no, 'per_page': 20, 'sort': 'popularity'}, with_auth=False)
+		data = call_flicklist('/anime/browse', params={'page': page_no, 'per_page': 20, 'sort': 'rating'}, with_auth=False)
 		items, _ = _media_to_fl_list(data, 'tv')
 		return items
 	string = 'fl_anime_most_watched_%s' % page_no
@@ -504,9 +503,9 @@ def fl_progress(action, media, media_id, percent, season=None, episode=None, res
 				'progress': float(percent),
 				'source': 'kodi_flicklist'
 			}
-			if season is not None:
+			if season not in (None, ''):
 				data['season'] = int(season)
-			if episode is not None:
+			if episode not in (None, ''):
 				data['episode'] = int(episode)
 			call_flicklist('/scrobble/event', data=data)
 		if refresh_fl:
