@@ -1085,11 +1085,11 @@ def scrobble_start(media_type, tmdb_id, season=None, episode=None, duration=None
 		'source': 'kodi_flicklist',
 		'event': 'start'
 	}
-	if season is not None:
+	if season not in (None, ''):
 		data['season'] = int(season)
-	if episode is not None:
+	if episode not in (None, ''):
 		data['episode'] = int(episode)
-	if duration is not None:
+	if duration not in (None, ''):
 		data['duration'] = int(duration)
 	try:
 		call_flicklist('/scrobble/event', data=data)
@@ -1105,9 +1105,9 @@ def scrobble_pause(media_type, tmdb_id, progress, season=None, episode=None):
 		'source': 'kodi_flicklist',
 		'event': 'pause'
 	}
-	if season is not None:
+	if season not in (None, ''):
 		data['season'] = int(season)
-	if episode is not None:
+	if episode not in (None, ''):
 		data['episode'] = int(episode)
 	try:
 		call_flicklist('/scrobble/event', data=data)
@@ -1123,9 +1123,9 @@ def scrobble_stop(media_type, tmdb_id, progress, season=None, episode=None):
 		'source': 'kodi_flicklist',
 		'event': 'stop'
 	}
-	if season is not None:
+	if season not in (None, ''):
 		data['season'] = int(season)
-	if episode is not None:
+	if episode not in (None, ''):
 		data['episode'] = int(episode)
 	try:
 		call_flicklist('/scrobble/event', data=data)
@@ -1142,13 +1142,13 @@ def scrobble_heartbeat(media_type, tmdb_id, progress, current_time=None, duratio
 		'event': 'heartbeat',
 		'timestamp': get_datetime().strftime('%Y-%m-%dT%H:%M:%S.000Z')
 	}
-	if season is not None:
+	if season not in (None, ''):
 		data['season'] = int(season)
-	if episode is not None:
+	if episode not in (None, ''):
 		data['episode'] = int(episode)
-	if current_time is not None:
+	if current_time not in (None, ''):
 		data['current_time'] = int(current_time)
-	if duration is not None:
+	if duration not in (None, ''):
 		data['duration'] = int(duration)
 	try:
 		call_flicklist('/scrobble/event', data=data)

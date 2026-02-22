@@ -1,3 +1,7 @@
+[COLOR red][B]Version 2.1.97[/B][/COLOR]
+[B]Critical:[/B]
+- Fixed a crash that occurred when starting a movie.
+
 [COLOR red][B]Version 2.1.96[/B][/COLOR]
 [B]Critical:[/B]
 - Fixed auth bug, trending gifs for everyone! You get a trending gif, YOU get a trending gif...
