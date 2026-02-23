@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import json
 import time
 from threading import Thread
@@ -10,7 +9,6 @@ from modules import debrid, kodi_utils, settings, metadata, watched_status
 from modules.player import FenLightPlayer
 from modules.source_utils import get_cache_expiry, make_alias_dict, include_exclude_filters
 from modules.utils import clean_file_name, string_to_float, safe_string, remove_accents, get_datetime, append_module_to_syspath, manual_function_import
-# logger = kodi_utils.logger
 
 class Sources():
 	def __init__(self):

@@ -1,14 +1,12 @@
-# -*- coding: utf-8 -*-
 import re
 import time
 import requests
 from threading import Thread
 from caches.main_cache import cache_object
 from caches.settings_cache import get_setting, set_setting
-from modules.utils import copy2clip, make_tinyurl, make_qrcode
+from modules.utils import copy2clip, make_qrcode
 from modules.source_utils import supported_video_extensions, seas_ep_filter, extras
 from modules.kodi_utils import sleep, ok_dialog, progress_dialog, notification
-# from modules.kodi_utils import logger
 
 class RealDebridAPI:
 	def __init__(self):
@@ -32,10 +30,8 @@ class RealDebridAPI:
 		user_code = response['user_code']
 		auth_url = response['direct_verification_url']
 		qr_code = make_qrcode(auth_url) or ''
-		short_url = make_tinyurl(auth_url)
 		copy2clip(auth_url)
-		if short_url: p_dialog_insert = 'OR visit this URL: [B]%s[/B][CR]OR Enter this Code: [B]%s[/B]' % (short_url, user_code)
-		else: p_dialog_insert = 'OR Enter this Code: [B]%s[/B]' % user_code
+		p_dialog_insert = 'OR visit this URL: [B]https://real-debrid.com/device[/B][CR]OR Enter this Code: [B]%s[/B]' % user_code
 		content = 'Please Scan the QR Code%s[CR]' % p_dialog_insert
 		progressDialog = progress_dialog('Real Debrid Authorize', qr_code)
 		progressDialog.update(content, 0)
@@ -339,7 +335,6 @@ class RealDebridAPI:
 			from caches.base_cache import connect_database
 			dbcon = connect_database('maincache_db')
 			user_cloud_success = False
-			# USER CLOUD
 			try:
 				try:
 					cache = dbcon.execute("""SELECT data FROM maincache WHERE id LIKE ?""", ('rd_user_cloud_info_%',)).fetchall()
@@ -352,12 +347,10 @@ class RealDebridAPI:
 						dbcon.execute("""DELETE FROM maincache WHERE id=?""", ('rd_user_cloud_info_%s' % i,))
 					user_cloud_success = True
 			except: user_cloud_success = False
-			# DOWNLOAD LINKS
 			try:
 				dbcon.execute("""DELETE FROM maincache WHERE id=?""", ('rd_downloads',))
 				download_links_success = True
 			except: download_links_success = False
-			# HASH CACHED STATUS
 			if clear_hashes:
 				try:
 					debrid_cache.clear_debrid_results('rd')

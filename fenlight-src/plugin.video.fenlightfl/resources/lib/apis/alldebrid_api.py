@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import re
 import time
 import requests
@@ -6,11 +5,10 @@ from threading import Thread
 from urllib.parse import quote
 from caches.main_cache import cache_object
 from caches.settings_cache import get_setting, set_setting
-from modules.utils import copy2clip, make_qrcode, make_tinyurl
+from modules.utils import copy2clip, make_qrcode
 from modules.source_utils import supported_video_extensions, seas_ep_filter, extras
 from modules.kodi_utils import progress_dialog, notification, hide_busy_dialog, show_busy_dialog, sleep, ok_dialog, progress_dialog, \
 								notification, hide_busy_dialog
-# from modules.kodi_utils import logger
 
 class AllDebridAPI:
 	def __init__(self):
@@ -29,10 +27,8 @@ class AllDebridAPI:
 		user_code = response['pin']
 		auth_url = 'https://alldebrid.com/pin?pin=%s' % user_code
 		qr_code = make_qrcode(auth_url) or ''
-		short_url = make_tinyurl(auth_url)
 		copy2clip(auth_url)
-		if short_url: p_dialog_insert = 'OR visit this URL: [B]%s[/B][CR]OR Enter this Code: [B]%s[/B]' % (short_url, user_code)
-		else: p_dialog_insert = 'OR Enter this Code: [B]%s[/B]' % user_code
+		p_dialog_insert = 'OR visit this URL: [B]https://alldebrid.com/pin[/B][CR]OR Enter this Code: [B]%s[/B]' % user_code
 		sleep_interval = 5
 		content = 'Please Scan the QR Code%s[CR]' % p_dialog_insert
 		progressDialog = progress_dialog('All Debrid Authorize', qr_code)
@@ -216,13 +212,11 @@ class AllDebridAPI:
 			from caches.debrid_cache import debrid_cache
 			from caches.base_cache import connect_database
 			dbcon = connect_database('maincache_db')
-			# USER CLOUD
 			try:
 				dbcon.execute("DELETE FROM maincache WHERE id LIKE 'ad_user_%'")
 				dbcon.execute("DELETE FROM maincache WHERE id LIKE 'ad_list_transfer_%'")
 				user_cloud_success = True
 			except: user_cloud_success = False
-			# HASH CACHED STATUS
 			if clear_hashes:
 				try:
 					debrid_cache.clear_debrid_results('ad')

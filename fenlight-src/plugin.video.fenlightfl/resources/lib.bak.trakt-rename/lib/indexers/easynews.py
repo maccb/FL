@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import sys
 from datetime import datetime
 from urllib.parse import unquote, urlencode, quote
@@ -8,7 +7,6 @@ from apis.easynews_api import EasyNews
 from indexers.images import Images
 from modules import kodi_utils
 from modules.utils import clean_file_name
-# logger = kodi_utils.logger
 
 def search_easynews_image(key_id=None):
 	return Images().run({'mode': 'easynews_image_results', 'key_id': unquote(key_id), 'page_no': 1})

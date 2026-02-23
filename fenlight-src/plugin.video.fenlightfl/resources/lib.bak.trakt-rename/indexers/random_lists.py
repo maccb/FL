@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import sys
 import json
 import random
@@ -9,7 +8,6 @@ from modules import meta_lists
 from modules.settings import paginate, page_limit
 from modules import kodi_utils
 from modules.utils import manual_function_import, make_thread_list
-# logger = kodi_utils.logger
 
 def get_persistent_content(database, key, is_external):
 	results, refresh_cache, key = None, True, 'random_list.%s' % key

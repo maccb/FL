@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import json
 from windows.base_window import BaseDialog
 from caches.settings_cache import set_setting
@@ -7,7 +6,6 @@ from modules.utils import TaskPool
 from modules.source_utils import source_filters
 from modules.settings import provider_sort_ranks, avoid_episode_spoilers, max_threads
 from modules.kodi_utils import get_icon, kodi_dialog, hide_busy_dialog, addon_fanart, select_dialog, ok_dialog, notification
-# from modules.kodi_utils import logger
 
 class SourcesResults(BaseDialog):
 	def __init__(self, *args, **kwargs):
@@ -86,7 +84,7 @@ class SourcesResults(BaseDialog):
 					choice = [i[1] for i in choice]
 					filtered_list = [i for i in self.item_list if all(x in i.getProperty('extraInfo') for x in choice)]
 				elif filter_value == 'showuncached': filtered_list = self.make_items(self.uncached_results)
-				else: #cache_check_rescrape
+				else:
 					self.selected = ('cache_change_rescrape', 'false' if self.external_cache_check else 'true')
 					return self.close()
 			if not filtered_list: return ok_dialog(text='No Results')

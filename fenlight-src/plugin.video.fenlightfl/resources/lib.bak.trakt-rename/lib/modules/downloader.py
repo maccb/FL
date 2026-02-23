@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os
 import sys
 import ssl
@@ -11,7 +10,6 @@ from modules.sources import Sources
 from modules.settings import download_directory
 from modules.source_utils import clean_title
 from modules.utils import clean_file_name, safe_string, remove_accents, normalize
-# logger = kodi_utils.logger
 
 def runner(params):
 	action = params.get('action')
@@ -317,13 +315,13 @@ class Downloader:
 				errno = 0
 				if hasattr(e, 'errno'):
 					errno = e.errno
-				if errno == 10035: # 'A non-blocking socket operation could not be completed immediately'
+				if errno == 10035:
 					pass
-				if errno == 10054: #'An existing connection was forcibly closed by the remote host'
-					errors = 10 #force resume
+				if errno == 10054:
+					errors = 10
 					sleep_time = 30
-				if errno == 11001: # 'getaddrinfo failed'
-					errors = 10 #force resume
+				if errno == 11001:
+					errors = 10
 					sleep_time = 30
 			if chunk:
 				errors = 0

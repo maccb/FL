@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 from caches.base_cache import connect_database
-# from modules.kodi_utils import logger
 
 class EpisodeGroupsCache:
 	def get(self, tmdb_id):

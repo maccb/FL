@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-# FL Calendar — Day-folder view
-# Shows upcoming episodes from user's personal FlickList calendar
-# Users add shows on flicklist.tv → episodes appear here grouped by date
-# API: GET /api/calendar/my/shows/{start}/{days} (auth required)
 
 import sys
 import json
@@ -14,7 +9,6 @@ from caches.settings_cache import get_setting
 
 TMDB_IMAGE_URL = 'https://image.tmdb.org/t/p/%s%s'
 
-# ── API Fetch ────────────────────────────────────────────────────────────
 
 def _fetch_calendar(previous_days=7, future_days=14):
 	"""Fetch user's personal calendar from FlickList API.
@@ -35,7 +29,6 @@ def _is_authenticated():
 	token = get_setting('fenlightfl.flicklist.token')
 	return token and token not in ('0', 'empty_setting', '')
 
-# ── Helpers ──────────────────────────────────────────────────────────────
 
 def _format_day_label(date_str, ep_count):
 	"""Format: 'TODAY · 3 episodes' or 'Wed Feb 19 · 5 episodes' """
@@ -106,10 +99,6 @@ def _get_still(item, size='w300'):
 	return None
 
 
-# ── Day-Folder View ─────────────────────────────────────────────────────
-# Shows one folder per day with episode count in the label
-# Empty days are skipped (progressive disclosure)
-
 def build_calendar_days(params):
 	"""Root calendar view: 7-day sliding window with Previous/Next Week nav.
 	Offset 0 = current week (yesterday through 5 days ahead).
@@ -121,7 +110,6 @@ def build_calendar_days(params):
 	fanart = kodi_utils.get_addon_fanart()
 	offset = int(params.get('offset', 0))
 
-	# ── Auth check ──
 	if not _is_authenticated():
 		listitem = make_listitem()
 		listitem.setLabel('[COLOR ff22d3a7]Log in to FlickList to see your calendar[/COLOR]')
@@ -135,7 +123,6 @@ def build_calendar_days(params):
 		kodi_utils.end_directory(handle)
 		return
 
-	# ── 7-day sliding window ──
 	window_start = datetime.now() + timedelta(days=offset - 1)
 	window_end = datetime.now() + timedelta(days=offset + 5)
 	start_str = window_start.strftime('%Y-%m-%d')
@@ -153,12 +140,10 @@ def build_calendar_days(params):
 		kodi_utils.end_directory(handle)
 		return
 
-	# Filter to only our 7-day window
 	calendar_days = [d for d in calendar_days if start_str <= d.get('date', '') <= end_str]
 
 	items = []
 
-	# ── Previous Week (cap at 12 weeks back) ──
 	if offset > -84:
 		prev_li = make_listitem()
 		prev_li.setLabel('[COLOR ff22d3a7][B]<  Previous Week[/B][/COLOR]')
@@ -166,7 +151,6 @@ def build_calendar_days(params):
 		prev_li.getVideoInfoTag(True).setPlot('Show the previous 7 days')
 		items.append((build_url({'mode': 'fl_calendar.build_calendar_days', 'offset': offset - 7}), prev_li, True))
 
-	# ── Day folders ──
 	day_count = 0
 	for day in calendar_days:
 		day_items = day.get('items', [])
@@ -192,14 +176,12 @@ def build_calendar_days(params):
 		listitem.getVideoInfoTag(True).setPlot(plot)
 		items.append((url, listitem, True))
 
-	# ── Empty state ──
 	if day_count == 0:
 		empty_li = make_listitem()
 		empty_li.setLabel('[COLOR ff888888]No episodes this week[/COLOR]')
 		empty_li.setArt({'icon': kodi_utils.get_icon('calender'), 'fanart': fanart})
 		items.append((build_url({}), empty_li, False))
 
-	# ── Next Week (cap at 4 weeks forward) ──
 	if offset < 28:
 		next_li = make_listitem()
 		next_li.setLabel('[COLOR ff22d3a7][B]Next Week  >[/B][/COLOR]')
@@ -207,7 +189,6 @@ def build_calendar_days(params):
 		next_li.getVideoInfoTag(True).setPlot('Show the next 7 days')
 		items.append((build_url({'mode': 'fl_calendar.build_calendar_days', 'offset': offset + 7}), next_li, True))
 
-	# ── Category header shows date range ──
 	range_label = '%s - %s' % (window_start.strftime('%b %d'), window_end.strftime('%b %d'))
 	add_items(handle, items)
 	kodi_utils.set_content(handle, '')
@@ -225,7 +206,6 @@ def build_calendar_day(params):
 
 	target_date = params.get('date', '')
 
-	# Calculate how far back/forward we need to fetch based on the target date
 	try:
 		target_dt = datetime(*(time.strptime(target_date, '%Y-%m-%d')[0:6]))
 		now = datetime.now()
@@ -260,7 +240,6 @@ def build_calendar_day(params):
 
 	playback_key = settings.playback_key()
 	play_mode = 'playback.%s' % playback_key
-	# Build watched info cache: {tmdb_id: set of (season, episode) tuples}
 	try:
 		watched_indicators = settings.watched_indicators()
 		watched_db = ws.get_database(watched_indicators)
@@ -276,7 +255,6 @@ def build_calendar_day(params):
 		label = _format_episode_label(ep)
 		plot = _format_episode_plot(ep)
 
-		# Click plays the episode directly
 		season_num = ep.get('season_number', 1)
 		episode_num = ep.get('episode_number', 1)
 		tmdb_id = ep.get('tmdb_id', 0)
@@ -292,7 +270,6 @@ def build_calendar_day(params):
 		listitem = make_listitem()
 		listitem.setLabel(label)
 
-		# Use show poster, episode still for thumb
 		poster = _get_poster(ep, 'w342') or kodi_utils.get_icon('calender')
 		still = _get_still(ep, 'w300')
 		listitem.setArt({
@@ -302,7 +279,6 @@ def build_calendar_day(params):
 			'fanart': fanart,
 		})
 
-		# Context menus: Go to Show, Go to Season
 		cm = []
 		cm.append(('[B]Go to Show[/B]', 'Container.Update(%s)' % build_url({'mode': 'build_season_list', 'tmdb_id': tmdb_id})))
 		cm.append(('[B]Go to Season[/B]', 'Container.Update(%s)' % build_url({'mode': 'build_episode_list', 'tmdb_id': tmdb_id, 'season': season_num})))
@@ -327,7 +303,6 @@ def build_calendar_day(params):
 
 	add_items(handle, items)
 
-	# Format the category header
 	date_obj = datetime(*(time.strptime(target_date, '%Y-%m-%d')[0:6]))
 	today = datetime.now().date()
 	tomorrow = today + timedelta(days=1)

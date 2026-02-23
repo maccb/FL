@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import re
 import json
 import base64
@@ -9,7 +8,6 @@ from caches.settings_cache import get_setting
 from modules.dom_parser import parseDOM
 from modules.utils import chunks, remove_accents
 from modules.kodi_utils import make_session
-# from modules.kodi_utils import logger
 
 session = make_session()
 

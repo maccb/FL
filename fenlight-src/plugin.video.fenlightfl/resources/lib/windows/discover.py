@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
 import json
 from windows.base_window import BaseDialog
 from apis import tmdb_api
 from caches.discover_cache import discover_cache
 from modules.kodi_utils import kodi_dialog, select_dialog, ok_dialog, get_icon, sleep, container_refresh, confirm_dialog
 from modules import meta_lists
-# from modules.kodi_utils import logger
 
 class Discover(BaseDialog):
 	def __init__(self, *args, **kwargs):

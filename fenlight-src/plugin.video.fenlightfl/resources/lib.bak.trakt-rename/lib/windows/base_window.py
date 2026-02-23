@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import xbmcgui
 import re
 import json
@@ -7,7 +6,6 @@ from xml.dom.minidom import parse as mdParse
 from modules import kodi_utils
 from caches.settings_cache import get_setting, set_setting, restore_setting_default
 from modules.utils import manual_function_import
-# logger = kodi_utils.logger
 
 def open_window(import_info, skin_xml, **kwargs):
 	'''

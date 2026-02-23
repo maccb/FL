@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 from modules.kodi_utils import progress_dialog, notification, sleep, make_session
 from caches.tmdb_lists import tmdb_lists_cache_object, tmdb_lists_cache
 from caches.settings_cache import get_setting, set_setting
 from modules.utils import copy2clip, make_qrcode, make_tinyurl, make_thread_list
-# from modules.kodi_utils import logger
 
 session = make_session('https://api.themoviedb.org')
 

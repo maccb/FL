@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import re
 import sys
 import time
@@ -12,7 +11,6 @@ from importlib import import_module
 from datetime import datetime, timedelta, date
 from modules.settings import max_threads
 from modules.kodi_utils import sleep
-# from modules.kodi_utils import logger
 
 class TaskPool:
 	def __init__(self):

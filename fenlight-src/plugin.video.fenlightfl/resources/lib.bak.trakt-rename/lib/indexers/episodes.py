@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 import sys
 from modules import kodi_utils, settings, watched_status as ws
 from modules.metadata import tvshow_meta, episodes_meta, all_episodes_meta
 from modules.utils import jsondate_to_datetime, adjust_premiered_date, make_day, get_datetime, get_current_timestamp, title_key, date_difference, TaskPool
-# logger = kodi_utils.logger
 
 def build_episode_list(params):
 	def _process():

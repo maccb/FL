@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import re
 import sys
 import math
@@ -7,7 +6,6 @@ from apis.premiumize_api import Premiumize
 from modules.source_utils import supported_video_extensions
 from modules.utils import clean_file_name, normalize
 from modules import kodi_utils
-# logger = kodi_utils.logger
 
 def pm_cloud(folder_id=None, folder_name=None):
 	def _builder():

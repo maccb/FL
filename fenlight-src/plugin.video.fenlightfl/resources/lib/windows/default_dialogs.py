@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 import json
 from windows.base_window import BaseDialog
-# from modules.kodi_utils import logger
 
 class Select(BaseDialog):
 	def __init__(self, *args, **kwargs):

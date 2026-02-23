@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import sys
 import json
 from datetime import datetime
@@ -6,7 +5,6 @@ from apis.alldebrid_api import AllDebrid
 from modules import kodi_utils
 from modules.source_utils import supported_video_extensions
 from modules.utils import clean_file_name, normalize
-# logger = kodi_utils.logger
 
 def ad_cloud(folder_id=None):
 	def _builder():

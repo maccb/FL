@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from threading import Thread
 from datetime import datetime, timedelta
 from windows.base_window import BaseDialog, window_manager, window_player
@@ -11,7 +10,6 @@ from modules.utils import change_image_resolution, adjust_premiered_date, get_da
 from modules.meta_lists import networks, movie_genres, tvshow_genres
 from modules.metadata import movieset_meta, episodes_meta, movie_meta, tvshow_meta
 from modules.episode_tools import EpisodeTools
-# logger = kodi_utils.logger
 
 class Extras(BaseDialog):
 	button_ids = (10, 11, 12, 13, 14, 15, 16, 17, 2050)

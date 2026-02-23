@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 from caches.base_cache import connect_database, get_timestamp
-# from modules.kodi_utils import logger
 
 class PersonalListsCache:
 	def make_list(self, list_name, author, sort_order, description, seen='false', poster='', fanart=''):

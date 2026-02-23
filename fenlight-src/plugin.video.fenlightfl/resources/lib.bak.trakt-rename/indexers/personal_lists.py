@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os
 import sys
 import json
@@ -12,7 +11,6 @@ from indexers.tvshows import TVShows
 from modules import metadata
 from modules import kodi_utils, settings
 from modules.utils import TaskPool, paginate_list, sort_for_article, get_datetime, get_current_timestamp, make_image, download_image
-# logger = kodi_utils.logger
 
 def get_personal_lists(params):
 	def _process():

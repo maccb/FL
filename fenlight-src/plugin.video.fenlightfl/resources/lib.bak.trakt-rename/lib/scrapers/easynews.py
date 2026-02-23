@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 from apis.easynews_api import EasyNews
 from modules import source_utils
 from modules.utils import clean_file_name, normalize
 from modules.settings import filter_by_name, easynews_language_filter
-# from modules.kodi_utils import logger
 
 class source:
 	def __init__(self):

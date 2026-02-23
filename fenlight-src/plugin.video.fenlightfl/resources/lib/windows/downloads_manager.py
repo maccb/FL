@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 import json
 from windows.base_window import BaseDialog
 from modules.kodi_utils import select_dialog, confirm_dialog, ok_dialog
-# from modules.kodi_utils import logger
 
 class DownloadsManager(BaseDialog):
 	def __init__(self, *args, **kwargs):

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 def get_years(start_year):
 	from datetime import datetime

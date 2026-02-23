@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 from modules.kodi_utils import progress_dialog, notification, sleep, make_session
 from caches.tmdb_lists import tmdb_lists_cache_object, tmdb_lists_cache
 from caches.settings_cache import get_setting, set_setting
-from modules.utils import copy2clip, make_qrcode, make_tinyurl, make_thread_list
-# from modules.kodi_utils import logger
+from modules.utils import copy2clip, make_qrcode, make_thread_list
 
 session = make_session('https://api.themoviedb.org')
 
@@ -21,10 +19,8 @@ class TMDbListAPI:
 		request_token = data['request_token']
 		token_url = 'https://www.themoviedb.org/auth/access?request_token=%s' % request_token
 		qr_code = make_qrcode(token_url) or ''
-		short_url = make_tinyurl(token_url)
-		copy2clip(short_url)
-		if short_url: p_dialog_insert = '[CR]OR visit this URL: [B]%s[/B]' % short_url
-		else: p_dialog_insert = ''
+		copy2clip(token_url)
+		p_dialog_insert = '[CR]OR visit this URL: [B]https://www.themoviedb.org/auth/access[/B]'
 		progressDialog = progress_dialog(heading='TMDb Account Authorization', icon=qr_code)
 		count, success = 72, None
 		while not progressDialog.iscanceled() and count >= 0 and success == None:

@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 from caches.base_cache import connect_database
-# from modules.kodi_utils import logger
 
 class FavoritesCache:
 	def set_favourite(self, media_type, tmdb_id, title):

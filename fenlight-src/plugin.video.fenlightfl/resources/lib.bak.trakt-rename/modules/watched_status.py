@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from datetime import datetime
 from threading import Thread
 from apis.flicklist_api import trakt_watched_status_mark, trakt_progress, trakt_get_hidden_items
@@ -7,31 +6,10 @@ from caches.flicklist_cache import clear_trakt_collection_watchlist_data
 from modules.kodi_utils import kodi_progress_background, sleep, get_video_database_path, notification, kodi_refresh
 from modules.utils import get_datetime, adjust_premiered_date, sort_for_article, make_thread_list
 from modules import metadata, settings
-# from modules.kodi_utils import logger
 
 def get_database(watched_indicators=None):
 	return connect_database({0: 'watched_db', 1: 'trakt_db'}[watched_indicators or settings.watched_indicators()])
 
-# def cache_watched_tvshow_status(function, status_type, watched_indicators=None):
-# 	watched_indicators = watched_indicators or settings.watched_indicators()
-# 	dbcon = get_database(watched_indicators)
-# 	cache = dbcon.execute('SELECT media_id, status FROM watched_status WHERE db_type = ?', (status_type,)).fetchone()
-# 	if cache is not None:
-# 		expiration, result = cache
-# 		if int(expiration) > get_timestamp(): return eval(result)
-# 		clear_cache_watched_tvshow_status(watched_indicators, (status_type,))
-# 	result = function(status_type)
-# 	dbcon.execute('INSERT OR REPLACE INTO watched_status VALUES (?, ?, ?)', (status_type, get_timestamp(12), repr(result)))
-# 	return result or []
-
-# def clear_cache_watched_tvshow_status(watched_indicators=None, status_types=('watched', 'progress')):
-# 	try:
-# 		watched_indicators = watched_indicators or settings.watched_indicators()
-# 		dbcon = get_database()
-# 		for status in status_types: dbcon.execute('DELETE FROM watched_status WHERE db_type = ?', (status,))
-# 		dbcon.execute('VACUUM')
-# 		return True
-# 	except: return False
 
 def get_hidden_progress_items(watched_indicators):
 	try:
@@ -390,7 +368,6 @@ def watched_status_mark(watched_indicators, media_type='', media_id='', action='
 		elif action == 'mark_as_unwatched':
 			dbcon.execute('DELETE FROM watched WHERE (db_type = ? and media_id = ? and season = ? and episode = ?)', (media_type, media_id, season, episode))
 		erase_bookmark(media_type, media_id, season, episode)
-		# if media_type == 'episode': clear_cache_watched_tvshow_status()
 	except: notification('Error')
 
 def batch_watched_status_mark(watched_indicators, insert_list, action):
@@ -401,7 +378,6 @@ def batch_watched_status_mark(watched_indicators, insert_list, action):
 		elif action == 'mark_as_unwatched':
 			dbcon.executemany('DELETE FROM watched WHERE (db_type = ? and media_id = ? and season = ? and episode = ?)', insert_list)
 		batch_erase_bookmark(watched_indicators, insert_list, action)
-		# clear_cache_watched_tvshow_status()
 	except: notification('Error')
 
 def get_next_episodes(nextep_content):
@@ -452,7 +428,6 @@ def get_in_progress_movies(dummy_arg, page_no):
 	return data
 
 def get_in_progress_tvshows(dummy_arg, page_no):
-	# results = cache_watched_tvshow_status(active_tvshows_information, 'progress')
 	results = active_tvshows_information('progress')
 	if settings.lists_sort_order('progress') == 0: results = sort_for_article(results, 'title', settings.ignore_articles())
 	else: results = sorted(results, key=lambda x: x['last_played'], reverse=True)

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import time
 from os import path
 import sqlite3 as database
@@ -84,7 +83,6 @@ def connect_database(database_name):
 	return dbcon
 
 def get_timestamp(offset=0):
-	# Offset is in HOURS multiply by 3600 to get seconds
 	return int(time.time()) + (offset*3600)
 
 def remove_old_databases():
@@ -228,7 +226,7 @@ def clear_cache(cache_type, silent=False):
 		if not _confirm(): return
 		from caches.tmdb_lists import tmdb_lists_cache
 		success = tmdb_lists_cache.clear_all()
-	else:# main
+	else:
 		if not _confirm(): return
 		from caches.main_cache import main_cache
 		success = main_cache.delete_all()
@@ -277,7 +275,6 @@ def insert_new_column_in_table(database, table, new_column, new_column_propertie
 	except: return False
 
 def check_and_insert_new_columns(database, table, new_column, new_column_properties):
-	#Check for existence of any column in databases and insert if not present
 	try:
 		if not columns_in_table(database, table, new_column):
 			success = insert_new_column_in_table(database, table, new_column, new_column_properties)

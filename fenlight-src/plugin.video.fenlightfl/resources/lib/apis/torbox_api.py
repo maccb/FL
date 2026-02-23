@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
 from threading import Thread
 from urllib.parse import urlencode
 from caches.settings_cache import get_setting, set_setting
 from caches.main_cache import cache_object
 from modules.source_utils import supported_video_extensions, seas_ep_filter, extras
 from modules.kodi_utils import make_session, kodi_dialog, ok_dialog, notification, confirm_dialog
-# from modules.kodi_utils import logger
 
 session = make_session('https://api.torbox.app/v1/api/')
 
@@ -176,13 +174,11 @@ class TorBoxAPI:
 			from caches.debrid_cache import debrid_cache
 			from caches.base_cache import connect_database
 			dbcon = connect_database('maincache_db')
-			# USER CLOUD
 			try:
 				dbcon.execute("""DELETE FROM maincache WHERE id=?""", ('tb_user_cloud',))
 				dbcon.execute("""DELETE FROM maincache WHERE id LIKE ?""", ('tb_user_cloud%',))
 				user_cloud_success = True
 			except: user_cloud_success = False
-			# HASH CACHED STATUS
 			if clear_hashes:
 				try:
 					debrid_cache.clear_debrid_results('tb')

@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 import sys
 from caches.navigator_cache import navigator_cache as nc
 from caches.settings_cache import get_setting, set_setting
 from modules import kodi_utils as k, settings as s
-# logger = k.logger
 
 class Navigator:
 	def __init__(self, params):

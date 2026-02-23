@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 from operator import itemgetter
 from caches.meta_cache import meta_cache
 from apis.tmdb_api import movie_details, tvshow_details, season_episodes_details, movie_set_details, movie_external_id, tvshow_external_id, \
 								episode_groups_data, episode_group_details
 from modules.utils import jsondate_to_datetime, subtract_dates
-# from modules.kodi_utils import logger
 
 def movie_meta(id_type, media_id, api_key, mpaa_region, current_date, current_time=None):
 	if id_type == 'fl_dict':

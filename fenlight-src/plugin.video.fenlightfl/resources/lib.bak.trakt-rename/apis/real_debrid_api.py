@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import re
 import time
 import requests
@@ -8,7 +7,6 @@ from caches.settings_cache import get_setting, set_setting
 from modules.utils import copy2clip, make_tinyurl, make_qrcode
 from modules.source_utils import supported_video_extensions, seas_ep_filter, extras
 from modules.kodi_utils import sleep, ok_dialog, progress_dialog, notification
-# from modules.kodi_utils import logger
 
 class RealDebridAPI:
 	def __init__(self):
@@ -339,7 +337,6 @@ class RealDebridAPI:
 			from caches.base_cache import connect_database
 			dbcon = connect_database('maincache_db')
 			user_cloud_success = False
-			# USER CLOUD
 			try:
 				try:
 					cache = dbcon.execute("""SELECT data FROM maincache WHERE id LIKE ?""", ('rd_user_cloud_info_%',)).fetchall()
@@ -352,12 +349,10 @@ class RealDebridAPI:
 						dbcon.execute("""DELETE FROM maincache WHERE id=?""", ('rd_user_cloud_info_%s' % i,))
 					user_cloud_success = True
 			except: user_cloud_success = False
-			# DOWNLOAD LINKS
 			try:
 				dbcon.execute("""DELETE FROM maincache WHERE id=?""", ('rd_downloads',))
 				download_links_success = True
 			except: download_links_success = False
-			# HASH CACHED STATUS
 			if clear_hashes:
 				try:
 					debrid_cache.clear_debrid_results('rd')

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from caches.debrid_cache import debrid_cache
 from apis.real_debrid_api import RealDebridAPI
 from apis.premiumize_api import PremiumizeAPI
@@ -8,7 +7,6 @@ from apis.torbox_api import TorBoxAPI
 from modules.source_utils import get_external_cache_status
 from modules.kodi_utils import show_busy_dialog, hide_busy_dialog, notification
 from modules.settings import enabled_debrids_check
-# from modules.kodi_utils import logger
 
 def debrid_enabled():
 	return [

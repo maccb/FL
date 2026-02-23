@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import requests
 from apis import google_api, groq_api
 from apis.tmdb_api import tmdb_movies_search, tmdb_tv_search
@@ -10,8 +9,6 @@ from modules.utils import TaskPool, normalize, get_datetime, get_current_timesta
 from modules.settings import ai_model_order, ai_model_limit, max_threads, tmdb_api_key, mpaa_region
 from modules.kodi_utils import logger
 
-# GOOGLE_MODELS = ('gemini-2.5-flash-lite', 'gemini-2.0-flash', 'gemini-2.5-flash', 'gemma-3-27b-it', 'gemma-3-12b-it', 'gemma-3-1b-it', 'gemma-3-4b-it', 'gemini-3-flash-preview')
-# GROQ_MODELS = ('llama-3.1-8b-instant', 'llama-3.3-70b-versatile', 'openai/gpt-oss-120b')
 
 def ai_similar(media_info, dummy=None):
 	def _fetch_similar(dummy):

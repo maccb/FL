@@ -2,6 +2,13 @@
 [I]Built on the shoulders of TikiPeter & AnonyMouse. True legends.[/I]
 
 
+[COLOR dodgerblue][B]Version 2.1.101[/B][/COLOR]
+[I]For the ones who thought it was working.[/I]
+[B]Critical:[/B]
+- Fixed FlickList authorization not saving properly.
+[B]Needed:[/B]
+- Auth screens now show the real URL instead of tinyurl.
+
 [COLOR dodgerblue][B]Version 2.1.100[/B][/COLOR]
 [I]For the ones who click too fast.[/I]
 [B]Needed:[/B]

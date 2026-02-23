@@ -1,9 +1,3 @@
-#
-# Copyright (c) 2016 - 2024 -- Lars Heuer
-# All rights reserved.
-#
-# License: BSD License
-#
 """\
 Constants.
 
@@ -13,18 +7,14 @@ from collections import namedtuple
 
 ALPHANUMERIC_CHARS = br'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:'
 
-# ISO/IEC 18004:2015(E) -- Table 2 — Mode indicators for QR Code (page 23)
 MODE_NUMERIC = 0x1
 MODE_ALPHANUMERIC = 0x2
 MODE_STRUCTURED_APPEND = 0x3
 MODE_BYTE = 0x4
 MODE_ECI = 0x7
 MODE_KANJI = 0x8
-# Hanzi is not part of ISO/IEC 18004 and must be enabled by the user explicitly
 MODE_HANZI = 0xD
 
-# Micro QR Code uses different mode indicators
-# ISO/IEC 18004:2015(E) -- Table 2 — Mode indicators for QR Code (page 23)
 MODE_TO_MICRO_MODE_MAPPING = {
     MODE_NUMERIC: 0x0,
     MODE_ALPHANUMERIC: 0x1,
@@ -32,8 +22,6 @@ MODE_TO_MICRO_MODE_MAPPING = {
     MODE_KANJI: 0x3,
 }
 
-# Rectangular Micro QR Code mode indicators
-# ISO/IEC 23941:2022(E) -- Table 2 - Mode and Mode indicators for rMQR (page 17)
 MODE_TO_RECT_MICRO_MODE_MAPPING = {
     MODE_NUMERIC: 0x1,
     MODE_ALPHANUMERIC: 0x2,
@@ -41,7 +29,6 @@ MODE_TO_RECT_MICRO_MODE_MAPPING = {
     MODE_KANJI: 0x64
 }
 
-# Note: These versions must be comparable: Version 1 > M4 > M3 > M2 > M1
 VERSION_M4 = 0
 VERSION_M3 = -1
 VERSION_M2 = -2
@@ -56,8 +43,6 @@ MICRO_VERSION_MAPPING = {
 
 MICRO_VERSIONS = tuple(sorted(MICRO_VERSION_MAPPING.values()))
 
-# ISO/IEC 18004:2015(E)
-# Table 12 — Error correction level indicators for QR Code symbols (page 55)
 ERROR_LEVEL_L = 1
 ERROR_LEVEL_M = 0
 ERROR_LEVEL_Q = 3
@@ -93,51 +78,7 @@ ERROR_MAPPING = {
     'H': ERROR_LEVEL_H,
 }
 
-#
-# ISO/IEC 18004:2015(E) -- 7.3.2 Extended Channel Interpretation (ECI) mode (page 20)
-#
-# <https://strokescribe.com/en/ECI.html>
-# ECI       Reference
-# ------    ---------
-# 000000    Represents the default encodation scheme
-# 000001    Represents the GLI encodation scheme of a number of symbologies
-#           with characters 0 to 127 being identical to those of
-#           ISO/IEC 646 : 1991 IRV (equivalent to ANSI X3.4) and characters
-#           128 to 255 being identical to those values of ISO 8859-1
-# 000002    An equivalent code table to ECI 000000, without the return-to-GLI 0
-#           logic. It is the default encodation scheme for encoders fully
-#           compliant with this standard.
-# 000003    ISO/IEC 8859-1 Latin alphabet No. 1
-# 000004    ISO/IEC 8859-2 Latin alphabet No. 2
-# 000005    ISO/IEC 8859-3 Latin alphabet No. 3
-# 000006    ISO/IEC 8859-4 Latin alphabet No. 4
-# 000007    ISO/IEC 8859-5 Latin/Cyrillic alphabet
-# 000008    ISO/IEC 8859-6 Latin/Arabic alphabet
-# 000009    ISO/IEC 8859-7 Latin/Greek alphabet
-# 000010    ISO/IEC 8859-8 Latin/Hebrew alphabet
-# 000011    ISO/IEC 8859-9 Latin alphabet No. 5
-# 000012    ISO/IEC 8859-10 Latin alphabet No. 6
-# 000013    ISO/IEC 8859-11 Latin/Thai alphabet
-# 000014    Reserved
-# 000015    ISO/IEC 8859-13 Latin alphabet No. 7 (Baltic Rim)
-# 000016    ISO/IEC 8859-14 Latin alphabet No. 8 (Celtic)
-# 000017    ISO/IEC 8859-15 Latin alphabet No. 9
-# 000018    ISO/IEC 8859-16 Latin alphabet No. 10
-# 000019    Reserved
-# 000020    Shift JIS (JIS X 0208 Annex 1 + JIS X 0201)
-# 000021    Windows 1250 Latin 2 (Central Europe)
-# 000022    Windows 1251 Cyrillic
-# 000023    Windows 1252 Latin 1
-# 000024    Windows 1256 Arabic
-# 000025    ISO/IEC 10646 UCS-2 (High order byte first)
-# 000026    ISO/IEC 10646 UTF-8 (See information above)
-# 000027    ISO/IEC 646:1991 International Reference Version of ISO 7-bit
-#           coded character set
-# 000028    Big 5 (Taiwan) Chinese Character Set
-# 000029    GB (PRC) Chinese Character Set
-# 000030    Korean Character Set
 ECI_ASSIGNMENT_NUM = {
-    # Codecs name (``codecs.lookup(some-charset).name``) -> ECI designator
     'cp437': 1,
     'iso8859-1': 3,
     'iso8859-2': 4,
@@ -163,12 +104,11 @@ ECI_ASSIGNMENT_NUM = {
     'utf-8': 26,
     'ascii': 27,
     'big5': 28,
-    'gb18030': 29, 'gbk': 29,  # GBK is treated as GB-18030
+    'gb18030': 29, 'gbk': 29,
     'euc_kr': 30,
 }
 
 
-# ISO/IEC 18004:2015(E) -- Table 2 — Mode indicators for QR Code (page 23)
 SUPPORTED_MODES = {
     MODE_NUMERIC: (None, VERSION_M1, VERSION_M2, VERSION_M3, VERSION_M4),
     MODE_ALPHANUMERIC: (None, VERSION_M2, VERSION_M3, VERSION_M4),
@@ -178,21 +118,18 @@ SUPPORTED_MODES = {
     MODE_HANZI: (None,),
 }
 
-# ISO/IEC 18004:2015(E) -- Table 2 — Mode indicators for QR Code (page 23)
 TERMINATOR_LENGTH = {
-    None: 4,  # QR Codes, all versions
+    None: 4,
     VERSION_M1: 3,
     VERSION_M2: 5,
     VERSION_M3: 7,
     VERSION_M4: 9
 }
 
-VERSION_RANGE_01_09 = 1  # Version  1 ..  9
-VERSION_RANGE_10_26 = 2  # Version 10 .. 26
-VERSION_RANGE_27_40 = 3  # Version 27 .. 40
+VERSION_RANGE_01_09 = 1
+VERSION_RANGE_10_26 = 2
+VERSION_RANGE_27_40 = 3
 
-# ISO/IEC 18004:2015(E)
-# Table 3 — Number of bits in character count indicator for QR Code (page 23)
 CHAR_COUNT_INDICATOR_LENGTH = {
     MODE_NUMERIC: {
         VERSION_RANGE_01_09: 10,
@@ -217,8 +154,6 @@ CHAR_COUNT_INDICATOR_LENGTH = {
 }
 
 
-# ISO/IEC 18004:2015(E) - 6.4.10 Bit stream to codeword conversion (page 33)
-# Table 7 — Number of symbol characters and input data capacity for QR Code
 SYMBOL_CAPACITY = {
     VERSION_M1: {
            None:          20},
@@ -271,8 +206,6 @@ SYMBOL_CAPACITY = {
 }
 
 
-# ISO/IEC 23941:2022(E) - 7.4.10 Bit stream to codeword conversion (page 25)
-# Table 6 — Number of symbol characters and input data capacity for rMQR
 RSYMBOL_CAPACITY = {
     'R7x43': {ERROR_LEVEL_M: 48, ERROR_LEVEL_H: 24},
     'R7x59': {ERROR_LEVEL_M: 96, ERROR_LEVEL_H: 56},
@@ -309,8 +242,6 @@ RSYMBOL_CAPACITY = {
 }
 
 
-# ISO/IEC 18004:2015(E) -- Table 9 — Error correction characteristics for QR Code (page 38)
-# ISO/IEC 23941:2022(E) -- Table 8 — Error correction characteristics for rMQR (page 29)
 EC = namedtuple('EC', 'num_blocks num_total num_data')
 
 ECC = {
@@ -542,16 +473,10 @@ ECC = {
 }
 
 
-# ISO/IEC 18004:2015 -- Annex C - D.1 Error correction bit calculation
-# Table C.1 — Valid format information bit sequences (page 80)
 FORMAT_INFO = (
-    # M: mask 0, mask 1 .. 7
     0x5412, 0x5125, 0x5e7c, 0x5b4b, 0x45f9, 0x40ce, 0x4f97, 0x4aa0,
-    # L
     0x77c4, 0x72f3, 0x7daa, 0x789d, 0x662f, 0x6318, 0x6c41, 0x6976,
-    # H
     0x1689, 0x13be, 0x1ce7, 0x19d0, 0x0762, 0x0255, 0x0d0c, 0x083b,
-    # Q
     0x355f, 0x3068, 0x3f31, 0x3a06, 0x24b4, 0x2183, 0x2eda, 0x2bed,
 )
 
@@ -583,10 +508,7 @@ FORMAT_INFO_RECT_MICRO_RIGHT = (
 )
 
 
-# ISO/IEC 18004:2015 -- Annex D - D.1 Error correction bit calculation
-# Table D.1 — Version information bit stream for each version (page 82)
 VERSION_INFO = (
-    # Version 7, 8, 9 .. 40
     0x07c94, 0x085bc, 0x09a99, 0x0a4d3, 0x0bbf6, 0x0c762, 0x0d847, 0x0e60d,
     0x0f928, 0x10b78, 0x1145d, 0x12a17, 0x13532, 0x149a6, 0x15683, 0x168c9,
     0x177ec, 0x18ec4, 0x191e1, 0x1afab, 0x1b08e, 0x1cc1a, 0x1d33f, 0x1ed75,
@@ -595,52 +517,48 @@ VERSION_INFO = (
 )
 
 
-# ISO/IEC 18004:2015 -- Annex E - Position of alignment patterns
-# Table E.1 — Row/column coordinates of center module of alignment patterns (page 83)
 ALIGNMENT_POS = (
-    (6, 18),  # Version 2 (version 1 has no additional alignment patterns)
-    (6, 22),  # Version 3
-    (6, 26),  # ..
+    (6, 18),
+    (6, 22),
+    (6, 26),
     (6, 30),
     (6, 34),
-    (6, 22, 38),  # Version 7
+    (6, 22, 38),
     (6, 24, 42),
     (6, 26, 46),
     (6, 28, 50),
     (6, 30, 54),
     (6, 32, 58),
     (6, 34, 62),
-    (6, 26, 46, 66),  # Version 14
+    (6, 26, 46, 66),
     (6, 26, 48, 70),
     (6, 26, 50, 74),
     (6, 30, 54, 78),
     (6, 30, 56, 82),
     (6, 30, 58, 86),
     (6, 34, 62, 90),
-    (6, 28, 50, 72, 94),  # Version 21
+    (6, 28, 50, 72, 94),
     (6, 26, 50, 74, 98),
     (6, 30, 54, 78, 102),
     (6, 28, 54, 80, 106),
     (6, 32, 58, 84, 110),
     (6, 30, 58, 86, 114),
     (6, 34, 62, 90, 118),
-    (6, 26, 50, 74, 98, 122),  # Version 28
+    (6, 26, 50, 74, 98, 122),
     (6, 30, 54, 78, 102, 126),
     (6, 26, 52, 78, 104, 130),
     (6, 30, 56, 82, 108, 134),
     (6, 34, 60, 86, 112, 138),
     (6, 30, 58, 86, 114, 142),
     (6, 34, 62, 90, 118, 146),
-    (6, 30, 54, 78, 102, 126, 150),  # Version 35
+    (6, 30, 54, 78, 102, 126, 150),
     (6, 24, 50, 76, 102, 128, 154),
     (6, 28, 54, 80, 106, 132, 158),
     (6, 32, 58, 84, 110, 136, 162),
     (6, 26, 54, 82, 110, 138, 166),
-    (6, 30, 58, 86, 114, 142, 170),  # Version 40
+    (6, 30, 58, 86, 114, 142, 170),
 )
 
-# ISO/IEC 23941:2022(E) -- Annex D - Position of alignment patterns
-# Table D.1 — Column coordinates of centre module of alignment patterns (page 61)
 RECT_MICRO_ALIGNMENT_POS = {
     43: (21,),
     59: (19, 39),
@@ -650,8 +568,6 @@ RECT_MICRO_ALIGNMENT_POS = {
 }
 
 
-# ISO/IEC 18004:2015 -- Annex A - Error detection and correction generator polynomials
-# Table A.1 — Generator polynomials for Reed-Solomon error correction codewords (page 73)
 GEN_POLY = {
     2: (25, 1),
     5: (113, 164, 166, 119, 10),
@@ -667,17 +583,13 @@ GEN_POLY = {
     18: (215, 234, 158, 94, 184, 97, 118, 170, 79, 187, 152, 148, 252, 179, 5, 98, 96, 153),
     20: (17, 60, 79, 50, 61, 163, 26, 187, 202, 180, 221, 225, 83, 239, 156, 164, 212, 212, 188, 190),
     22: (210, 171, 247, 242, 93, 230, 14, 109, 221, 53, 200, 74, 8, 172, 98, 80, 219, 134, 160, 105, 165, 231),
-    24: (229, 121, 135, 48, 211, 117, 251, 126, 159, 180, 169, 152, 192, 226, 228, 218, 111, 0, 117, 232, 87, 96, 227, 21),  # noqa: E501
-    26: (173, 125, 158, 2, 103, 182, 118, 17, 145, 201, 111, 28, 165, 53, 161, 21, 245, 142, 13, 102, 48, 227, 153, 145, 218, 70),  # noqa: E501
-    28: (168, 223, 200, 104, 224, 234, 108, 180, 110, 190, 195, 147, 205, 27, 232, 201, 21, 43, 245, 87, 42, 195, 212, 119, 242, 37, 9, 123),  # noqa: E501
-    30: (41, 173, 145, 152, 216, 31, 179, 182, 50, 48, 110, 86, 239, 96, 222, 125, 42, 173, 226, 193, 224, 130, 156, 37, 251, 216, 238, 40, 192, 180)  # noqa: E501
+    24: (229, 121, 135, 48, 211, 117, 251, 126, 159, 180, 169, 152, 192, 226, 228, 218, 111, 0, 117, 232, 87, 96, 227, 21),
+    26: (173, 125, 158, 2, 103, 182, 118, 17, 145, 201, 111, 28, 165, 53, 161, 21, 245, 142, 13, 102, 48, 227, 153, 145, 218, 70),
+    28: (168, 223, 200, 104, 224, 234, 108, 180, 110, 190, 195, 147, 205, 27, 232, 201, 21, 43, 245, 87, 42, 195, 212, 119, 242, 37, 9, 123),
+    30: (41, 173, 145, 152, 216, 31, 179, 182, 50, 48, 110, 86, 239, 96, 222, 125, 42, 173, 226, 193, 224, 130, 156, 37, 251, 216, 238, 40, 192, 180)
 }
 
-# Precomputed Galios Log tables
-#
-# prime polynomial: 0x11d (285) / generator: 2
 
-# GF(256) log
 GALIOS_LOG = (
     0, 0, 1, 25, 2, 50, 26, 198, 3, 223, 51, 238, 27, 104, 199, 75, 4, 100,
     224, 14, 52, 141, 239, 129, 28, 193, 105, 248, 200, 8, 76, 113, 5, 138,
@@ -697,9 +609,6 @@ GALIOS_LOG = (
     174, 213, 233, 230, 231, 173, 232, 116, 214, 244, 234, 168, 80, 88, 175
 )
 
-# GF(256) antilog
-# Inverse of the logarithm table.  Maps integer logarithms to members
-# of the field.
 GALIOS_EXP = ([
     1, 2, 4, 8, 16, 32, 64, 128, 29, 58, 116, 232, 205, 135, 19, 38, 76, 152,
     45, 90, 180, 117, 234, 201, 143, 3, 6, 12, 24, 48, 96, 192, 157, 39, 78,
@@ -719,8 +628,6 @@ GALIOS_EXP = ([
     125, 250, 233, 207, 131, 27, 54, 108, 216, 173, 71, 142] * 2
 )
 
-
-# Constants for module types
 
 TYPE_FINDER_PATTERN_LIGHT = 6
 """\

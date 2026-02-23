@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from threading import Thread
 from windows.base_window import BaseDialog, window_manager, window_player
 from apis.tmdb_api import tmdb_people_info, tmdb_people_full_info
@@ -8,7 +7,6 @@ from indexers.images import Images
 from modules.kodi_utils import addon_fanart, execute_builtin, notification, show_busy_dialog, hide_busy_dialog, get_icon
 from modules.settings import extras_enable_scrollbars, tmdb_api_key, easynews_authorized, mpaa_region
 from modules.utils import calculate_age, get_datetime, remove_accents
-# from modules.kodi_utils import logger
 
 
 class People(BaseDialog):

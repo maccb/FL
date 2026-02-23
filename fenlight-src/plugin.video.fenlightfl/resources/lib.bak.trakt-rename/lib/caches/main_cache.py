@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 from caches.base_cache import BaseCache, get_timestamp
-# from modules.kodi_utils import logger
 
 class MainCache(BaseCache):
 	def __init__(self):

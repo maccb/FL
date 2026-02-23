@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 import sys
 import json
 from modules.metadata import movie_meta, movieset_meta
 from modules.utils import get_datetime, get_current_timestamp, paginate_list, jsondate_to_datetime, TaskPool, manual_function_import
 from modules import kodi_utils, settings, watched_status
-# logger = kodi_utils.logger
 
 class Movies:
 	main = ('tmdb_movies_popular', 'tmdb_movies_popular_today','tmdb_movies_blockbusters','tmdb_movies_in_theaters', 'tmdb_movies_upcoming',

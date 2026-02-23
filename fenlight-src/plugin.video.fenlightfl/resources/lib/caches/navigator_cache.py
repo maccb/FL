@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 from caches.base_cache import connect_database
 from modules.kodi_utils import get_property, set_property, clear_property
-# from modules.kodi_utils import logger
 
 class NavigatorCache:
 	root_list = [

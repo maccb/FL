@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 from caches.base_cache import connect_database, get_timestamp
-# from modules.kodi_utils import logger
 
 class DebridCache:
 	def get_many(self, hash_list):

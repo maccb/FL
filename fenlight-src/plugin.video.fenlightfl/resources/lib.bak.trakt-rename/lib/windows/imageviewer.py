@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
 import json
 from windows.base_window import BaseDialog
 from indexers.people import person_data_dialog
 from indexers.dialogs import favorites_manager_choice
 from modules.settings import download_directory
 from modules.kodi_utils import addon_fanart, get_icon, select_dialog
-# from modules.kodi_utils import logger
 
 
 class ThumbImageViewer(BaseDialog):
@@ -63,7 +61,7 @@ class ThumbImageViewer(BaseDialog):
 					title = '%s|%s|%s' % (chosen_listitem.getProperty('actor_name'), chosen_listitem.getProperty('thumb'), actor_image)
 					action = favorites_manager_choice({'media_type': 'people', 'tmdb_id': actor_id, 'title': title, 'refresh': 'false'})
 					if in_favorites and action == 'Remove From Favorites?': self.reset_after_favorite_delete(position)
-				else:#exit_image
+				else:
 					return self.close()
 
 	def make_page(self):

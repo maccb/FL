@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 from windows.base_window import BaseDialog
 from modules.kodi_utils import addon_icon
-# from modules.kodi_utils import logger
 
 class Progress(BaseDialog):
 	def __init__(self, *args, **kwargs):

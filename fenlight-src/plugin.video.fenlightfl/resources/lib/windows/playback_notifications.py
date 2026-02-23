@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 import time
 from modules.kodi_utils import addon_fanart
 from windows.base_window import BaseDialog
 from modules.settings import avoid_episode_spoilers
-# from modules.kodi_utils import logger
 
 class NextEpisode(BaseDialog):
 	episode_status_dict = {

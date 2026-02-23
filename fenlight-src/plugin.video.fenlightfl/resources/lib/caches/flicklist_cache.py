@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 FlickList Cache — Drop-in replacement for fl_cache.py
 
@@ -8,7 +7,6 @@ All function signatures match fl_cache.py for seamless import swap.
 from threading import Thread
 from caches.base_cache import connect_database
 from modules.kodi_utils import sleep, confirm_dialog, close_all_dialog
-# from modules.kodi_utils import logger
 
 class FlCache:
 	def get(self, string):

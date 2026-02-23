@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import re
 import time
 import requests
@@ -10,7 +9,6 @@ from modules.utils import copy2clip, make_qrcode, make_tinyurl
 from modules.source_utils import supported_video_extensions, seas_ep_filter, extras
 from modules.kodi_utils import progress_dialog, notification, hide_busy_dialog, show_busy_dialog, sleep, ok_dialog, progress_dialog, \
 								notification, hide_busy_dialog
-# from modules.kodi_utils import logger
 
 class AllDebridAPI:
 	def __init__(self):
@@ -216,13 +214,11 @@ class AllDebridAPI:
 			from caches.debrid_cache import debrid_cache
 			from caches.base_cache import connect_database
 			dbcon = connect_database('maincache_db')
-			# USER CLOUD
 			try:
 				dbcon.execute("DELETE FROM maincache WHERE id LIKE 'ad_user_%'")
 				dbcon.execute("DELETE FROM maincache WHERE id LIKE 'ad_list_transfer_%'")
 				user_cloud_success = True
 			except: user_cloud_success = False
-			# HASH CACHED STATUS
 			if clear_hashes:
 				try:
 					debrid_cache.clear_debrid_results('ad')

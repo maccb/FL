@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 import sys
 from modules.metadata import tvshow_meta
 from modules.utils import get_datetime, get_current_timestamp, paginate_list, TaskPool, manual_function_import
 from modules import kodi_utils, settings, watched_status
-# logger = kodi_utils.logger
 
 class TVShows:
 	main = ('tmdb_tv_popular', 'tmdb_tv_popular_today', 'tmdb_tv_premieres', 'tmdb_tv_airing_today','tmdb_tv_on_the_air', 'tmdb_tv_upcoming',
