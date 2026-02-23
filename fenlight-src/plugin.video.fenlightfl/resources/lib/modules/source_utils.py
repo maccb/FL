@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re
 import json
 import base64
@@ -10,6 +11,7 @@ from modules.metadata import episodes_meta
 from modules.settings import date_offset
 from modules.kodi_utils import supported_media, get_property, set_property, notification
 from modules.utils import adjust_premiered_date, get_datetime, jsondate_to_datetime, subtract_dates, chunks
+# from modules.kodi_utils import logger
 
 def extras():
 	return ('sample', 'extra', 'extras', 'deleted', 'unused', 'footage', 'inside', 'blooper', 'bloopers', 'making.of', 'feature', 'featurette', 'behind.the.scenes', 'trailer')
@@ -95,7 +97,7 @@ def seas_ep_filter(season, episode, release_title, split=False, return_match=Fal
 	str_ep_plus_1, str_ep_minus_1 = str(episode+1), str(episode-1)
 	release_title = re.sub(r'[^A-Za-z0-9-]+', '.', unquote(release_title).replace('\'', '')).lower()
 	string1 = r'(s<<S>>[.-]?e[p]?[.-]?<<E>>[.-])'
-	string2 = r'(season[.-]?<<S>>[.-]?episode[.-]?<<E>>[.-])'
+	string2 = r'(season[.-]?<<S>>[.-]?episode[.-]?<<E>>[.-])'#|([s]?<<S>>[x.]<<E>>[.-])'
 	string3 = r'(s<<S>>e<<E1>>[.-]?e?<<E2>>[.-])'
 	string4 = r'([.-]<<S>>[.-]?<<E>>[.-])'
 	string5 = r'(episode[.-]?<<E>>[.-])'
@@ -243,6 +245,7 @@ def get_release_quality(release_info):
 	return None
 
 def get_info(title):
+	# thanks 123Venom and gaiaaaiaai, whom I knicked most of this code from. :)
 	info = []
 	info_append = info.append
 	if any(i in title for i in ('.3d.', '.sbs.', '.hsbs', 'sidebyside', 'side.by.side', 'stereoscopic', '.tab.', '.htab.', 'topandbottom', 'top.and.bottom')):

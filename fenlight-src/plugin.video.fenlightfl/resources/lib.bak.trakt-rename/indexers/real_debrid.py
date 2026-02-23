@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sys
 from datetime import datetime
 from modules.utils import datetime_workaround
@@ -5,6 +6,7 @@ from apis.real_debrid_api import RealDebrid
 from modules import kodi_utils
 from modules.source_utils import supported_video_extensions
 from modules.utils import clean_file_name, normalize, jsondate_to_datetime
+# logger = kodi_utils.logger
 
 def rd_cloud():
 	def _builder():
@@ -111,7 +113,7 @@ def browse_rd_cloud(folder_id):
 def rd_delete(file_id, cache_type):
 	if not kodi_utils.confirm_dialog(): return
 	if cache_type == 'torrent': result = RealDebrid.delete_torrent(file_id)
-	else: result = RealDebrid.delete_download(file_id)
+	else: result = RealDebrid.delete_download(file_id) # cache_type: 'download'
 	if result.status_code in (401, 403, 404): return kodi_utils.notification('Error')
 	RealDebrid.clear_cache()
 	kodi_utils.execute_builtin('Container.Refresh')

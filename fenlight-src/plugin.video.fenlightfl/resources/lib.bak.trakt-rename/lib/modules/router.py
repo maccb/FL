@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
 from xbmc import getInfoLabel
 from urllib.parse import parse_qsl
 from modules.kodi_utils import external, get_property
+# from modules.kodi_utils import logger
 
 def sys_exit_check():
 	if get_property('fenlightfl.reuse_language_invoker') == 'false': return False
@@ -247,6 +249,7 @@ def routing(sys):
 	elif 'updater' in mode:
 		from modules import updater
 		exec('updater.%s()' % mode.split('.')[1])
+	##EXTRA modes##
 	elif mode == 'set_view':
 		from modules.kodi_utils import set_view
 		kodi_utils.set_view(_get('view_type'))

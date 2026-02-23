@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
 import json
 from caches.settings_cache import get_setting, set_setting, set_default, default_setting_values
 from modules import kodi_utils, settings
+# logger = kodi_utils.logger
 
 def navigate_to_page_choice(params):
 	def _builder():

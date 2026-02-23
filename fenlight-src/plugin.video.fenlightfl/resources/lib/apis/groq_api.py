@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
 from caches.settings_cache import get_setting
 from modules.utils import extract_json_object
+# from modules.kodi_utils import logger
 
+# GROQ_MODELS = ('llama-3.1-8b-instant', 'llama-3.3-70b-versatile', 'meta-llama/llama-4-maverick-17b-128e-instruct', 'openai/gpt-oss-120b', 'moonshotai/kimi-k2-instruct')
 
 def models():
 	return ('llama-3.1-8b-instant', 'llama-3.3-70b-versatile', 'openai/gpt-oss-120b')

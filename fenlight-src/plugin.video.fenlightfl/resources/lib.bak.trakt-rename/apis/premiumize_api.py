@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re
 import json
 import time
@@ -9,6 +10,7 @@ from caches.settings_cache import get_setting, set_setting
 from modules.utils import copy2clip, make_qrcode
 from modules.source_utils import supported_video_extensions, seas_ep_filter, extras
 from modules.kodi_utils import sleep, ok_dialog, progress_dialog, notification
+# logger = kodi_utils.logger
 
 class PremiumizeAPI:
 	def __init__(self):
@@ -210,6 +212,7 @@ class PremiumizeAPI:
 			from caches.base_cache import connect_database
 			dbcon = connect_database('maincache_db')
 			user_cloud_success = False
+			# USER CLOUD
 			try:
 				try:
 					user_cloud_cache = dbcon.execute("""SELECT id FROM maincache WHERE id LIKE ?""", ('pm_user_cloud%',)).fetchall()
@@ -221,10 +224,12 @@ class PremiumizeAPI:
 						dbcon.execute("""DELETE FROM maincache WHERE id=?""", (i,))
 					user_cloud_success = True
 			except: user_cloud_success = False
+			# DOWNLOAD LINKS
 			try:
 				dbcon.execute("""DELETE FROM maincache WHERE id=?""", ('pm_transfers_list',))
 				download_links_success = True
 			except: download_links_success = False
+			# HASH CACHED STATUS
 			if clear_hashes:
 				try:
 					debrid_cache.clear_debrid_results('pm')

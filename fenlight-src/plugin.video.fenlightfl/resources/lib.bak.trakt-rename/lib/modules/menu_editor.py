@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
 import json
 from urllib.parse import parse_qsl, unquote
 from caches.navigator_cache import navigator_cache
 from modules import kodi_utils
+# logger = kodi_utils.logger
 
 class MenuEditor:
 	def __init__(self, params):

@@ -1,9 +1,11 @@
+# -*- coding: utf-8 -*-
 import sys
 from urllib.parse import unquote
 from apis.tmdb_api import tmdb_people_info
 from windows.base_window import open_window
 from indexers.images import Images
 from modules.kodi_utils import add_items, set_content, set_category, end_directory, build_url, make_listitem, get_icon, get_addon_fanart
+# from modules.kodi_utils import logger
 
 def tmdb_people(params):
 	return Images().run({'mode': 'tmdb_people_list_image_results', 'action': params['action'], 'page_no': 1})
@@ -52,5 +54,6 @@ def person_direct_search(key_id):
 	set_content(handle, 'movies')
 	set_category(handle, key_id)
 	end_directory(handle, cacheToDisc=False)
+
 
 

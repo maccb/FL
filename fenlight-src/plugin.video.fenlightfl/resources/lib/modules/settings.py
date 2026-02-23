@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
 from caches.settings_cache import get_setting, set_setting, default_setting_values
 from modules.kodi_utils import translate_path, get_property
+# from modules.kodi_utils import logger
 
 def tmdb_api_key():
 	return get_setting('fenlightfl.tmdb_api', '')
@@ -281,12 +283,12 @@ def size_sort_weighted():
 def results_sort_order():
 	sort_direction = -1 if get_setting('fenlightfl.results.size_sort_direction') == '0' else 1
 	return (
-			lambda k: (k['quality_rank'], k['provider_rank'], sort_direction*k['size_rank']),
-			lambda k: (k['quality_rank'], sort_direction*k['size_rank'], k['provider_rank']),
-			lambda k: (k['provider_rank'], k['quality_rank'], sort_direction*k['size_rank']),
-			lambda k: (k['provider_rank'], sort_direction*k['size_rank'], k['quality_rank']),
-			lambda k: (sort_direction*k['size_rank'], k['quality_rank'], k['provider_rank']),
-			lambda k: (sort_direction*k['size_rank'], k['provider_rank'], k['quality_rank'])
+			lambda k: (k['quality_rank'], k['provider_rank'], sort_direction*k['size_rank']), #Quality, Provider, Size
+			lambda k: (k['quality_rank'], sort_direction*k['size_rank'], k['provider_rank']), #Quality, Size, Provider
+			lambda k: (k['provider_rank'], k['quality_rank'], sort_direction*k['size_rank']), #Provider, Quality, Size
+			lambda k: (k['provider_rank'], sort_direction*k['size_rank'], k['quality_rank']), #Provider, Size, Quality
+			lambda k: (sort_direction*k['size_rank'], k['quality_rank'], k['provider_rank']), #Size, Quality, Provider
+			lambda k: (sort_direction*k['size_rank'], k['provider_rank'], k['quality_rank'])  #Size, Provider, Quality
 			)[int(get_setting('fenlightfl.results.sort_order', '1'))]
 
 def active_internal_scrapers():

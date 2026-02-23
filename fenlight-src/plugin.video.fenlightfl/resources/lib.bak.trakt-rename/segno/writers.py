@@ -1,3 +1,10 @@
+#
+# Copyright (c) 2016 - 2024 -- Lars Heuer
+# All rights reserved.
+#
+# License: BSD License
+#
+# type: ignore
 import io
 import re
 import zlib
@@ -23,6 +30,7 @@ __all__ = ('writable', 'write_svg', 'write_png', 'write_eps', 'write_pdf',
            'write_txt', 'write_pbm', 'write_pam', 'write_ppm', 'write_xpm',
            'write_xbm', 'write_tex', 'write_terminal')
 
+# Standard creator name
 CREATOR = 'Segno <https://pypi.org/project/segno/>'
 
 
@@ -82,7 +90,7 @@ def write_svg(matrix, matrix_size, out, colormap, scale=1, border=None, xmldecl=
         return _color_to_webcolor(clr, allow_css3_colors=allow_css3_colors) if clr is not None else None
 
     def matrix_to_lines_verbose():
-        j = -.5
+        j = -.5  # stroke width / 2
         invalid_color = -1
         for row in matrix_iter_verbose(matrix, matrix_size, scale=1, border=border):
             last_color = invalid_color
@@ -210,7 +218,7 @@ def as_svg_data_uri(matrix, matrix_size, scale=1, border=None,
 
 def write_svg_debug(matrix, matrix_size, out, scale=15, border=None,
                     fallback_color='fuchsia', colormap=None,
-                    add_legend=True):
+                    add_legend=True):  # pragma: no cover
     clr_mapping = {
         0x0: '#fff',
         0x1: '#000',
@@ -276,15 +284,15 @@ def write_eps(matrix, matrix_size, out, scale=1, border=None, dark='#000', light
         writeline('/m { rmoveto } bind def')
         writeline('/l { rlineto } bind def')
         if light is not None:
-            writeline('{0:f} {1:f} {2:f} setrgbcolor clippath fill'.format(*rgb_to_floats(light)))
+            writeline('{0:f} {1:f} {2:f} setrgbcolor clippath fill'.format(*rgb_to_floats(light)))  # noqa UP030
             if stroke_color_is_black:
                 writeline('0 0 0 setrgbcolor')
         if not stroke_color_is_black:
-            writeline('{0:f} {1:f} {2:f} setrgbcolor'.format(*stroke_color))
+            writeline('{0:f} {1:f} {2:f} setrgbcolor'.format(*stroke_color))  # noqa UP030
         if scale != 1:
             writeline(f'{scale} {scale} scale')
         writeline('newpath')
-        y = get_symbol_size(matrix_size, scale=1, border=0)[1] + border - .5
+        y = get_symbol_size(matrix_size, scale=1, border=0)[1] + border - .5  # .5 = linewidth / 2
         line_iter = matrix_to_lines(matrix, border, y, incby=-1)
         (x1, y1), (x2, y2) = next(line_iter)
         coord = [f'{x1} {y1} moveto {x2 - x1} 0 l']
@@ -329,37 +337,45 @@ def write_png(matrix, matrix_size, out, colormap, scale=1, border=None, compress
 
     black = (0, 0, 0)
     white = (255, 255, 255)
-    transparent = (-1, -1, -1, -1)
+    transparent = (-1, -1, -1, -1)  # Invalid placeholder for transparent color
     dark_idx = consts.TYPE_FINDER_PATTERN_DARK
     qz_idx = consts.TYPE_QUIET_ZONE
     clr_map = {k: png_color(colormap[k]) for k in colormap}
+    # Creating a palette here regardless of the image type (greyscale vs. index-colors)
     palette = sorted(set(clr_map.values()), key=itemgetter(0, 1, 2))
     is_transparent = transparent in palette
     number_of_colors = len(palette)
+    # Check if greyscale mode is applicable
     is_greyscale = number_of_colors == 2 and all(clr in (transparent, black, white) for clr in palette)
     png_color_type = 0 if is_greyscale else 3
-    png_bit_depth = 1
+    png_bit_depth = 1  # Assume a bit depth of 1 (may change if PLTE is used)
     png_trans_idx = None
-    if not is_greyscale:
+    if not is_greyscale:  # PLTE
         if number_of_colors > 2:
             png_bit_depth = 2 if number_of_colors < 5 else 4
-        palette.sort(key=len, reverse=True)
+        palette.sort(key=len, reverse=True)  # RGBA colors first
         if is_transparent:
             png_trans_idx = 0
             rgb_values = _NAME2RGB.values() if len(palette[1]) == 3 else ((*clr, 0) for clr in _NAME2RGB.values())
+            # Choose a random color which becomes transparent.
             transparent_color = next(clr for clr in rgb_values if clr not in palette)
             palette[0] = transparent_color
+            # Replace the placeholder "transparent" with the actual RGB(A) value
             clr_map.update({module_type: transparent_color
                             for module_type, clr in clr_map.items() if clr == transparent})
-    elif is_transparent:
+    elif is_transparent:  # Greyscale and transparent
         if black in palette:
+            # Since black is zero, it should be the first entry
             palette = [black, transparent]
         png_trans_idx = palette.index(transparent)
     if number_of_colors > 2:
+        # Need the more expensive matrix iterator
         miter = matrix_iter_verbose(matrix, matrix_size, scale=1, border=0)
         color_index = {module_type: palette.index(clr) for module_type, clr in clr_map.items()}
     else:
+        # Just two colors, use the cheap iterator which returns 0x0 or 0x1
         miter = iter(matrix)
+        # The code to create the image requires that TYPE_QUIET_ZONE is available
         color_index = {qz_idx: palette.index(clr_map[qz_idx])}
         color_index.update({0: color_index[qz_idx],
                             1: palette.index(clr_map[dark_idx])})
@@ -367,27 +383,33 @@ def write_png(matrix, matrix_size, out, colormap, scale=1, border=None, compress
     horizontal_border = b''
     vertical_border = b''
     if border > 0:
+        # Calculate horizontal and vertical border
         qz_value = color_index[qz_idx]
         horizontal_border = scanline(repeat(qz_value, width)) * border * scale
         vertical_border = [qz_value] * border * scale
     same_as_above = b''
     if scale > 1:
+        # 2 == PNG Filter "Up"  <https://www.w3.org/TR/PNG/#9-table91>
         same_as_above = scanline(repeat(0x0, width), filter_type=b'\2') * (scale - 1)
         miter = (chain(*(repeat(b, scale) for b in row)) for row in miter)
     idat = bytearray(horizontal_border)
     for row in miter:
+        # Chain precalculated left border with row and right border
         idat += scanline(chain(vertical_border, row, vertical_border))
-        idat += same_as_above
+        idat += same_as_above  # This is b'' if no scaling factor was provided
     idat += horizontal_border
     with writable(out, 'wb') as f:
         write = f.write
-        write(b'\211PNG\r\n\032\n')
+        write(b'\211PNG\r\n\032\n')  # Magic number
+        # Header:
+        # width, height, bitdepth, colortype, compression meth., filter, interlance
         write(chunk(b'IHDR', pack(b'>2I5B', width, height, png_bit_depth, png_color_type, 0, 0, 0)))
         if dpi:
             write(chunk(b'pHYs', pack(b'>LLB', dpi, dpi, 1)))
         if not is_greyscale:
             write(chunk(b'PLTE', b''.join(pack(b'>3B', *clr[:3]) for clr in palette)))
-            if len(palette[0]) > 3:
+            # <https://www.w3.org/TR/PNG/#11tRNS>
+            if len(palette[0]) > 3:  # Color with alpha channel is the first entry in the palette
                 write(chunk(b'tRNS', b''.join(pack(b'>B', clr[3]) for clr in palette if len(clr) > 3)))
             elif is_transparent:
                 write(chunk(b'tRNS', pack(b'>B', png_trans_idx)))
@@ -417,16 +439,20 @@ def write_pdf(matrix, matrix_size, out, scale=1, border=None, dark='#000',
     cmds = []
     append_cmd = cmds.append
     if light is not None:
+        # If the background color is defined, a rect is drawn in the background
         append_cmd('{} {} {} rg'.format(*to_pdf_color(light)))
         append_cmd(f'0 0 {width} {height} re')
         append_cmd('f q')
+    # Set the stroke color only iff it is not black (default)
     if not _color_is_black(dark):
         append_cmd('{} {} {} RG'.format(*to_pdf_color(dark)))
     if scale > 1:
         append_cmd(f'{scale} 0 0 {scale} 0 0 cm')
     y = get_symbol_size(matrix_size, scale=1, border=0)[1] + border - .5
+    # Set the origin in the upper left corner
     append_cmd(f'1 0 0 1 {border} {y} cm')
     miter = matrix_to_lines(matrix, 0, 0, incby=-1)
+    # PDF supports absolute coordinates, only
     cmds.extend(f'{x1} {y1} m {x2} {y1} l' for (x1, y1), (x2, y2) in miter)
     append_cmd('S')
     graphic = zlib.compress((' '.join(cmds)).encode('ascii'), compresslevel)
@@ -581,6 +607,7 @@ def write_xbm(matrix, matrix_size, out, scale=1, border=None, name='img'):
               f'static unsigned char {name}_bits[] = {{\n')
         for i, row in enumerate(row_iter, start=1):
             iter_ = zip_longest(*[iter(row)] * 8, fillvalue=0x0)
+            # Reverse bits since XBM uses little endian
             bits = [f'0x{reduce(lambda x, y: (x << 1) + y, bits[::-1]):02x}' for bits in iter_]
             write('    ')
             write(', '.join(bits))
@@ -629,17 +656,17 @@ def write_terminal(matrix, matrix_size, out, border=None):
                     if cnt:
                         write(colours[prev_bit])
                         write('  ' * cnt)
-                        write('\033[0m')
+                        write('\033[0m')  # reset color
                     prev_bit = bit
                     cnt = 1
             if cnt:
                 write(colours[prev_bit])
                 write('  ' * cnt)
-                write('\033[0m')
+                write('\033[0m')  # reset color
             write('\n')
 
 
-def write_terminal_win(matrix, matrix_size, border=None):
+def write_terminal_win(matrix, matrix_size, border=None):  # pragma: no cover
     import sys
     import struct
     import ctypes
@@ -668,15 +695,15 @@ def write_terminal_win(matrix, matrix_size, border=None):
         if cnt:
             set_color(colours[prev_bit])
             write('  ' * cnt)
-        set_color(default_color)
+        set_color(default_color)  # reset color
         write('\n')
 
 
 def write_terminal_compact(matrix, matrix_size, out, border=None):
     blocks = {(1, 1): ' ',
-              (0, 1): '\u2580',
-              (1, 0): '\u2584',
-              (0, 0): '\u2588',
+              (0, 1): '\u2580',  # Upper half block
+              (1, 0): '\u2584',  # Lower half block
+              (0, 0): '\u2588',  # Full block
               }
     it = [matrix_iter(matrix, matrix_size, scale=1, border=border)] * 2
     with writable(out, 'wt') as f:
@@ -702,22 +729,22 @@ def _color_to_webcolor(color, allow_css3_colors=True, optimize=True):
     alpha_channel = None
     if len(clr) == 4:
         if allow_css3_colors:
-            return 'rgba({0},{1},{2},{3})'.format(*clr)
+            return 'rgba({0},{1},{2},{3})'.format(*clr)  # noqa UP030
         alpha_channel = clr[3]
         clr = clr[:3]
-    hx = '#{0:02x}{1:02x}{2:02x}'.format(*clr)
+    hx = '#{0:02x}{1:02x}{2:02x}'.format(*clr)  # noqa UP030
     if optimize:
         if hx == '#d2b48c':
-            hx = 'tan'
+            hx = 'tan'  # shorter
         elif hx == '#ff0000':
-            hx = 'red'
+            hx = 'red'  # shorter
         elif hx[1] == hx[2] and hx[3] == hx[4] and hx[5] == hx[6]:
             hx = f'#{hx[1]}{hx[3]}{hx[5]}'
     return hx if alpha_channel is None else (hx, alpha_channel)
 
 
 def color_to_rgb_hex(color):
-    return '#{0:02x}{1:02x}{2:02x}'.format(*_color_to_rgb(color))
+    return '#{0:02x}{1:02x}{2:02x}'.format(*_color_to_rgb(color))  # noqa UP030
 
 
 def _color_is_black(color):
@@ -784,6 +811,7 @@ def _hex_to_rgb_or_rgba(color, alpha_float=True):
     if color[0] == '#':
         color = color[1:]
     if 2 < len(color) < 5:
+        # Expand RGB -> RRGGBB and RGBA -> RRGGBBAA
         color = ''.join([color[i] * 2 for i in range(len(color))])
     color_len = len(color)
     if color_len not in (6, 8):
@@ -819,6 +847,7 @@ def _invert_color(rgb_or_rgba):
     return tuple([255 - c for c in rgb_or_rgba])
 
 
+# <https://www.w3.org/TR/css-color-3/#svg-color>
 _NAME2RGB = {
     'aliceblue': (240, 248, 255),
     'antiquewhite': (250, 235, 215),
@@ -981,13 +1010,13 @@ def _make_colormap(matrix_width, matrix_height, dark, light,
                    quiet_zone=False):
     unsupported = ()
     is_square = matrix_width == matrix_height
-    if not is_square:
+    if not is_square:  # rMQR
         unsupported = [consts.TYPE_DARKMODULE, consts.TYPE_VERSION_DARK, consts.TYPE_VERSION_LIGHT]
-        if matrix_width < 43:
+        if matrix_width < 43:  # rMQR R11x27, R13x27, …
             unsupported.extend((consts.TYPE_ALIGNMENT_PATTERN_DARK, consts.TYPE_ALIGNMENT_PATTERN_LIGHT))
-    elif matrix_width < 45:
+    elif matrix_width < 45:  # QR Code version 7
         unsupported = [consts.TYPE_VERSION_DARK, consts.TYPE_VERSION_LIGHT]
-        if matrix_width < 21:
+        if matrix_width < 21:  # Lesser than QR Code version 1 => Micro QR code
             unsupported.extend([consts.TYPE_DARKMODULE,
                                 consts.TYPE_ALIGNMENT_PATTERN_DARK,
                                 consts.TYPE_ALIGNMENT_PATTERN_LIGHT])

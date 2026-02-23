@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sys
 import json
 import random
@@ -8,6 +9,7 @@ from modules.metadata import episodes_meta, all_episodes_meta
 from modules.watched_status import get_watched_status_episode, get_next_episodes, get_hidden_progress_items, watched_info_episode, get_next
 from modules.utils import adjust_premiered_date, get_datetime, make_thread_list, title_key
 from modules import kodi_utils
+# logger = kodi_utils.logger
 
 class EpisodeTools:
 	def __init__(self, meta, nextep_settings=None):

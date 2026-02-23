@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import sys
 import json
@@ -12,6 +13,7 @@ from indexers.episodes import build_single_episode
 from modules import kodi_utils
 from modules.utils import paginate_list, gen_md5, get_datetime, get_current_timestamp
 from modules.settings import paginate, page_limit, widget_hide_next_page, tmdb_api_key, mpaa_region, jump_to_enabled
+# logger = kodi_utils.logger
 
 def search_fl_lists(params):
 	def _builder():

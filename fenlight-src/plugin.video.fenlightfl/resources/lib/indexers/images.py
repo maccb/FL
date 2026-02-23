@@ -1,9 +1,11 @@
+# -*- coding: utf-8 -*-
 import os
 import json
 from windows.base_window import open_window
 from apis.tmdb_api import tmdb_people_info, tmdb_people_full_info, tmdb_popular_people, tmdb_trending_people_day, tmdb_trending_people_week, tmdb_media_images
 from apis.easynews_api import EasyNews
 from modules.kodi_utils import notification, make_listitem, list_dirs, delete_file, show_busy_dialog, hide_busy_dialog, get_icon, image_extensions
+# from modules.kodi_utils import logger
 
 class Images():
 	def run(self, params):

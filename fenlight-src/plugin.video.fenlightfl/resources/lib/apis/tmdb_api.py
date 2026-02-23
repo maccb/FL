@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
 import datetime
 from caches.meta_cache import cache_function
 from caches.lists_cache import lists_cache_object
 from modules.settings import get_meta_filter, tmdb_api_key, lists_cache_duraton
 from modules.kodi_utils import make_session, remove_keys
+# from modules.kodi_utils import logger
 
 session = make_session('https://api.themoviedb.org/3')
 

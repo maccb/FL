@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import time
 import json
 import random
@@ -7,6 +8,7 @@ from caches.settings_cache import get_setting
 from modules import kodi_utils, source_utils
 from modules.debrid import RD_check, PM_check, AD_check, ED_check ,TB_check, query_local_cache
 from modules.utils import clean_file_name
+# logger = kodi_utils.logger
 
 class source:
 	def __init__(self, meta, source_dict, active_debrid, external_cache_check, internal_scrapers, prescrape_sources, progress_dialog, disabled_ext_ignored=False):

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# TRUMP WON
 import xbmc, xbmcgui, xbmcplugin, xbmcvfs, xbmcaddon
 import os
 from urllib.parse import urlencode, unquote
@@ -430,6 +432,7 @@ def external_playback_check(params):
 	return True
 
 def timeIt(func):
+	# Thanks to 123Venom
 	import time
 	fnc_name = func.__name__
 	def wrap(*args, **kwargs):
@@ -440,6 +443,7 @@ def timeIt(func):
 	return wrap
 
 def volume_checker():
+	# 0% == -60db, 100% == 0db
 	try:
 		if get_property('fenlightfl.playback.volumecheck_enabled') == 'false' or get_visibility('Player.Muted'): return
 		from modules.utils import string_alphanum_to_num

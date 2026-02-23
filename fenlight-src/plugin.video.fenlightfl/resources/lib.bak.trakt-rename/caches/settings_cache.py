@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
 import json
 from modules import kodi_utils
 from caches.base_cache import connect_database
+# logger = kodi_utils.logger
 
 class SettingsCache:
 	def get(self, setting_id):
@@ -188,33 +190,52 @@ def default_setting_values(setting_id):
 
 def default_settings():
 	return [
+#===============================================================================#
+#====================================GENERAL====================================#
+#===============================================================================#
+#==================== General
 {'setting_id': 'auto_start_fenlight', 'setting_type': 'boolean', 'setting_default': 'false'},
 {'setting_id': 'addon_icon_choice', 'setting_type': 'string', 'setting_default': 'resources/media/addon_icons/fenlight_icon_01.png'},
 {'setting_id': 'default_addon_fanart', 'setting_type': 'path', 'setting_default': kodi_utils.get_addon_fanart(), 'browse_mode': '2'},
 {'setting_id': 'limit_concurrent_threads', 'setting_type': 'boolean', 'setting_default': 'false'},
 {'setting_id': 'max_threads', 'setting_type': 'action', 'setting_default': '60', 'min_value': '10', 'max_value': '250'},
+#==================== Manage Updates
 {'setting_id': 'update.action', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'Prompt', '1': 'Automatic', '2': 'Notification', '3': 'Off'}},
 {'setting_id': 'update.delay', 'setting_type': 'action', 'setting_default': '10', 'min_value': '10', 'max_value': '300'},
 {'setting_id': 'update.username', 'setting_type': 'string', 'setting_default': 'maccb'},
 {'setting_id': 'update.location', 'setting_type': 'string', 'setting_default': 'FL'},
+#==================== Watched Indicators
 {'setting_id': 'watched_indicators', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'FL', '1': 'FlickList'}},
+#======+============= FlickList Cache
 {'setting_id': 'flicklist.sync_interval', 'setting_type': 'action', 'setting_default': '60', 'min_value': '5', 'max_value': '600'},
 {'setting_id': 'flicklist.refresh_widgets', 'setting_type': 'boolean', 'setting_default': 'true'},
+#==================== UTC Time Offset
 {'setting_id': 'datetime.offset', 'setting_type': 'action', 'setting_default': '0', 'min_value': '-15', 'max_value': '15'},
+#==================== Downloads
 {'setting_id': 'movie_download_directory', 'setting_type': 'path', 'setting_default': 'special://profile/addon_data/plugin.video.fenlightfl/Movies Downloads/', 'browse_mode': '0'},
 {'setting_id': 'tvshow_download_directory', 'setting_type': 'path', 'setting_default': 'special://profile/addon_data/plugin.video.fenlightfl/TV Show Downloads/', 'browse_mode': '0'},
 {'setting_id': 'premium_download_directory', 'setting_type': 'path', 'setting_default': 'special://profile/addon_data/plugin.video.fenlightfl/Premium Downloads/', 'browse_mode': '0'},
 {'setting_id': 'image_download_directory', 'setting_type': 'path', 'setting_default': 'special://profile/addon_data/plugin.video.fenlightfl/Image Downloads/', 'browse_mode': '0'},
 
 
+#================================================================================#
+#====================================FEATURES====================================#
+#================================================================================#
+#==================== Extras
 {'setting_id': 'extras.enable_extra_ratings', 'setting_type': 'boolean', 'setting_default': 'true'},
 {'setting_id': 'extras.enable_scrollbars', 'setting_type': 'boolean', 'setting_default': 'false'},
+#==================== Special Open Actions
 {'setting_id': 'media_open_action_movie', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'None', '1': 'Open Extras', '2': 'Open Movie Set', '3': 'Both'}},
 {'setting_id': 'media_open_action_tvshow', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'None', '1': 'Open Extras'}},
+#==================== AI Generated Similar Titles
 {'setting_id': 'ai_model.order', 'setting_type': 'string', 'setting_default': 'gemini-2.5-flash-lite,llama-3.3-70b-versatile,gemma-3-27b-it,llama-3.1-8b-instant'},
 {'setting_id': 'ai_model.limit', 'setting_type': 'action', 'setting_default': '15', 'min_value': '1', 'max_value': '25'},
 
 
+#==================================================================================#
+#====================================CONTENT=======================================#
+#==================================================================================#
+#==================== General
 {'setting_id': 'paginate.lists', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'Off', '1': 'Within Addon Only', '2': 'Widgets Only', '3': 'Both'}},
 {'setting_id': 'paginate.limit_addon', 'setting_type': 'action', 'setting_default': '20'},
 {'setting_id': 'paginate.limit_widgets', 'setting_type': 'action', 'setting_default': '20'},
@@ -244,27 +265,38 @@ def default_settings():
 {'setting_id': 'view.episodes', 'setting_type': 'string', 'setting_default': '55'},
 {'setting_id': 'view.episodes_single', 'setting_type': 'string', 'setting_default': '55'},
 {'setting_id': 'view.premium', 'setting_type': 'string', 'setting_default': '55'},
+#==================== Contents Sort Order For Watched Progress
 {'setting_id': 'sort.progress', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'Title', '1': 'Recently Watched'}},
 {'setting_id': 'sort.watched', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'Title', '1': 'Recently Watched'}},
+#==================== Contents Sort Order For FL Lists
 {'setting_id': 'sort.collection', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'Title', '1': 'Date Added', '2': 'Release Date'}},
 {'setting_id': 'sort.watchlist', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'Title', '1': 'Date Added', '2': 'Release Date'}},
+#==================== Personal Lists
 {'setting_id': 'personal_list.sort_unseen_to_top', 'setting_type': 'boolean', 'setting_default': 'true'},
 {'setting_id': 'personal_list.highlight_unseen', 'setting_type': 'boolean', 'setting_default': 'false'},
 {'setting_id': 'personal_list.unseen_highlight', 'setting_type': 'string', 'setting_default': 'FF4DDBFF'},
 {'setting_id': 'personal_list.show_author', 'setting_type': 'boolean', 'setting_default': 'true'},
+#==================== Widgets
 {'setting_id': 'widget_refresh_timer', 'setting_type': 'string', 'setting_default': '0'},
 {'setting_id': 'widget_refresh_notification', 'setting_type': 'boolean', 'setting_default': 'true'},
 {'setting_id': 'widget_hide_watched', 'setting_type': 'boolean', 'setting_default': 'false'},
 {'setting_id': 'widget_hide_next_page', 'setting_type': 'boolean', 'setting_default': 'false'},
+#==================== RPDb Ratings Posters
 {'setting_id': 'rpdb_enabled', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'None', '1': 'Movies', '2': 'TV Shows', '3': 'Both'}},
+#==================== Context Menu
 {'setting_id': 'context_menu.order', 'setting_type': 'string',
 'setting_default': 'extras,options,playback_options,browse_movie_set,browse_seasons,browse_episodes,recommended,related,more_like_this,similar,in_trakt_list,' \
 'trakt_manager,personal_manager,tmdb_manager,favorites_manager,mark_watched,unmark_previous_episode,exit,refresh,reload'},
 
 
+#==================================================================================#
+#====================================SINGLE EPISODE LISTS==========================#
+#==================================================================================#
+#==================== General
 {'setting_id': 'single_ep_display', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'TITLE: SxE - EPISODE', '1': 'SxE - EPISODE', '2': 'EPISODE'}},
 {'setting_id': 'single_ep_display_widget', 'setting_type': 'action', 'setting_default': '1', 'settings_options': {'0': 'TITLE: SxE - EPISODE', '1': 'SxE - EPISODE', '2': 'EPISODE'}},
 {'setting_id': 'single_ep_unwatched_episodes', 'setting_type': 'boolean', 'setting_default': 'false'},
+#==================== Next Episodes
 {'setting_id': 'nextep.method', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'Last Aired', '1': 'Last Watched'}},
 {'setting_id': 'nextep.sort_type', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'Recently Watched', '1': 'Airdate', '2': 'Title'}},
 {'setting_id': 'nextep.sort_order', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'Descending', '1': 'Ascending'}},
@@ -274,28 +306,44 @@ def default_settings():
 {'setting_id': 'nextep.include_airdate', 'setting_type': 'boolean', 'setting_default': 'false'},
 {'setting_id': 'nextep.airing_today', 'setting_type': 'boolean', 'setting_default': 'false'},
 {'setting_id': 'nextep.include_unaired', 'setting_type': 'boolean', 'setting_default': 'false'},
+#======+============= FlickList Calendar
 {'setting_id': 'flicklist.flatten_episodes', 'setting_type': 'boolean', 'setting_default': 'false'},
 {'setting_id': 'flicklist.calendar_sort_order', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'Descending', '1': 'Ascending'}},
 {'setting_id': 'flicklist.calendar_previous_days', 'setting_type': 'action', 'setting_default': '7', 'min_value': '0', 'max_value': '14'},
 {'setting_id': 'flicklist.calendar_future_days', 'setting_type': 'action', 'setting_default': '7', 'min_value': '0', 'max_value': '14'},
 
 
+#=====================================================================================#
+#====================================META ACCOUNTS====================================#
+#=====================================================================================#
+#==================== FlickList
 {'setting_id': 'flicklist.user', 'setting_type': 'string', 'setting_default': 'empty_setting'},
 {'setting_id': 'flicklist.api_url', 'setting_type': 'string', 'setting_default': 'https://beta.flicklist.tv/api'},
 {'setting_id': 'flicklist.client_id', 'setting_type': 'string', 'setting_default': 'flicklist_kodi_addon'},
+#==================== TMDb API
 {'setting_id': 'tmdb_api', 'setting_type': 'string', 'setting_default': 'b370b60447737762ca38457bd77579b3'},
+#==================== TMDb Lists
 {'setting_id': 'tmdb.token', 'setting_type': 'string', 'setting_default': 'empty_setting'},
 {'setting_id': 'tmdb.account_id', 'setting_type': 'string', 'setting_default': 'empty_setting'},
+#==================== OMDb
 {'setting_id': 'omdb_api', 'setting_type': 'string', 'setting_default': 'empty_setting'},
+#==================== RPDb
 {'setting_id': 'rpdb_api', 'setting_type': 'string', 'setting_default': 'empty_setting'},
+#==================== Google API
 {'setting_id': 'google_api', 'setting_type': 'string', 'setting_default': 'empty_setting'},
+#==================== GROQ API
 {'setting_id': 'groq_api', 'setting_type': 'string', 'setting_default': 'empty_setting'},
 
 
+#=====================================================================================#
+#====================================STREAMING ACCOUNTS===============================#
+#=====================================================================================#
+#==================== External
 {'setting_id': 'provider.external', 'setting_type': 'boolean', 'setting_default': 'true'},
 {'setting_id': 'external_scraper.name', 'setting_type': 'string', 'setting_default': 'CocoScrapers'},
 {'setting_id': 'external.cache_check', 'setting_type': 'boolean', 'setting_default': 'false'},
 {'setting_id': 'external.filter_sources', 'setting_type': 'boolean', 'setting_default': 'true'},
+#==================== Real Debrid
 {'setting_id': 'rd.token', 'setting_type': 'string', 'setting_default': 'empty_setting'},
 {'setting_id': 'rd.enabled', 'setting_type': 'boolean', 'setting_default': 'false'},
 {'setting_id': 'rd.account_id', 'setting_type': 'string', 'setting_default': 'empty_setting'},
@@ -307,6 +355,7 @@ def default_settings():
 {'setting_id': 'results.sort_rdcloud_first', 'setting_type': 'boolean', 'setting_default': 'true'},
 {'setting_id': 'rd.priority', 'setting_type': 'action', 'setting_default': '10', 'min_value': '1', 'max_value': '10'},
 {'setting_id': 'rd.alternate_base_url', 'setting_type': 'boolean', 'setting_default': 'false'},
+#==================== Premiumize
 {'setting_id': 'pm.token', 'setting_type': 'string', 'setting_default': 'empty_setting'},
 {'setting_id': 'pm.enabled', 'setting_type': 'boolean', 'setting_default': 'false'},
 {'setting_id': 'pm.account_id', 'setting_type': 'string', 'setting_default': 'empty_setting'},
@@ -317,6 +366,7 @@ def default_settings():
 {'setting_id': 'autoplay.pm_cloud', 'setting_type': 'boolean', 'setting_default': 'false'},
 {'setting_id': 'results.sort_pmcloud_first', 'setting_type': 'boolean', 'setting_default': 'true'},
 {'setting_id': 'pm.priority', 'setting_type': 'action', 'setting_default': '10', 'min_value': '1', 'max_value': '10'},
+#==================== All Debrid
 {'setting_id': 'ad.token', 'setting_type': 'string', 'setting_default': 'empty_setting'},
 {'setting_id': 'ad.enabled', 'setting_type': 'boolean', 'setting_default': 'false'},
 {'setting_id': 'ad.account_id', 'setting_type': 'string', 'setting_default': 'empty_setting'},
@@ -327,9 +377,11 @@ def default_settings():
 {'setting_id': 'autoplay.ad_cloud', 'setting_type': 'boolean', 'setting_default': 'false'},
 {'setting_id': 'results.sort_adcloud_first', 'setting_type': 'boolean', 'setting_default': 'true'},
 {'setting_id': 'ad.priority', 'setting_type': 'action', 'setting_default': '10', 'min_value': '1', 'max_value': '10'},
+#==================== Easy Debrid
 {'setting_id': 'ed.token', 'setting_type': 'string', 'setting_default': 'empty_setting'},
 {'setting_id': 'ed.enabled', 'setting_type': 'boolean', 'setting_default': 'false'},
 {'setting_id': 'ed.priority', 'setting_type': 'action', 'setting_default': '10', 'min_value': '1', 'max_value': '10'},
+#==================== TorBox
 {'setting_id': 'tb.token', 'setting_type': 'string', 'setting_default': 'empty_setting'},
 {'setting_id': 'tb.enabled', 'setting_type': 'boolean', 'setting_default': 'false'},
 {'setting_id': 'store_resolved_to_cloud.torbox', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'None', '1': 'All', '2': 'Show Packs Only'}},
@@ -339,6 +391,7 @@ def default_settings():
 {'setting_id': 'autoplay.tb_cloud', 'setting_type': 'boolean', 'setting_default': 'false'},
 {'setting_id': 'results.sort_tbcloud_first', 'setting_type': 'boolean', 'setting_default': 'true'},
 {'setting_id': 'tb.priority', 'setting_type': 'action', 'setting_default': '10', 'min_value': '1', 'max_value': '10'},
+#==================== Easynews
 {'setting_id': 'provider.easynews', 'setting_type': 'boolean', 'setting_default': 'false'},
 {'setting_id': 'easynews_user', 'setting_type': 'string', 'setting_default': 'empty_setting'},
 {'setting_id': 'easynews_password', 'setting_type': 'string', 'setting_default': 'empty_setting'},
@@ -348,6 +401,7 @@ def default_settings():
 {'setting_id': 'check.easynews', 'setting_type': 'boolean', 'setting_default': 'false'},
 {'setting_id': 'autoplay.easynews', 'setting_type': 'boolean', 'setting_default': 'false'},
 {'setting_id': 'en.priority', 'setting_type': 'action', 'setting_default': '7', 'min_value': '1', 'max_value': '10'},
+#=========+========== Folders
 {'setting_id': 'provider.folders', 'setting_type': 'boolean', 'setting_default': 'false'},
 {'setting_id': 'folders.title_filter', 'setting_type': 'boolean', 'setting_default': 'true'},
 {'setting_id': 'check.folders', 'setting_type': 'boolean', 'setting_default': 'false'},
@@ -357,13 +411,19 @@ def default_settings():
 {'setting_id': 'folders.priority', 'setting_type': 'action', 'setting_default': '6', 'min_value': '1', 'max_value': '10'},
 
 
+#===============================================================================#
+#====================================RESULTS====================================#
+#===============================================================================#
+#==================== Display
 {'setting_id': 'results.timeout', 'setting_type': 'action', 'setting_default': '20', 'min_value': '1'},
 {'setting_id': 'results.list_format', 'setting_type': 'string', 'setting_default': 'List'},
+#==================== General
 {'setting_id': 'results.auto_rescrape_cache_ignored', 'setting_type': 'action', 'setting_default': '1', 'settings_options': {'0': 'Off', '1': 'Auto', '2': 'Prompt'}},
 {'setting_id': 'results.auto_rescrape_imdb_year', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'Off', '1': 'Auto', '2': 'Prompt'}},
 {'setting_id': 'results.auto_rescrape_with_all', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'Off', '1': 'Auto', '2': 'Prompt'}},
 {'setting_id': 'results.auto_episode_group', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'Off', '1': 'Auto', '2': 'Prompt'}},
 {'setting_id': 'results.ignore_filter', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'Off', '1': 'Auto', '2': 'Prompt'}},
+#==================== Sorting and Filtering
 {'setting_id': 'results.sort_order_display', 'setting_type': 'string', 'setting_default': 'Quality, Size, Provider'},
 {'setting_id': 'results.filter_size_method', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'Off', '1': 'Use Line Speed', '2': 'Use Size'}},
 {'setting_id': 'results.line_speed', 'setting_type': 'action', 'setting_default': '25', 'min_value': '1'},
@@ -389,6 +449,7 @@ def default_settings():
 {'setting_id': 'filter.sort_to_top', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'None', '1': 'Source Select', '2': 'Autoplay', '3': 'Both'}},
 {'setting_id': 'filter.preferred_filters', 'setting_type': 'string', 'setting_default': 'empty_setting'},
 {'setting_id': 'filter_audio', 'setting_type': 'string', 'setting_default': 'empty_setting'},
+#==================== Results Color Highlights
 {'setting_id': 'highlight.type', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'Provider', '1': 'Quality', '2': 'Single Color'}},
 {'setting_id': 'provider.easynews_highlight', 'setting_type': 'string', 'setting_default': 'FF00B3B2'},
 {'setting_id': 'provider.debrid_cloud_highlight', 'setting_type': 'string', 'setting_default': 'FF7A01CC'},
@@ -406,6 +467,10 @@ def default_settings():
 {'setting_id': 'scraper_single_highlight', 'setting_type': 'string', 'setting_default': 'FF008EB2'},
 
 
+#===============================================================================#
+#===================================PLAYBACK====================================#
+#===============================================================================#
+#==================== Playback Movies
 {'setting_id': 'auto_play_movie', 'setting_type': 'boolean', 'setting_default': 'false'},
 {'setting_id': 'results_quality_movie', 'setting_type': 'string', 'setting_default': 'SD, 720p, 1080p, 4K'},
 {'setting_id': 'autoplay_quality_movie', 'setting_type': 'string', 'setting_default': 'SD, 720p, 1080p, 4K'},
@@ -413,6 +478,7 @@ def default_settings():
 {'setting_id': 'stinger_alert.show', 'setting_type': 'boolean', 'setting_default': 'false'},
 {'setting_id': 'stinger_alert.window_percentage', 'setting_type': 'action', 'setting_default': '90', 'min_value': '1', 'max_value': '99'},
 {'setting_id': 'stinger_alert.use_chapters', 'setting_type': 'boolean', 'setting_default': 'true'},
+#==================== Playback Episodes
 {'setting_id': 'auto_play_episode', 'setting_type': 'boolean', 'setting_default': 'false'},
 {'setting_id': 'results_quality_episode', 'setting_type': 'string', 'setting_default': 'SD, 720p, 1080p, 4K'},
 {'setting_id': 'autoplay_quality_episode', 'setting_type': 'string', 'setting_default': 'SD, 720p, 1080p, 4K'},
@@ -426,6 +492,7 @@ def default_settings():
 {'setting_id': 'autoscrape_next_window_percentage', 'setting_type': 'action', 'setting_default': '95', 'min_value': '75', 'max_value': '99'},
 {'setting_id': 'autoscrape_use_chapters', 'setting_type': 'boolean', 'setting_default': 'true'},
 {'setting_id': 'auto_resume_episode', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'Never', '1': 'Always', '2': 'Autoplay Only'}},
+#==================== Playback Utilities
 {'setting_id': 'playback.limit_resolve', 'setting_type': 'boolean', 'setting_default': 'false'},
 {'setting_id': 'easynews.playback_method', 'setting_type': 'action', 'setting_default': '0', 'settings_options': {'0': 'None', '1': 'Retry', '2': 'No Seek', '3': 'Both'}},
 {'setting_id': 'easynews.playback_method_limited', 'setting_type': 'boolean', 'setting_default': 'false'},
@@ -434,6 +501,9 @@ def default_settings():
 {'setting_id': 'playback.auto_enable_subs', 'setting_type': 'boolean', 'setting_default': 'false'},
 
 
+#=========================================================================================#
+#======================================HIDDEN=============================================#
+#=========================================================================================#
 {'setting_id': 'reuse_language_invoker', 'setting_type': 'string', 'setting_default': 'true'},
 {'setting_id': 'addon_icon_choice_name', 'setting_type': 'string', 'setting_default': 'fenlight_icon_01.png'},
 {'setting_id': 'widget_refresh_timer_name', 'setting_type': 'string', 'setting_default': 'Off'},

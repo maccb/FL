@@ -1,9 +1,11 @@
+# -*- coding: utf-8 -*-
 import xbmc
 import json
 from threading import Thread
 from apis.flicklist_api import make_trakt_slug, scrobble_start, scrobble_stop, scrobble_heartbeat
 from caches.settings_cache import get_setting
 from modules import kodi_utils as ku, settings as st, watched_status as ws
+# logger = ku.logger
 
 class FenLightPlayer(xbmc.Player):
 	def __init__ (self):

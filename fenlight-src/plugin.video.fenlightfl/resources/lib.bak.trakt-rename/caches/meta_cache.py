@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
 from caches.base_cache import connect_database, get_timestamp
 from modules.kodi_utils import get_property, set_property, clear_property
+# from modules.kodi_utils import logger
 
 class MetaCache:
 	def get(self, media_type, id_type, media_id, current_time=None):

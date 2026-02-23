@@ -1,3 +1,10 @@
+#
+# Copyright (c) 2016 - 2024 -- Lars Heuer
+# All rights reserved.
+#
+# License: BSD License
+#
+# type: ignore
 """\
 Utility functions useful for writers or QR Code objects.
 
@@ -94,7 +101,7 @@ def matrix_to_lines(matrix, x, y, incby=1):
     :param incby: Value to move along the y-axis (default: 1).
     :rtype: iterable of (x1, y1), (x2, y2) tuples
     """
-    y -= incby
+    y -= incby  # Move along y-axis so we can simply increment y in the loop
     last_bit = 0x1
     for row in matrix:
         x1, x2 = x, x
@@ -168,34 +175,44 @@ def matrix_iter_verbose(matrix, matrix_size, scale=1, border=None):
     border = get_border(matrix_size, border)
     width, height = matrix_size
     is_square = width == height
-    is_micro = is_square and width < 21
+    is_micro = is_square and width < 21  # 21 == QR Code version 1
+    # Create an empty matrix with invalid 0x2 values
     alignment_matrix = encoder.make_matrix(width, height, reserve_regions=False, add_timing=False)
     encoder.add_alignment_patterns(alignment_matrix, width, height)
 
     def get_bit(i, j):
+        # Check if we operate upon the matrix or the "virtual" border
         if 0 <= i < height and 0 <= j < width:
             val = matrix[i][j]
             if not is_micro:
+                # Alignment pattern
                 alignment_val = alignment_matrix[i][j]
                 if alignment_val != 0x2:
                     return (consts.TYPE_ALIGNMENT_PATTERN_LIGHT, consts.TYPE_ALIGNMENT_PATTERN_DARK)[alignment_val]
-                if is_square and width > 41:
+                if is_square and width > 41:  # QR Codes < version 7 do not carry any version information
                     if (i < 6 and width - 12 < j < width - 8) \
                             or (height - 12 < i < height - 8 and j < 6):
                         return (consts.TYPE_VERSION_LIGHT, consts.TYPE_VERSION_DARK)[val]
+                # Dark module
                 if i == height - 8 and j == 8:
                     return consts.TYPE_DARKMODULE
+            # Timing - IMPORTANT: Check alignment (see above) in advance!
             if (not is_micro and ((i == 6 and 7 < j < width - 8) or (j == 6 and 7 < i < height - 8))) \
                     or (is_micro and ((i == 0 and j > 7) or (j == 0 and i > 7))):
                 return (consts.TYPE_TIMING_LIGHT, consts.TYPE_TIMING_DARK)[val]
+            # Format - IMPORTANT: Check timing (see above) in advance!
             if (i == 8 and (j < 9 or (not is_micro and j > width - 10))) \
                     or (j == 8 and (i < 8 or (not is_micro and i > height - 9))):
                 return (consts.TYPE_FORMAT_LIGHT, consts.TYPE_FORMAT_DARK)[val]
+            # Finder pattern
+            # top left             top right
             if (i < 7 and (j < 7 or (not is_micro and j > width - 8))) \
-                    or (not is_micro and i > height - 8 and j < 7):
+                    or (not is_micro and i > height - 8 and j < 7):  # bottom left
                 return (consts.TYPE_FINDER_PATTERN_LIGHT, consts.TYPE_FINDER_PATTERN_DARK)[val]
+            # Separator
+            # top left              top right
             if (i < 8 and (j < 8 or (not is_micro and j > width - 9))) \
-                    or (not is_micro and (i > height - 9 and j < 8)):
+                    or (not is_micro and (i > height - 9 and j < 8)):  # bottom left
                 return consts.TYPE_SEPARATOR
             return (consts.TYPE_DATA_LIGHT, consts.TYPE_DATA_DARK)[val]
         else:

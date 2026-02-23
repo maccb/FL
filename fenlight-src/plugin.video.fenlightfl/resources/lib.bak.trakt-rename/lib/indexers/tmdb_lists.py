@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import sys
 import json
@@ -12,6 +13,7 @@ from indexers.tvshows import TVShows
 from modules.utils import paginate_list, sort_for_article, gen_md5, jsondate_to_datetime as js2date
 from modules.settings import paginate, page_limit, lists_sort_order, widget_hide_next_page, ignore_articles, jump_to_enabled
 from modules import kodi_utils
+# logger = kodi_utils.logger
 
 def get_tmdb_lists(params):
 	def get_custom_image(list_name, image_type, images):

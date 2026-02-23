@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
 from urllib.parse import parse_qsl
 from modules.kodi_utils import get_infolabel, activate_window, container_update, hide_busy_dialog
 from indexers import dialogs
+# from modules.kodi_utils import logger
 
 def extras_menu():
 	params = get_params('extras_params')

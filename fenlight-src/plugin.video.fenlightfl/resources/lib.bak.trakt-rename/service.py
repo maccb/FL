@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from xbmc import Monitor
 import os
 import json
@@ -113,10 +114,12 @@ class OnUpdateChanges:
 		return kodi_utils.logger('FL', 'OnUpdateChanges Service Finished')
 
 	def clear_context_menu_order_01(self):
+		# Active for 2.1.85.
 		from caches.settings_cache import restore_setting_default
 		restore_setting_default({'setting_id': 'context_menu.order', 'silent': 'true'})
 
 	def clear_extras_menu_order_01(self):
+		# Active for 2.1.85.
 		from caches.settings_cache import restore_setting_default
 		restore_setting_default({'setting_id': 'extras.enabled', 'silent': 'true'})
 
@@ -154,7 +157,7 @@ class FlickListMonitor:
 				if status == 'failed': kodi_utils.logger('FL', trakt_service_string % ('Failed. Error from FlickList', next_update_string))
 				else:
 					if status in ('success', 'no account'): kodi_utils.logger('FL', trakt_service_string % ('Success. %s' % trakt_success_line_dict[status], next_update_string))
-					else: kodi_utils.logger('FL', trakt_service_string % ('Success. No Changes Needed', next_update_string))
+					else: kodi_utils.logger('FL', trakt_service_string % ('Success. No Changes Needed', next_update_string))# 'not needed'
 					if status == 'success' and get_setting('fenlightfl.flicklist.refresh_widgets', 'false') == 'true': kodi_utils.run_plugin({'mode': 'kodi_refresh'})
 			except Exception as e: kodi_utils.logger('FL', trakt_service_string % ('Failed', 'The following Error Occured: %s' % str(e)))
 			wait_for_abort(wait_time)

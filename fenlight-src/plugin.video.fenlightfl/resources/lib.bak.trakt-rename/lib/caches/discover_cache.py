@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 from caches.base_cache import connect_database
+# from modules.kodi_utils import logger
 
 class DiscoverCache:
 	def insert_one(self, _id, db_type, data):
