@@ -1,3 +1,11 @@
+[COLOR red][B]Version 2.1.100[/B][/COLOR]
+[I]For the ones who click too fast.[/I]
+[B]Needed:[/B]
+- Marking episodes and movies as watched is now instant. The checkmark appears immediately without waiting for the server.
+- Rapid marking multiple episodes in a row no longer causes missed marks.
+- If the server is briefly unreachable when marking watched, it retries automatically after a few seconds.
+- Added proper Kodi repository. New users can install through "Install from repository" instead of zip files only.
+
 [COLOR red][B]Version 2.1.99[/B][/COLOR]
 [B]Needed:[/B]
 - Fixed Calendar sometimes crashing when opened. A date formatting issue that happened randomly depending on Kodi's internal state.

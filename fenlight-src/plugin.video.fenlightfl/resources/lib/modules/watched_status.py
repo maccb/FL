@@ -266,7 +266,7 @@ def mark_movie(params):
 	watched_indicators = settings.watched_indicators()
 	if watched_indicators == 1:
 		if from_playback and fl_official_status(media_type) == False: sleep(1000)
-		else: fl_watched_status_mark(action, 'movies', tmdb_id)
+		else: Thread(target=fl_watched_status_mark, args=(action, 'movies', tmdb_id)).start()
 		clear_fl_collection_watchlist_data('watchlist', media_type)
 	watched_status_mark(watched_indicators, media_type, tmdb_id, action, title=title)
 	refresh_container(refresh)
@@ -347,7 +347,7 @@ def mark_episode(params):
 	watched_indicators = settings.watched_indicators()
 	if watched_indicators == 1:
 		if from_playback and fl_official_status(media_type) == False: sleep(1000)
-		else: fl_watched_status_mark(action, media_type, tmdb_id, tvdb_id, season, episode)
+		else: Thread(target=fl_watched_status_mark, args=(action, media_type, tmdb_id, tvdb_id, season, episode)).start()
 		clear_fl_collection_watchlist_data('watchlist', 'tvshow')
 	watched_status_mark(watched_indicators, media_type, tmdb_id, action, season, episode, title)
 	update_hidden_progress(tmdb_id)
