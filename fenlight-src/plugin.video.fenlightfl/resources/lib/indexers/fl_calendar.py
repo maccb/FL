@@ -1,6 +1,7 @@
 
 import sys
 import json
+import time
 from datetime import datetime, timedelta
 from modules import kodi_utils, settings, watched_status as ws
 from apis.flicklist_api import call_flicklist
@@ -31,7 +32,7 @@ def _is_authenticated():
 
 def _format_day_label(date_str, ep_count):
 	"""Format: 'TODAY · 3 episodes' or 'Wed Feb 19 · 5 episodes' """
-	date_obj = datetime.strptime(date_str, '%Y-%m-%d')
+	date_obj = datetime(*(time.strptime(date_str, '%Y-%m-%d')[0:6]))
 	today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 	tomorrow = today + timedelta(days=1)
 	if date_obj.date() == today.date():
@@ -206,7 +207,7 @@ def build_calendar_day(params):
 	target_date = params.get('date', '')
 
 	try:
-		target_dt = datetime.strptime(target_date, '%Y-%m-%d')
+		target_dt = datetime(*(time.strptime(target_date, '%Y-%m-%d')[0:6]))
 		now = datetime.now()
 		diff_days = (now - target_dt).days
 		if diff_days > 0:
@@ -302,7 +303,7 @@ def build_calendar_day(params):
 
 	add_items(handle, items)
 
-	date_obj = datetime.strptime(target_date, '%Y-%m-%d')
+	date_obj = datetime(*(time.strptime(target_date, '%Y-%m-%d')[0:6]))
 	today = datetime.now().date()
 	tomorrow = today + timedelta(days=1)
 	if date_obj.date() == today:

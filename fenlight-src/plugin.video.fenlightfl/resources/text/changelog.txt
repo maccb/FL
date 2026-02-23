@@ -2,6 +2,11 @@
 [I]Built on the shoulders of TikiPeter & AnonyMouse. True legends.[/I]
 
 
+[COLOR dodgerblue][B]Version 2.1.99[/B][/COLOR]
+[B]Needed:[/B]
+- Fixed Calendar sometimes crashing when opened. A date formatting issue that happened randomly depending on Kodi's internal state.
+
+
 [COLOR dodgerblue][B]Version 2.1.98[/B][/COLOR]
 [I]For the ones who scroll back just to see what they missed.[/I]
 [B]Moderate:[/B]
