@@ -1,5 +1,5 @@
 from caches.settings_cache import get_setting, set_setting, default_setting_values
-from modules.kodi_utils import translate_path, get_property
+from modules.kodi_utils import translate_path, get_property, addon_installed
 
 def tmdb_api_key():
 	return get_setting('fenlightfl.tmdb_api', '')
@@ -290,7 +290,10 @@ def results_sort_order():
 			)[int(get_setting('fenlightfl.results.sort_order', '1'))]
 
 def active_internal_scrapers():
-	settings = ['provider.external', 'provider.easynews', 'provider.folders']
+	settings = ['provider.easynews', 'provider.folders']
+	external_module = get_setting('fenlightfl.external_scraper.module', 'empty_setting')
+	if external_module not in ('empty_setting', '') and addon_installed(external_module):
+		settings.append('provider.external')
 	settings_append = settings.append
 	for item in [('rd', 'provider.rd_cloud'), ('pm', 'provider.pm_cloud'), ('ad', 'provider.ad_cloud'), ('tb', 'provider.tb_cloud')]:
 		if enabled_debrids_check(item[0]): settings_append(item[1])

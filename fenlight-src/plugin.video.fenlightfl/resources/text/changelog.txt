@@ -2,6 +2,11 @@
 [I]Built on the shoulders of TikiPeter & AnonyMouse. True legends.[/I]
 
 
+[COLOR dodgerblue][B]Version 2.1.102[/B][/COLOR]
+[B]Needed:[/B]
+- Fixed a few cosmetic details.
+
+
 [COLOR dodgerblue][B]Version 2.1.101[/B][/COLOR]
 [I]For the ones who thought it was working.[/I]
 [B]Critical:[/B]
