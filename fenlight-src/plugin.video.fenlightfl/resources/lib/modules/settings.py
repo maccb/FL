@@ -4,12 +4,6 @@ from modules.kodi_utils import translate_path, get_property, addon_installed
 def tmdb_api_key():
 	return get_setting('fenlightfl.tmdb_api', '')
 
-def fl_client():
-	return flicklist_client_id()
-
-def fl_secret():
-	return ''
-
 def fl_user_active():
 	return flicklist_user_active()
 

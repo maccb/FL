@@ -58,9 +58,8 @@ class FenLightPlayer(xbmc.Player):
 
 	def _local_safety_write(self):
 		try:
-			from caches.base_cache import connect_database
 			from modules.utils import get_datetime
-			dbcon = connect_database('watched_db')
+			dbcon = ws.get_database()
 			db_type = 'movie' if self.media_type == 'movie' else 'episode'
 			resume_point = round(max(float(self.curr_time) - 5, 0) / float(self.total_time) * 100, 1)
 			season = self.season if self.media_type == 'episode' else ''
@@ -106,7 +105,7 @@ class FenLightPlayer(xbmc.Player):
 						self._last_heartbeat_progress = self.current_point
 						try: Thread(target=scrobble_heartbeat, args=(self.media_type, self.tmdb_id, self.current_point, self.curr_time, self.total_time, self.season, self.episode)).start()
 						except: pass
-					if heartbeat_counter % 30 == 0 and self.current_point >= 5:
+					if heartbeat_counter % 30 == 0 and self.current_point >= 5 and not self.media_marked:
 						try: Thread(target=self._local_safety_write).start()
 						except: pass
 					if self.current_point >= 90:

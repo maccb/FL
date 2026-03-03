@@ -291,9 +291,25 @@ def routing(sys):
 		hide_unhide_progress_items(params)
 	elif mode == 'fl_resync':
 		from caches.flicklist_cache import clear_all_fl_cache_data
-		from modules.kodi_utils import notification
-		clear_all_fl_cache_data(silent=True)
-		notification('FlickList resync started')
+		from apis.flicklist_api import fl_sync_activities
+		from modules.kodi_utils import notification, show_busy_dialog, hide_busy_dialog
+		notification('Syncing FlickList...', 2000)
+		show_busy_dialog()
+		try:
+			clear_all_fl_cache_data(silent=True, refresh=False)
+			result = fl_sync_activities(force_update=True)
+		except:
+			result = 'failed'
+		finally:
+			hide_busy_dialog()
+		if result == 'success':
+			notification('FlickList sync complete', 3000)
+		elif result == 'no account':
+			notification('No FlickList account. Authorize first.', 5000)
+		elif result == 'failed':
+			notification('FlickList sync failed. Check connection.', 5000)
+		else:
+			notification('FlickList sync complete', 3000)
 	elif mode == 'open_external_scraper_settings':
 		from modules.kodi_utils import external_scraper_settings
 		external_scraper_settings()

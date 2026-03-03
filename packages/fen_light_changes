@@ -1,3 +1,14 @@
+[COLOR red][B]Version 2.1.103[/B][/COLOR]
+[I]For the ones who press play without thinking twice.[/I]
+[B]Critical:[/B]
+- Fixed movies and episodes asking to resume at 92-100% even after being marked watched. Ghost progress entries from earlier versions are now automatically cleaned up.
+[B]Moderate:[/B]
+- "Resync FlickList" now shows a loading spinner and tells you when it finishes instead of silently running in the background.
+- Calendar login button actually works now. Takes you straight to the authorization screen.
+[B]Needed:[/B]
+- Added "Search Custom Season" option in episode context menus. Useful for shows with alternate season numbering.
+- Better tracking data sent to FlickList when marking items as watched.
+
 [COLOR red][B]Version 2.1.102[/B][/COLOR]
 [B]Needed:[/B]
 - Fixed a few cosmetic details.

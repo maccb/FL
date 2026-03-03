@@ -693,19 +693,18 @@ class Sources():
 		if self.media_type == 'movie': percent = watched_status.get_progress_status_movie(watched_status.get_bookmarks_movie(), str(self.tmdb_id))
 		elif any((self.random, self.random_continual)): return 0.0
 		else: percent = watched_status.get_progress_status_episode(watched_status.get_bookmarks_episode(self.tmdb_id, self.season), self.episode)
-		try:
-			from caches.base_cache import connect_database
-			local_db = connect_database('watched_db')
-			if self.media_type == 'movie':
-				local_row = local_db.execute('SELECT resume_point FROM progress WHERE db_type = ? AND media_id = ?', ('movie', str(self.tmdb_id))).fetchone()
-			else:
-				local_row = local_db.execute('SELECT resume_point FROM progress WHERE db_type = ? AND media_id = ? AND season = ? AND episode = ?',
-					('episode', str(self.tmdb_id), int(self.season), int(self.episode))).fetchone()
-			if local_row:
-				local_pct = str(round(float(local_row[0])))
-				if not percent or float(local_pct) > float(percent): percent = local_pct
-		except: pass
 		if not percent or float(percent) < 3: return 0.0
+		try:
+			watched_db = watched_status.get_database()
+			if self.media_type == 'movie':
+				is_watched = watched_db.execute('SELECT 1 FROM watched WHERE db_type = ? AND media_id = ?', ('movie', str(self.tmdb_id))).fetchone()
+			else:
+				is_watched = watched_db.execute('SELECT 1 FROM watched WHERE db_type = ? AND media_id = ? AND season = ? AND episode = ?',
+					('episode', str(self.tmdb_id), int(self.season), int(self.episode))).fetchone()
+			if is_watched:
+				watched_status.erase_bookmark(self.media_type, self.tmdb_id, self.season, self.episode)
+				return 0.0
+		except: pass
 		action = self.get_resume_status(percent)
 		if action == 'cancel': return None
 		if action == 'start_over':

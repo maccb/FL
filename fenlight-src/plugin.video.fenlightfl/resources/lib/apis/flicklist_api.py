@@ -445,17 +445,20 @@ def fl_recommendations(media_type):
 def _fl_watched_api_call(action, media, media_type, tmdb_id, season, episode):
 	"""Execute the actual API call for watched status. Returns result or None."""
 	if action == 'mark_as_watched':
+		is_bulk = media in ('shows', 'season')
+		svc = {'service': 'kodi_flicklist', 'client_type': 'bulk_mark' if is_bulk else 'manual_mark'}
 		if media == 'episode':
 			data = {'tmdb_id': tmdb_id, 'media_type': media_type}
+			data.update(svc)
 			if season is not None: data['season_number'] = int(season)
 			if episode is not None: data['episode_number'] = int(episode)
 			return call_flicklist('/watched', data=data)
 		elif media == 'shows':
-			return call_flicklist('/watched/batch', data={'tmdb_id': tmdb_id, 'media_type': media_type, 'scope': 'show'})
+			return call_flicklist('/watched/batch', data={'tmdb_id': tmdb_id, 'media_type': media_type, 'scope': 'show', **svc})
 		elif media == 'season':
-			return call_flicklist('/watched/batch', data={'tmdb_id': tmdb_id, 'media_type': media_type, 'scope': 'season', 'season_number': int(season)})
+			return call_flicklist('/watched/batch', data={'tmdb_id': tmdb_id, 'media_type': media_type, 'scope': 'season', 'season_number': int(season), **svc})
 		else:
-			return call_flicklist('/watched', data={'tmdb_id': tmdb_id, 'media_type': media_type})
+			return call_flicklist('/watched', data={'tmdb_id': tmdb_id, 'media_type': media_type, **svc})
 	else:
 		if media == 'episode':
 			delete_data = {'tmdb_id': tmdb_id, 'media_type': media_type, 'scope': 'episode'}
@@ -477,22 +480,17 @@ def _fl_watched_api_call(action, media, media_type, tmdb_id, season, episode):
 def fl_watched_status_mark(action, media, media_id, tvdb_id=0, season=None, episode=None, key='tmdb'):
 	"""Mark media as watched/unwatched on FlickList API.
 	Sends tmdb_id + media_type directly -- server resolves internally.
-	This is best-effort with retry -- local write happens regardless in watched_status.py."""
+	Best-effort with retry -- local write happens regardless in watched_status.py."""
 	try:
 		is_tv = media in ('episode', 'shows', 'season')
 		media_type = 'tv' if is_tv else 'movie'
 		tmdb_id = int(media_id)
-		kodi_utils.logger('###FL###', 'watched_status_mark: %s %s tmdb=%s s=%s e=%s' % (action, media, tmdb_id, season, episode))
 		result = _fl_watched_api_call(action, media, media_type, tmdb_id, season, episode)
 		if result is None:
-			kodi_utils.logger('###FL###', 'watched_status_mark: first attempt failed, retrying in 3s...')
 			kodi_utils.sleep(3000)
 			result = _fl_watched_api_call(action, media, media_type, tmdb_id, season, episode)
-		success = result is not None
-		kodi_utils.logger('###FL###', 'watched_status_mark: API result=%s' % success)
-		return success
-	except Exception as e:
-		kodi_utils.logger('###FL###', 'watched_status_mark ERROR: %s' % str(e))
+		return result is not None
+	except:
 		return False
 
 def fl_progress(action, media, media_id, percent, season=None, episode=None, resume_id=None, refresh_fl=False):
@@ -517,12 +515,6 @@ def fl_progress(action, media, media_id, percent, season=None, episode=None, res
 			fl_sync_activities()
 	except Exception as e:
 		kodi_utils.logger('FlickList progress error', str(e))
-
-def fl_official_status(media_type):
-	"""Always returns True — FlickList handles all scrobbling directly.
-	This function existed in the original addon to check if an external scrobbler was active.
-	Since we ARE the tracker, always return True (meaning: go ahead and track)."""
-	return True
 
 
 def fl_get_hidden_items(list_type):
@@ -857,6 +849,11 @@ def fl_like_a_list(params):
 	kodi_utils.notification('Not available yet', 3000)
 	return False
 
+def fl_unlike_a_list(params):
+	"""FlickList doesn't have list unliking yet — no-op."""
+	kodi_utils.notification('Not available yet', 3000)
+	return False
+
 def fl_search_lists(search_title, page_no):
 	"""FlickList doesn't have public list search yet — return empty."""
 	return []
@@ -877,12 +874,21 @@ def fl_indicators_movies():
 		insert_append(('movie', str(tmdb_id), '', '', watched_at, title))
 	insert_list = []
 	insert_append = insert_list.append
-	data = call_flicklist('/scrobble/history', params={'media_type': 'movie', 'matched_only': 'true', 'per_page': 5000}, with_auth=True)
-	if not data:
-		return
-	items = data.get('results', data.get('items', [])) if isinstance(data, dict) else data
-	threads = list(make_thread_list(_process, items))
-	[i.join() for i in threads]
+	page = 1
+	per_page = 500
+	while True:
+		data = call_flicklist('/scrobble/history', params={'media_type': 'movie', 'matched_only': 'true', 'per_page': per_page, 'page': page}, with_auth=True)
+		if not data:
+			break
+		items = data.get('results', data.get('items', [])) if isinstance(data, dict) else data
+		if not items:
+			break
+		threads = list(make_thread_list(_process, items))
+		[i.join() for i in threads]
+		total_pages = data.get('total_pages', 1) if isinstance(data, dict) else 1
+		if page >= total_pages:
+			break
+		page += 1
 	flicklist_cache.fl_watched_cache.set_bulk_movie_watched(insert_list)
 
 def fl_indicators_tv():
@@ -900,7 +906,7 @@ def fl_indicators_tv():
 	insert_list = []
 	insert_append = insert_list.append
 	page = 1
-	per_page = 5000
+	per_page = 500
 	while True:
 		data = call_flicklist('/scrobble/history', params={'media_type': 'tv', 'matched_only': 'true', 'per_page': per_page, 'page': page}, with_auth=True)
 		if not data:

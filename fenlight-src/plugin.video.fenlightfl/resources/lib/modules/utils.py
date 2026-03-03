@@ -341,19 +341,6 @@ def make_qrcode(url):
 	except: return
 	return art_path
 
-def make_tinyurl(url):
-	import requests
-	short_url = ''
-	try:
-		tiny_url = 'http://tinyurl.com/api-create.php'
-		response = requests.get(tiny_url, params={'url': url})
-		status = response.status_code
-		if status == 200:
-			short_url = response.text
-		else: pass
-	except: pass
-	return short_url
-
 def copy2clip(txt):
 	if sys.platform == "win32":
 		try:
