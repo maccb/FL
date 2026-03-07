@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
 from caches.settings_cache import get_setting, set_setting, default_setting_values
 from modules.kodi_utils import translate_path, get_property, addon_installed
+# from modules.kodi_utils import logger
 
 def tmdb_api_key():
 	return get_setting('fenlightfl.tmdb_api', '')
@@ -134,6 +136,9 @@ def autoscrape_next_episode():
 	if not auto_play('episode') and get_setting('fenlightfl.autoscrape_next_episode', 'false') == 'true': return True
 	else: return False
 
+def autoscrape_confirm():
+	return get_setting('fenlightfl.autoscrape_confirm', 'false') == 'true'
+
 def auto_rescrape_cache_ignored():
 	return int(get_setting('fenlightfl.results.auto_rescrape_cache_ignored', '1'))
 
@@ -218,6 +223,9 @@ def easynews_playback_method(query):
 	setting = queries[query]()
 	return setting
 
+def easynews_playback_method_retries():
+	return int(get_setting('fenlightfl.easynews.playback_method_retries', '1')) + 1
+
 def easynews_authorized():
 	easynews_user = get_setting('fenlightfl.easynews_user', 'empty_setting')
 	easynews_password = get_setting('fenlightfl.easynews_password', 'empty_setting')
@@ -256,8 +264,8 @@ def external_scraper_info():
 	if module in ('empty_setting', ''): return None, ''
 	return module, module.split('.')[-1]
 
-def external_filter_sources():
-	return get_setting('fenlightfl.external.filter_sources', 'true') == 'true'
+def uncached_min_seeders():
+	return int(get_setting('fenlightfl.results.uncached_min_seeders', '0'))
 
 def filter_by_name(scraper):
 	if get_property('fs_filterless_search') == 'true': return False
@@ -275,12 +283,12 @@ def size_sort_weighted():
 def results_sort_order():
 	sort_direction = -1 if get_setting('fenlightfl.results.size_sort_direction') == '0' else 1
 	return (
-			lambda k: (k['quality_rank'], k['provider_rank'], sort_direction*k['size_rank']),
-			lambda k: (k['quality_rank'], sort_direction*k['size_rank'], k['provider_rank']),
-			lambda k: (k['provider_rank'], k['quality_rank'], sort_direction*k['size_rank']),
-			lambda k: (k['provider_rank'], sort_direction*k['size_rank'], k['quality_rank']),
-			lambda k: (sort_direction*k['size_rank'], k['quality_rank'], k['provider_rank']),
-			lambda k: (sort_direction*k['size_rank'], k['provider_rank'], k['quality_rank'])
+			lambda k: (k['quality_rank'], k['provider_rank'], sort_direction*k['size_rank']), #Quality, Provider, Size
+			lambda k: (k['quality_rank'], sort_direction*k['size_rank'], k['provider_rank']), #Quality, Size, Provider
+			lambda k: (k['provider_rank'], k['quality_rank'], sort_direction*k['size_rank']), #Provider, Quality, Size
+			lambda k: (k['provider_rank'], sort_direction*k['size_rank'], k['quality_rank']), #Provider, Size, Quality
+			lambda k: (sort_direction*k['size_rank'], k['quality_rank'], k['provider_rank']), #Size, Quality, Provider
+			lambda k: (sort_direction*k['size_rank'], k['provider_rank'], k['quality_rank'])  #Size, Provider, Quality
 			)[int(get_setting('fenlightfl.results.sort_order', '1'))]
 
 def active_internal_scrapers():

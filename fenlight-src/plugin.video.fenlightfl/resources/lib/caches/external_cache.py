@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 from caches.base_cache import connect_database, get_timestamp
+# from modules.kodi_utils import logger
 
 class ExternalCache(object):
 	def get(self, source, media_type, tmdb_id, title, year, season, episode):

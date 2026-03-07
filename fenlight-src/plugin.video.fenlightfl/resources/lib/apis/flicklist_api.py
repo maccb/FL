@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-FlickList API Client — Drop-in replacement for fl_api.py
+FlickList API Client - Drop-in replacement for fl_api.py
 
 All function signatures match fl_api.py for seamless import swap.
 Internally calls FlickList API instead of the original API.
@@ -20,10 +21,15 @@ from modules import kodi_utils, settings
 from modules.metadata import movie_meta_external_id, tvshow_meta_external_id
 from modules.utils import sort_list, sort_for_article, get_datetime, timedelta, replace_html_codes, copy2clip, make_qrcode, \
 							make_thread_list, jsondate_to_datetime as js2date
+# logger = kodi_utils.logger
 
-API_BASE = 'https://beta.flicklist.tv/api'
+API_BASE = 'https://flicklist.tv/api'
 FLICKLIST_CLIENT_ID = 'flicklist_kodi_addon'
 
+#
+# ── Response transformers ────────────────────────────────────────────────
+# makes the api responses work with the existing kodi list builders
+#
 
 def _to_fl_movie(item):
 	"""Transform a FlickList MediaCard to standard movie dict."""
@@ -83,6 +89,9 @@ def _media_to_fl_list(data, media_type='movie'):
 		return [_to_fl_media(i) for i in items], page_count
 	return [_to_fl_movie(i) for i in items], page_count
 
+#
+# ── Core HTTP client ─────────────────────────────────────────────────────
+#
 
 def call_flicklist(path, params=None, data=None, is_delete=False, with_auth=True, method=None, pagination=False, page_no=1):
 	"""Make an HTTP request to the FlickList API."""
@@ -121,7 +130,7 @@ def call_flicklist(path, params=None, data=None, is_delete=False, with_auth=True
 			return (None, page_no)
 		return None
 	if resp.status_code == 401:
-		kodi_utils.logger('FlickList', 'Unauthorized — token may be expired')
+		kodi_utils.logger('FlickList', 'Unauthorized - token may be expired')
 		if pagination:
 			return (None, page_no)
 		return None
@@ -164,6 +173,9 @@ def get_fl(params):
 		return result
 	return result
 
+#
+# ── Authentication ───────────────────────────────────────────────────────
+#
 
 def fl_get_device_code():
 	"""Request a device authorization code from FlickList."""
@@ -178,7 +190,7 @@ def fl_get_device_token(device_codes):
 		expires_in = device_codes.get('expires_in', 900)
 		sleep_interval = device_codes.get('interval', 5)
 		user_code = str(device_codes.get('user_code', ''))
-		verification_uri = 'https://beta.flicklist.tv/link'
+		verification_uri = 'https://flicklist.tv/link'
 		auth_url = '%s?code=%s' % (verification_uri, user_code)
 		qr_code = make_qrcode(auth_url) or ''
 		copy2clip(auth_url)
@@ -225,7 +237,7 @@ def fl_refresh_token():
 			return
 		response = call_flicklist('/auth/me', with_auth=True)
 		if response is None:
-			kodi_utils.logger('FlickList', 'Token validation failed — may need re-auth')
+			kodi_utils.logger('FlickList', 'Token validation failed - may need re-auth')
 	except:
 		pass
 
@@ -233,7 +245,7 @@ def fl_authenticate(dummy=''):
 	"""Run the full FlickList device authorization flow."""
 	code = fl_get_device_code()
 	if not code:
-		kodi_utils.notification('FlickList Error — Could not get device code', 3000)
+		kodi_utils.notification('FlickList Error - Could not get device code', 3000)
 		return False
 	token = fl_get_device_token(code)
 	if token:
@@ -261,6 +273,9 @@ def fl_revoke_authentication(dummy=''):
 	flicklist_cache.clear_all_fl_cache_data(silent=True, refresh=False)
 	kodi_utils.notification('FlickList Account Authorization Reset', 3000)
 
+#
+# ── Discovery: Movies ────────────────────────────────────────────────────
+#
 
 def fl_movies_related(imdb_id):
 	def _process(params):
@@ -311,6 +326,9 @@ def fl_movies_most_favorited(page_no):
 	string = 'fl_movies_most_favorited%s' % page_no
 	return lists_cache_object(_process, string, {})
 
+#
+# ── Discovery: TV Shows ──────────────────────────────────────────────────
+#
 
 def fl_tv_related(imdb_id):
 	def _process(params):
@@ -375,6 +393,9 @@ def fl_tv_search(query, page_no):
 	string = 'fl_tv_search_%s_%s' % (query, page_no)
 	return cache_object(_process, string, 'dummy_arg', False, 24)
 
+#
+# ── Discovery: Anime ─────────────────────────────────────────────────────
+#
 
 def fl_anime_trending(page_no):
 	def _process(params):
@@ -430,6 +451,9 @@ def fl_anime_search(query, page_no):
 	string = 'fl_anime_search_%s_%s' % (query, page_no)
 	return cache_object(_process, string, 'dummy_arg', False, 24)
 
+#
+# ── Recommendations ──────────────────────────────────────────────────────
+#
 
 def fl_recommendations(media_type):
 	def _process(params):
@@ -441,6 +465,10 @@ def fl_recommendations(media_type):
 	string = 'fl_recommendations_%s' % media_type
 	return flicklist_cache.cache_fl_object(_process, string, {})
 
+#
+#
+# ── Watched Status ───────────────────────────────────────────────────────
+#
 
 def _fl_watched_api_call(action, media, media_type, tmdb_id, season, episode):
 	"""Execute the actual API call for watched status. Returns result or None."""
@@ -516,10 +544,14 @@ def fl_progress(action, media, media_id, percent, season=None, episode=None, res
 	except Exception as e:
 		kodi_utils.logger('FlickList progress error', str(e))
 
+#
+# ── Hidden Items ─────────────────────────────────────────────────────────
+#
 
 def fl_get_hidden_items(list_type):
 	"""Get hidden/dropped items from FlickList up-next."""
 	try:
+		# FlickList uses the up-next/drop system
 		data = call_flicklist('/up-next', params={'include_dropped': 'true'}, with_auth=True)
 		if data and isinstance(data, list):
 			dropped = [item.get('tmdb_id') for item in data if item.get('dropped', False)]
@@ -541,6 +573,9 @@ def hide_unhide_progress_items(params):
 	fl_sync_activities()
 	kodi_utils.kodi_refresh()
 
+#
+# ── Collection & Watchlist ───────────────────────────────────────────────
+#
 
 def fl_collection_lists(media_type, list_type=None):
 	"""FlickList watchlist with status=watching serves as 'collection'."""
@@ -621,6 +656,7 @@ def fl_fetch_collection_watchlist(list_type, media_type):
 
 def add_to_list(user, slug, data):
 	"""Add media to a FlickList user list."""
+	# Extract TMDB IDs from legacy-format data
 	items = []
 	for key in ('movies', 'shows'):
 		media_type = 'movie' if key == 'movies' else 'tv'
@@ -630,6 +666,7 @@ def add_to_list(user, slug, data):
 				items.append({'tmdb_id': int(tmdb_id), 'media_type': media_type})
 	if not items:
 		return kodi_utils.notification('Error', 3000)
+	# slug is the list_id in FlickList
 	for item in items:
 		result = call_flicklist('/user/lists/%s/items' % slug, data=item)
 	kodi_utils.notification('Success', 3000)
@@ -679,12 +716,15 @@ def remove_from_watchlist(data):
 		kodi_utils.kodi_refresh()
 
 def add_to_collection(data):
-	"""FlickList doesn't have a separate collection — map to watchlist with status=watching."""
+	"""FlickList doesn't have a separate collection - map to watchlist with status=watching."""
 	return add_to_watchlist(data)
 
 def remove_from_collection(data):
 	return remove_from_watchlist(data)
 
+#
+# ── User Lists ───────────────────────────────────────────────────────────
+#
 
 def fl_favorites(media_type, dummy_arg):
 	def _process(params):
@@ -711,6 +751,7 @@ def fl_favorites(media_type, dummy_arg):
 def fl_get_lists(list_type, page_no='1'):
 	"""Get user's FlickList lists."""
 	if list_type in ('trending', 'popular'):
+		# no public list browsing
 		return []
 	else:
 		def _process(params):
@@ -810,7 +851,7 @@ def get_fl_list_selection(included_lists):
 		_lists.sort(key=lambda k: k['name'])
 		return _lists
 	def liked_lists():
-		return []
+		return []  # not supported
 	list_dict = {'default': default_lists, 'personal': personal_lists, 'liked': liked_lists}
 	used_lists = []
 	for list_type in included_lists:
@@ -845,23 +886,26 @@ def delete_fl_list(params):
 	kodi_utils.kodi_refresh()
 
 def fl_like_a_list(params):
-	"""FlickList doesn't have list liking yet — no-op."""
+	"""FlickList doesn't have list liking yet - no-op."""
 	kodi_utils.notification('Not available yet', 3000)
 	return False
 
 def fl_unlike_a_list(params):
-	"""FlickList doesn't have list unliking yet — no-op."""
+	"""FlickList doesn't have list unliking yet - no-op."""
 	kodi_utils.notification('Not available yet', 3000)
 	return False
 
 def fl_search_lists(search_title, page_no):
-	"""FlickList doesn't have public list search yet — return empty."""
+	"""FlickList doesn't have public list search yet - return empty."""
 	return []
 
 def fl_lists_with_media(media_type, imdb_id):
-	"""FlickList doesn't have 'lists containing this media' yet — return empty."""
+	"""FlickList doesn't have 'lists containing this media' yet - return empty."""
 	return []
 
+#
+# ── Indicators (Watched Status Sync) ─────────────────────────────────────
+#
 
 def fl_indicators_movies():
 	"""Fetch watched movies from FlickList and store in local cache."""
@@ -922,14 +966,18 @@ def fl_indicators_tv():
 		page += 1
 	flicklist_cache.fl_watched_cache.set_bulk_tvshow_watched(insert_list)
 
+#
+# ── Playback Progress ────────────────────────────────────────────────────
+#
 
 def fl_playback_progress():
 	"""Get in-progress items from FlickList.
 	Merges two sources:
-	  1. /sync/playback — actual resume points from active scrobble sessions
-	  2. /up-next — shows with watch progress (next episode to watch)
+	  1. /sync/playback - actual resume points from active scrobble sessions
+	  2. /up-next - shows with watch progress (next episode to watch)
 	"""
 	results = []
+	# 1. Resume points from scrobble sessions (episodes paused mid-watch)
 	data = call_flicklist('/sync/playback', with_auth=True)
 	if data:
 		items = data if isinstance(data, list) else data.get('results', data.get('items', []))
@@ -956,6 +1004,8 @@ def fl_playback_progress():
 					'number': item.get('episode_number', item.get('episode', 0))
 				}
 			results.append(progress_item)
+	# 2. up-next episodes, shows with watch history (next unwatched episode)
+	# Limit to 40 most recent to avoid flooding with stale/incomplete shows
 	try:
 		up_next = call_flicklist('/up-next', params={'limit': 40}, with_auth=True)
 	except:
@@ -963,6 +1013,7 @@ def fl_playback_progress():
 	if up_next:
 		up_items = up_next.get('items', up_next) if isinstance(up_next, dict) else up_next
 		if isinstance(up_items, list):
+			# Track tmdb_ids already present from resume points to avoid duplicates
 			existing_tmdb = set()
 			for r in results:
 				if r.get('type') == 'episode' and 'show' in r:
@@ -1040,12 +1091,16 @@ def fl_progress_tv(progress_info):
 	insert_list = list(_process())
 	flicklist_cache.fl_watched_cache.set_bulk_tvshow_progress(insert_list)
 
+#
+# ── Calendar ─────────────────────────────────────────────────────────────
+#
 
 def fl_get_my_calendar(recently_aired, current_date):
 	def _process(dummy):
 		data = call_flicklist('/calendar/my/shows/%s/%s' % (start, finish), with_auth=True)
 		if not data:
 			return []
+		# API returns {days: [{date, items: [...CalendarEpisode]}]}
 		days = data.get('days', []) if isinstance(data, dict) else []
 		results = []
 		for day in days:
@@ -1080,11 +1135,17 @@ def fl_calendar_days(recently_aired, current_date):
 		finish = str(previous_days + future_days)
 	return start, finish
 
+#
+# ── Comments ─────────────────────────────────────────────────────────────
+#
 
 def fl_comments(media_type, imdb_id):
-	"""FlickList doesn't have comments yet — return empty."""
+	"""FlickList doesn't have comments yet - return empty."""
 	return []
 
+#
+# ── Scrobble Events ─────────────────────────────────────────────────────
+#
 
 def scrobble_start(media_type, tmdb_id, season=None, episode=None, duration=None):
 	"""Notify FlickList that playback has started."""
@@ -1165,6 +1226,9 @@ def scrobble_heartbeat(media_type, tmdb_id, progress, current_time=None, duratio
 	except:
 		pass
 
+#
+# ── Sync Activities ──────────────────────────────────────────────────────
+#
 
 def fl_get_activity():
 	"""Get last activity timestamps from FlickList."""
@@ -1181,7 +1245,8 @@ def fl_sync_activities(force_update=False):
 	def _get_timestamp(date_time):
 		return int(time.mktime(date_time.timetuple()))
 	def _parse_ts(ts_string):
-		"""Parse ISO 8601 timestamp — handles both with and without fractional seconds."""
+		"""Parse ISO 8601 timestamp - handles both with and without fractional seconds."""
+		# Normalize +00:00 timezone suffix to Z for consistent parsing
 		if ts_string and ts_string.endswith('+00:00'):
 			ts_string = ts_string.replace('+00:00', 'Z')
 		for fmt in ('%Y-%m-%dT%H:%M:%S.%fZ', '%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%dT%H:%M:%S.%f', '%Y-%m-%dT%H:%M:%S'):
@@ -1202,6 +1267,7 @@ def fl_sync_activities(force_update=False):
 		return result
 	def _check_daily_expiry():
 		return int(time.time()) >= int(get_setting('fenlightfl.flicklist.next_daily_clear', '0'))
+	# Token check
 	fl_refresh_token()
 	if force_update:
 		flicklist_cache.clear_all_fl_cache_data(silent=True, refresh=False)
@@ -1222,6 +1288,7 @@ def fl_sync_activities(force_update=False):
 	if force_update:
 		refresh_movies_progress = True
 		refresh_shows_progress = True
+	# compare timestamps to see what changed since last sync
 	cached_movies = cached.get('movies', {})
 	latest_movies = latest.get('movies', {})
 	cached_shows = cached.get('shows', {})
@@ -1230,6 +1297,7 @@ def fl_sync_activities(force_update=False):
 	latest_episodes = latest.get('episodes', {})
 	cached_lists = cached.get('lists', {})
 	latest_lists = latest.get('lists', {})
+	# favorites
 	latest_fav = latest.get('favorites', fallback_date)
 	if isinstance(latest_fav, dict):
 		latest_fav = latest_fav.get('updated_at', fallback_date)
@@ -1238,11 +1306,13 @@ def fl_sync_activities(force_update=False):
 		cached_fav = cached_fav.get('updated_at', fallback_date)
 	if _compare(latest_fav, cached_fav):
 		flicklist_cache.clear_fl_favorites()
+	# watchlist (covers both movies and tv)
 	if _compare(latest_shows.get('watchlisted_at', fallback_date), cached_shows.get('watchlisted_at', fallback_date)):
 		flicklist_cache.clear_fl_collection_watchlist_data('collection', 'movie')
 		flicklist_cache.clear_fl_collection_watchlist_data('collection', 'tvshow')
 		flicklist_cache.clear_fl_collection_watchlist_data('watchlist', 'movie')
 		flicklist_cache.clear_fl_collection_watchlist_data('watchlist', 'tvshow')
+	# Watched indicators
 	if _compare(latest_movies.get('watched_at', fallback_date), cached_movies.get('watched_at', fallback_date)):
 		clear_properties('movie')
 		fl_indicators_movies()
@@ -1250,6 +1320,7 @@ def fl_sync_activities(force_update=False):
 		clear_properties('episode')
 		fl_indicators_tv()
 		refresh_shows_progress = True
+	# Playback progress
 	if _compare(latest_movies.get('paused_at', fallback_date), cached_movies.get('paused_at', fallback_date)):
 		refresh_movies_progress = True
 	if _compare(latest_episodes.get('paused_at', fallback_date), cached_episodes.get('paused_at', fallback_date)):
@@ -1262,6 +1333,7 @@ def fl_sync_activities(force_update=False):
 		if refresh_shows_progress:
 			clear_properties('episode')
 			fl_progress_tv(progress_info)
+	# Lists
 	if _compare(latest_lists.get('updated_at', fallback_date), cached_lists.get('updated_at', fallback_date)):
 		lists_actions.append('my_lists')
 		lists_actions.append('liked_lists')
@@ -1271,6 +1343,9 @@ def fl_sync_activities(force_update=False):
 			flicklist_cache.clear_fl_list_contents_data(item)
 	return 'success'
 
+#
+# ── ID Helpers ───────────────────────────────────────────────────────────
+#
 
 def get_fl_movie_id(item):
 	if item.get('tmdb'):

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import xbmcgui
 import re
 import json
@@ -6,6 +7,7 @@ from xml.dom.minidom import parse as mdParse
 from modules import kodi_utils
 from caches.settings_cache import get_setting, set_setting, restore_setting_default
 from modules.utils import manual_function_import
+# logger = kodi_utils.logger
 
 def open_window(import_info, skin_xml, **kwargs):
 	'''
@@ -114,7 +116,8 @@ def window_player(obj):
 	try:
 		window_player_url = obj.window_player_url
 		if 'plugin.video.youtube' in window_player_url:
-			if not kodi_utils.addon_installed('plugin.video.youtube') or not kodi_utils.addon_enabled('plugin.video.youtube'): return
+			if not kodi_utils.addon_installed('plugin.video.youtube') or not kodi_utils.addon_enabled('plugin.video.youtube'):
+				return kodi_utils.notification('Youtube Plugin needed for playback')
 		kodi_utils.clear_property('fenlightfl.window_loaded')
 		current_params = obj.current_params
 		player = kodi_utils.kodi_player()

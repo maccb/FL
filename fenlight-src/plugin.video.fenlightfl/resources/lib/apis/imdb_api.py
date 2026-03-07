@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re
 import json
 import requests
@@ -7,6 +8,7 @@ from caches.settings_cache import get_setting
 from modules.dom_parser import parseDOM
 from modules.kodi_utils import sleep
 from modules.utils import remove_accents, replace_html_codes, normalize
+# from modules.kodi_utils import logger
 
 def imdb_more_like_this(imdb_id):
 	url = 'https://www.imdb.com/title/%s' % imdb_id
@@ -72,12 +74,13 @@ def get_imdb(params):
 					if _id.replace('tt','').isnumeric(): yield (_id)
 				except: pass
 		try:
-			result = requests.get(url, timeout=20, headers=headers).text
+			result = requests.get(url, timeout=20, headers=headers)#.text
+			result = result.text
 			result = result.split('<span>Storyline</span>')[0].split('<span>More like this</span>')[1]
 			items = str(result).split('poster-card__title--clickable" aria-label="')
 		except: items = []
 		imdb_list = list(_process())
-		imdb_list = [i for n, i in enumerate(imdb_list) if i not in imdb_list[n + 1:]]
+		imdb_list = [i for n, i in enumerate(imdb_list) if i not in imdb_list[n + 1:]] # remove duplicates
 	if action in ('imdb_trivia', 'imdb_blunders'):
 		def _process():
 			for count, item in enumerate(items, 1):

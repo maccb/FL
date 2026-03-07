@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
+import json
 import sys
 from modules.metadata import tvshow_meta
 from modules.utils import get_datetime, get_current_timestamp, paginate_list, TaskPool, manual_function_import
 from modules import kodi_utils, settings, watched_status
+# logger = kodi_utils.logger
 
 class TVShows:
 	main = ('tmdb_tv_popular', 'tmdb_tv_popular_today', 'tmdb_tv_premieres', 'tmdb_tv_airing_today','tmdb_tv_on_the_air', 'tmdb_tv_upcoming',
@@ -193,6 +196,8 @@ class TVShows:
 										'name': 'More Like This based on %s' % title, 'is_external': self.is_external})
 			browse_similar_params = self.build_url({'mode': 'build_tvshow_list', 'action': 'ai_similar', 'is_external': self.is_external,
 										'key_id': 'tvshow|%s' % tmdb_id, 'name': 'Similar based on %s' % title})
+			browse_in_fl_list_params = self.build_url({'mode': 'fl.list.in_fl_lists', 'media_type': 'tvshow', 'imdb_id': imdb_id, 'is_external': self.is_external,
+										'category_name': '%s In FL Lists' % title})
 			fl_manager_params = self.build_url({'mode': 'fl_manager_choice', 'tmdb_id': tmdb_id, 'imdb_id': imdb_id, 'tvdb_id': tvdb_id, 'media_type': 'tvshow', 'icon': poster})
 			personal_manager_params = self.build_url({'mode': 'personallists_manager_choice', 'list_type': 'tvshow', 'tmdb_id': tmdb_id, 'title': title,
 										'premiered': premiered, 'current_time': self.current_time, 'icon': poster})
@@ -211,11 +216,7 @@ class TVShows:
 			cm_append(['related', ('[B]Browse Related[/B]', self.window_command % browse_related_params)])
 			cm_append(['more_like_this', ('[B]Browse More Like This[/B]', self.window_command % browse_more_like_this_params)])
 			cm_append(['similar', ('[B]Browse Similar[/B]', self.window_command % browse_similar_params)])
-			if imdb_id:
-				browse_in_fl_list_params = self.build_url({'mode': 'fl.list.in_fl_lists', 'media_type': 'tvshow', 'imdb_id': imdb_id, 'is_external': self.is_external,
-											'category_name': '%s In FL Lists' % title})
-				cm_append(['in_fl_list', ('[B]In FL Lists[/B]', self.window_command % browse_in_fl_list_params)])
-			else: browse_in_fl_list_params = ''
+			cm_append(['in_fl_list', ('[B]In FL Lists[/B]', self.window_command % browse_in_fl_list_params)])
 			cm_append(['fl_manager', ('[B]FL Lists Manager[/B]', 'RunPlugin(%s)' % fl_manager_params)])
 			cm_append(['personal_manager', ('[B]Personal Lists Manager[/B]', 'RunPlugin(%s)' % personal_manager_params)])
 			cm_append(['tmdb_manager', ('[B]TMDb Lists Manager[/B]', 'RunPlugin(%s)' % tmdb_manager_params)])

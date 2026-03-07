@@ -1,13 +1,15 @@
+# -*- coding: utf-8 -*-
 from caches.base_cache import connect_database
 from modules.kodi_utils import get_property, set_property, clear_property
+# from modules.kodi_utils import logger
 
 class NavigatorCache:
 	root_list = [
 	{'name': 'Movies', 'mode': 'navigator.main', 'action': 'MovieList', 'iconImage': 'movies'},
 	{'name': 'TV Shows', 'mode': 'navigator.main', 'action': 'TVShowList', 'iconImage': 'tv'},
 	{'name': 'Anime', 'mode': 'navigator.main', 'action': 'AnimeList', 'iconImage': 'anime'},
-	{'name': 'Calendar [I](Coming Soon)[/I]', 'mode': 'fl_calendar.build_calendar_days', 'iconImage': 'calender'},
-	{'name': 'Jump Back In [I](Coming Soon)[/I]', 'mode': 'navigator.jump_back_in', 'iconImage': 'player'},
+	{'name': 'Calendar', 'mode': 'fl_calendar.build_calendar_days', 'iconImage': 'calender'},
+	{'name': 'Jump Back In', 'mode': 'navigator.jump_back_in', 'iconImage': 'player'},
 	{'name': 'Search', 'mode': 'navigator.search', 'iconImage': 'search'},
 	{'name': 'People', 'mode': 'navigator.people', 'iconImage': 'empty_person'},
 	{'name': 'Discover', 'mode': 'navigator.discover', 'iconImage': 'discover'},

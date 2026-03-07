@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
 from windows.base_window import BaseDialog
 from modules.meta_lists import color_palette
 from modules.kodi_utils import kodi_dialog, ok_dialog
+# from modules.kodi_utils import logger
 
 class SelectColor(BaseDialog):
 	def __init__(self, *args, **kwargs):

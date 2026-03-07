@@ -1,3 +1,9 @@
+#
+# Copyright (c) 2016 - 2024 -- Lars Heuer
+# All rights reserved.
+#
+# License: BSD License
+#
 """\
 QR Code and Micro QR Code implementation.
 
@@ -19,6 +25,7 @@ def make(content, error=None, version=None, mode=None, mask=None, encoding=None,
          eci=False, micro=None, boost_error=True):
     return QRCode(encoder.encode(content, error, version, mode, mask, encoding,
                                  eci, micro, boost_error=boost_error))
+
 
 
 class QRCode:
@@ -75,7 +82,7 @@ class QRCode:
         return iterfn(self.matrix, self._matrix_size, scale, border)
 
     def show(self, delete_after=20, scale=10, border=None, dark='#000',
-             light='#fff'):
+             light='#fff'):  # pragma: no cover
         import os
         import time
         import tempfile
@@ -122,7 +129,7 @@ class QRCode:
     def terminal(self, out=None, border=None, compact=False):
         if compact:
             writers.write_terminal_compact(self.matrix, self._matrix_size, out or sys.stdout, border)
-        elif out is None and sys.platform == 'win32':
+        elif out is None and sys.platform == 'win32':  # pragma: no cover
             try:
                 writers.write_terminal_win(self.matrix, self._matrix_size, border)
             except OSError:
@@ -158,13 +165,13 @@ class QRCodeSequence(tuple):
             qrcode.terminal(out=out, border=border, compact=compact)
 
     def save(self, out, kind=None, **kw):
-        filename = lambda o, n: o
+        filename = lambda o, n: o  # noqa: E731
         m = len(self)
         if m > 1 and isinstance(out, str):
             dot_idx = out.rfind('.')
             if dot_idx > -1:
                 out = out[:dot_idx] + '-{0:02d}-{1:02d}' + out[dot_idx:]
-                filename = lambda o, n: o.format(m, n)
+                filename = lambda o, n: o.format(m, n)  # noqa: E731
         for n, qrcode in enumerate(self, start=1):
             qrcode.save(filename(out, n), kind=kind, **kw)
 

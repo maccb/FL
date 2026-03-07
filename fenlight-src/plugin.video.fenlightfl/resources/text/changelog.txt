@@ -2,6 +2,17 @@
 [I]Built on the shoulders of TikiPeter & AnonyMouse. True legends.[/I]
 
 
+[COLOR dodgerblue][B]Version 2.1.104[/B][/COLOR]
+[I]Spring cleaning came early.[/I]
+[B]Critical:[/B]
+- Fixed items asking to resume at weird percentages after being fully watched. Old stale data is cleaned up automatically.
+[B]Moderate:[/B]
+- Synced with Fen Light AM v2.1.86. Thanks AnonyMouse.
+- Resync now shows a spinner and tells you when it finishes.
+- Calendar login link works now.
+[B]Needed:[/B]
+- Minor fixes and cleanup.
+
 [COLOR dodgerblue][B]Version 2.1.103[/B][/COLOR]
 [I]For the ones who press play without thinking twice.[/I]
 [B]Critical:[/B]

@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
 import sys
 from modules import kodi_utils, settings, watched_status as ws
 from modules.metadata import tvshow_meta, episodes_meta, all_episodes_meta
 from modules.utils import jsondate_to_datetime, adjust_premiered_date, make_day, get_datetime, get_current_timestamp, title_key, date_difference, TaskPool
+# logger = kodi_utils.logger
 
 def build_episode_list(params):
 	def _process():
@@ -44,7 +46,7 @@ def build_episode_list(params):
 				cm_append(['extras', ('[B]Extras[/B]', 'RunPlugin(%s)' % extras_params)])
 				cm_append(['options', ('[B]Options[/B]', 'RunPlugin(%s)' % options_params)])
 				cm_append(['playback_options', ('[B]Play Options[/B]', 'RunPlugin(%s)' % playback_options_params)])
-				if not unaired and not season_special and season:
+				if not season_special and season:
 					custom_season_params = build_url({'mode': 'custom_season_search_choice', 'media_type': 'episode', 'tmdb_id': tmdb_id,
 												'season': season, 'episode': episode, 'episode_id': episode_id, 'playcount': playcount})
 					cm_append(['playback_options', ('[B]Search Custom Season[/B]', 'RunPlugin(%s)' % custom_season_params)])

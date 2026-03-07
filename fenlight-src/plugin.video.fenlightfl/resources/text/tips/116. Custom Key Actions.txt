@@ -18,7 +18,7 @@ custom_key.favorites_manager
 
 Your command in the keymap would look like this:
 
-RunPlugin(plugin://plugin.video.fenlight/?mode=[CHOSEN OPTION FROM ABOVE])
+RunPlugin(plugin://plugin.video.fenlightfl/?mode=[CHOSEN OPTION FROM ABOVE])
 
 You replace [CHOSEN OPTION FROM ABOVE] with your chosen mode from above.
 

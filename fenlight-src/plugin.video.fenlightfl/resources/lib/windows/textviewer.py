@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from windows.base_window import BaseDialog
 from modules.kodi_utils import logger
 

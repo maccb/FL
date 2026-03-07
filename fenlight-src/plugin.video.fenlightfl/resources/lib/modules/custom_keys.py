@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
 from urllib.parse import parse_qsl
 from modules.kodi_utils import get_infolabel, activate_window, container_update, hide_busy_dialog
 from indexers import dialogs
+# from modules.kodi_utils import logger
 
 def extras_menu():
 	params = get_params('extras_params')
@@ -22,6 +24,12 @@ def browse_movie_set():
 
 def browse_recommended():
 	params = get_params('browse_recommended_params')
+	if params:
+		window_function = activate_window if params['is_external'] in (True, 'True', 'true') else container_update
+		return window_function(params)
+
+def browse_related():
+	params = get_params('browse_related_params')
 	if params:
 		window_function = activate_window if params['is_external'] in (True, 'True', 'true') else container_update
 		return window_function(params)

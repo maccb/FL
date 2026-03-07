@@ -7,7 +7,7 @@ Random folders will take their contents and select a random movie, tvshow, seaso
 
 This means if you use a random shortcut folder as a widget, you will see random content in that widget from the list of items in the Random Folder every time that widget is refreshed.
 
-If you also wish to have the widget show the correct label for the currently displaying content, then simply name the widget $INFO[Window.Property(fenlight.[NAME OF SHORTCUT FOLDER])], replacing [NAME OF SHORTCUT FOLDER] with the name of the shortcut folder you are making a widget with.
+If you also wish to have the widget show the correct label for the currently displaying content, then simply name the widget $INFO[Window.Property(fenlightfl.[NAME OF SHORTCUT FOLDER])], replacing [NAME OF SHORTCUT FOLDER] with the name of the shortcut folder you are making a widget with.
 
 Now you will have a random widget based on the contents of the Shortcut Folder you have used.
 

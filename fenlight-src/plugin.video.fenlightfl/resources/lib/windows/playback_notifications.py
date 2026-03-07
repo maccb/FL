@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
 import time
 from modules.kodi_utils import addon_fanart
 from windows.base_window import BaseDialog
 from modules.settings import avoid_episode_spoilers
+# from modules.kodi_utils import logger
 
 class NextEpisode(BaseDialog):
 	episode_status_dict = {
@@ -84,6 +86,7 @@ class StillWatching(BaseDialog):
 		self.closed = False
 		self.selected = False
 		self.meta = kwargs.get('meta')
+		self.check_text = kwargs.get('check_text')
 		self.set_properties()
 
 	def onInit(self):
@@ -112,7 +115,7 @@ class StillWatching(BaseDialog):
 		self.setProperty('mode', 'still_watching')
 		self.setProperty('thumb', landscape or fanart)
 		if not landscape: self.setProperty('clearlogo', clearlogo)
-		self.setProperty('episode_label', 'Are you still watching [B]%s[/B]' % self.meta['title'])
+		self.setProperty('episode_label', self.check_text % self.meta['title'])
 
 	def monitor(self):
 		pause_timer = 10

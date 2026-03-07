@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-FlickList Cache — Drop-in replacement for fl_cache.py
+FlickList Cache - Drop-in replacement for fl_cache.py
 
 Uses the same SQLite database ('fl_db') and table schema.
 All function signatures match fl_cache.py for seamless import swap.
@@ -7,6 +8,7 @@ All function signatures match fl_cache.py for seamless import swap.
 from threading import Thread
 from caches.base_cache import connect_database
 from modules.kodi_utils import sleep, confirm_dialog, close_all_dialog
+# from modules.kodi_utils import logger
 
 class FlCache:
 	def get(self, string):
@@ -198,7 +200,7 @@ def clear_all_fl_cache_data(silent=False, refresh=True):
 	except: return False
 
 def default_activities():
-	"""Default activity timestamps — matches FlickList API /sync/last-activities shape.
+	"""Default activity timestamps - matches FlickList API /sync/last-activities shape.
 	API returns: { all, movies: {watched_at, paused_at}, episodes: {watched_at, paused_at},
 	              shows: {watchlisted_at}, lists: {updated_at}, favorites: "timestamp" }
 	"""
