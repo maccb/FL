@@ -399,7 +399,7 @@ def nextep_method():
 	return int(get_setting('fenlightfl.nextep.method', '0'))
 
 def nextep_limit_history():
-	return get_setting('fenlightfl.nextep.limit_history', 'false') == 'true'
+	return get_setting('fenlightfl.nextep.limit_history', 'true') == 'true'
 
 def nextep_limit():
 	return int(get_setting('fenlightfl.nextep.limit', '20'))
