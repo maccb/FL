@@ -138,6 +138,11 @@ class OnUpdateChanges:
 		from caches.settings_cache import restore_setting_default
 		restore_setting_default({'setting_id': 'extras.enabled', 'silent': 'true'})
 
+	def enable_nextep_limit_history_01(self):
+		# Active for 2.1.105. Default was false, causing 500+ show lookups and freezing on low-end devices.
+		from caches.settings_cache import set_setting
+		set_setting('nextep.limit_history', 'true')
+
 class CustomFonts:
 	def run(self):
 		kodi_utils.logger('FL', 'CustomFonts Service Starting')
