@@ -134,7 +134,14 @@ def subtract_dates(date1, date2):
 
 def datetime_workaround(data, str_format):
 	try: datetime_object = datetime.strptime(data, str_format)
-	except: datetime_object = datetime(*(time.strptime(data, str_format)[0:6]))
+	except:
+		try: datetime_object = datetime(*(time.strptime(data, str_format)[0:6]))
+		except:
+			if '.%f' in str_format:
+				alt_format = str_format.replace('.%f', '')
+				try: datetime_object = datetime.strptime(data, alt_format)
+				except: datetime_object = datetime(*(time.strptime(data, alt_format)[0:6]))
+			else: raise
 	return datetime_object
 
 def date_difference(current_date, compare_date, difference_tolerance, allow_postive_difference=False):

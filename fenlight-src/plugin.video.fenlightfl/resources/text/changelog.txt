@@ -2,6 +2,11 @@
 [I]Built on the shoulders of TikiPeter & AnonyMouse. True legends.[/I]
 
 
+[COLOR dodgerblue][B]Version 2.1.105[/B][/COLOR]
+[I]Timestamps are just numbers until they break everything.[/I]
+[B]Critical:[/B]
+- Fixed a crash when loading Next Episodes that could freeze Kodi. Thanks for helping us catch this one!
+
 [COLOR dodgerblue][B]Version 2.1.104[/B][/COLOR]
 [I]Spring cleaning came early.[/I]
 [B]Critical:[/B]
