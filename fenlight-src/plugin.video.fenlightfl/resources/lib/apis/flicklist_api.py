@@ -26,6 +26,23 @@ from modules.utils import sort_list, sort_for_article, get_datetime, timedelta, 
 API_BASE = 'https://flicklist.tv/api'
 FLICKLIST_CLIENT_ID = 'flicklist_kodi_addon'
 
+# ── Cloudflare block detection ───────────────────────────────────────────
+_cf_block_count = 0
+_cf_block_notified = False
+
+def _track_cf_block():
+	global _cf_block_count, _cf_block_notified
+	_cf_block_count += 1
+	if _cf_block_count >= 3 and not _cf_block_notified:
+		_cf_block_notified = True
+		kodi_utils.notification('FlickList sync issue', 'Server connection blocked. Data may not sync.', icon_type='ERROR')
+	kodi_utils.logger('FlickList BLOCKED', 'Cloudflare block count: %d' % _cf_block_count)
+
+def _reset_cf_blocks():
+	global _cf_block_count, _cf_block_notified
+	_cf_block_count = 0
+	_cf_block_notified = False
+
 #
 # ── Response transformers ────────────────────────────────────────────────
 # makes the api responses work with the existing kodi list builders
@@ -98,7 +115,7 @@ def call_flicklist(path, params=None, data=None, is_delete=False, with_auth=True
 	if params is None:
 		params = {}
 	url = '%s%s' % (API_BASE, path)
-	headers = {'Content-Type': 'application/json'}
+	headers = {'Content-Type': 'application/json', 'User-Agent': 'FenLightFL/2.1 Kodi'}
 	if with_auth:
 		token = get_setting('fenlightfl.flicklist.token')
 		if token and token not in ('0', 'empty_setting', ''):
@@ -146,8 +163,13 @@ def call_flicklist(path, params=None, data=None, is_delete=False, with_auth=True
 		return None
 	try:
 		result = resp.json()
+		_reset_cf_blocks()
 	except:
-		result = resp.text
+		# Non-JSON response — likely Cloudflare challenge page
+		content_snippet = (resp.text or '')[:200]
+		kodi_utils.logger('FlickList BLOCKED', 'Non-JSON response for %s (HTTP %d). Possible Cloudflare challenge. Content: %s' % (path, resp.status_code, content_snippet))
+		_track_cf_block()
+		result = None
 	if pagination:
 		if isinstance(result, dict):
 			page_count = result.get('total_pages', page_no)
@@ -910,6 +932,8 @@ def fl_lists_with_media(media_type, imdb_id):
 def fl_indicators_movies():
 	"""Fetch watched movies from FlickList and store in local cache."""
 	def _process(item):
+		if not isinstance(item, dict):
+			return
 		tmdb_id = item.get('tmdb_id')
 		if not tmdb_id:
 			return
@@ -925,7 +949,7 @@ def fl_indicators_movies():
 		if not data:
 			break
 		items = data.get('results', data.get('items', [])) if isinstance(data, dict) else data
-		if not items:
+		if not isinstance(items, list) or not items:
 			break
 		threads = list(make_thread_list(_process, items))
 		[i.join() for i in threads]
@@ -938,6 +962,8 @@ def fl_indicators_movies():
 def fl_indicators_tv():
 	"""Fetch watched TV episodes from FlickList and store in local cache."""
 	def _process(item):
+		if not isinstance(item, dict):
+			return
 		tmdb_id = item.get('tmdb_id')
 		if not tmdb_id:
 			return
@@ -956,7 +982,7 @@ def fl_indicators_tv():
 		if not data:
 			break
 		items = data.get('results', data.get('items', [])) if isinstance(data, dict) else data
-		if not items:
+		if not isinstance(items, list) or not items:
 			break
 		threads = list(make_thread_list(_process, items))
 		[i.join() for i in threads]

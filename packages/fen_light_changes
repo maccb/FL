@@ -1,3 +1,10 @@
+[COLOR red][B]Version 2.1.107[/B][/COLOR]
+[I]Power watchers stress test our servers so we don't have to.[/I]
+[B]Critical:[/B]
+- Fixed a crash that could occur during sync when the server returned an unexpected response.
+[B]Needed:[/B]
+- Improved connection handling and error detection for more reliable syncing.
+
 [COLOR red][B]Version 2.1.106[/B][/COLOR]
 [I]Respect the grind of 730 shows. Power watchers keep us honest.[/I]
 [B]Critical:[/B]
