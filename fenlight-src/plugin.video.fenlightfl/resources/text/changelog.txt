@@ -2,6 +2,13 @@
 [I]Built on the shoulders of TikiPeter & AnonyMouse. True legends.[/I]
 
 
+[COLOR dodgerblue][B]Version 2.1.106[/B][/COLOR]
+[I]Respect the grind of 730 shows. Power watchers keep us honest.[/I]
+[B]Critical:[/B]
+- Improved stability for users with large watch histories.
+[B]Needed:[/B]
+- Search Custom Season now starts at the correct episode.
+
 [COLOR dodgerblue][B]Version 2.1.105[/B][/COLOR]
 [I]Timestamps are just numbers until they break everything.[/I]
 [B]Critical:[/B]

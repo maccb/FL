@@ -1032,9 +1032,10 @@ def custom_season_search_choice(params):
 	try: custom_season = int(custom_season)
 	except: return kodi_utils.notification('Invalid season number', 2500)
 	if str(custom_season) == str(season): return kodi_utils.notification('Same as current season', 2500)
+	episode = params.get('episode', '1')
 	playback_key = settings.playback_key()
 	play_mode = 'playback.%s' % playback_key
-	play_params = {'mode': play_mode, 'media_type': 'episode', 'tmdb_id': tmdb_id, 'season': season, 'episode': '1',
+	play_params = {'mode': play_mode, 'media_type': 'episode', 'tmdb_id': tmdb_id, 'season': season, 'episode': episode,
 				'custom_season': custom_season, 'prescrape': 'false', 'autoplay': 'false', 'playcount': '0',
 				playback_key: playback_key}
 	if settings.autoplay_next_episode(): play_params['disable_autoplay_next_episode'] = 'true'

@@ -365,12 +365,16 @@ def build_single_episode(list_type, params={}):
 	[i.join() for i in threads]
 	if return_results: return [(i['list_items'], i['sort_order']) for i in item_list]
 	if list_type_starts_with('next_'):
+		sort_fallback = jsondate_to_datetime(resinsert, resformat)
 		def func(function):
 			if sort_key == 'name': return title_key(function, ignore_articles)
-			elif sort_key == 'last_played': return jsondate_to_datetime(function, resformat)
+			elif sort_key == 'last_played':
+				try: return jsondate_to_datetime(function, resformat) or sort_fallback
+				except: return sort_fallback
 			else: return function
 		if settings.nextep_airing_today():
-			airing_today = sorted([i for i in item_list if date_difference(current_date, jsondate_to_datetime(i.get('first_aired', '2100-12-31'), '%Y-%m-%d').date(), 0)],
+			airing_today = sorted([i for i in item_list if i.get('first_aired') and
+									date_difference(current_date, jsondate_to_datetime(i['first_aired'], '%Y-%m-%d').date(), 0)],
 									key=lambda i: func(i[sort_key]), reverse=sort_direction)
 			item_list = [i for i in item_list if not i in airing_today]
 		else: airing_today = []
@@ -389,7 +393,8 @@ def build_single_episode(list_type, params={}):
 				item_list = [i for i in item_list if i.get('first_aired') not in (None, 'None', '')]
 				item_list = sorted(item_list, key=lambda i: i.get('first_aired'), reverse=reverse)
 			if list_type_compare == 'fl_calendar':
-				airing_today = sorted([i for i in item_list if date_difference(current_date, jsondate_to_datetime(i.get('first_aired', '2100-12-31'), '%Y-%m-%d').date(), 0)],
+				airing_today = sorted([i for i in item_list if i.get('first_aired') and
+										date_difference(current_date, jsondate_to_datetime(i['first_aired'], '%Y-%m-%d').date(), 0)],
 										key=lambda i: i['first_aired'])
 				item_list = [i for i in item_list if not i in airing_today]
 				item_list = airing_today + item_list
