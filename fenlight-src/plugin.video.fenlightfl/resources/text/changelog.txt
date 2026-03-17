@@ -2,6 +2,12 @@
 [I]Built on the shoulders of TikiPeter & AnonyMouse. True legends.[/I]
 
 
+[COLOR dodgerblue][B]Version 2.1.108[/B][/COLOR]
+[I]Some sessions end. Others get a second chance.[/I]
+[B]Critical:[/B]
+- Fixed session issues that could cause random disconnects.
+- Fixed "Clear Progress" and other remove actions not working.
+
 [COLOR dodgerblue][B]Version 2.1.107[/B][/COLOR]
 [I]Power watchers stress test our servers so we don't have to.[/I]
 [B]Critical:[/B]

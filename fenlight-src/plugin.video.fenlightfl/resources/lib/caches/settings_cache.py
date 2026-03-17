@@ -210,6 +210,7 @@ def default_settings():
 #======+============= FlickList Cache
 {'setting_id': 'flicklist.sync_interval', 'setting_type': 'action', 'setting_default': '60', 'min_value': '5', 'max_value': '600'},
 {'setting_id': 'flicklist.refresh_widgets', 'setting_type': 'boolean', 'setting_default': 'true'},
+{'setting_id': 'flicklist.expires_at', 'setting_type': 'string', 'setting_default': '0'},
 #==================== UTC Time Offset
 {'setting_id': 'datetime.offset', 'setting_type': 'action', 'setting_default': '0', 'min_value': '-15', 'max_value': '15'},
 #==================== Downloads

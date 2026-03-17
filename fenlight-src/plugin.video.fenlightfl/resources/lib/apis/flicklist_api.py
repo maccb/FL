@@ -117,6 +117,14 @@ def call_flicklist(path, params=None, data=None, is_delete=False, with_auth=True
 	url = '%s%s' % (API_BASE, path)
 	headers = {'Content-Type': 'application/json', 'User-Agent': 'FenLightFL/2.1 Kodi'}
 	if with_auth:
+		while kodi_utils.get_property('fenlightfl.refreshing_token') == 'true':
+			kodi_utils.sleep(250)
+		try: expires_at = float(get_setting('fenlightfl.flicklist.expires_at'))
+		except: expires_at = 0.0
+		if not expires_at or time.time() > expires_at:
+			token = get_setting('fenlightfl.flicklist.token')
+			if token and token not in ('0', 'empty_setting', ''):
+				fl_refresh_token()
 		token = get_setting('fenlightfl.flicklist.token')
 		if token and token not in ('0', 'empty_setting', ''):
 			headers['Authorization'] = 'Bearer %s' % token
@@ -147,7 +155,9 @@ def call_flicklist(path, params=None, data=None, is_delete=False, with_auth=True
 			return (None, page_no)
 		return None
 	if resp.status_code == 401:
-		kodi_utils.logger('FlickList', 'Unauthorized - token may be expired')
+		if with_auth:
+			fl_refresh_token()
+		kodi_utils.logger('FlickList', 'Unauthorized - token expired, re-auth needed')
 		if pagination:
 			return (None, page_no)
 		return None
@@ -161,6 +171,11 @@ def call_flicklist(path, params=None, data=None, is_delete=False, with_auth=True
 		if pagination:
 			return (None, page_no)
 		return None
+	if resp.status_code == 204 or not resp.content:
+		_reset_cf_blocks()
+		if pagination:
+			return (None, page_no)
+		return True
 	try:
 		result = resp.json()
 		_reset_cf_blocks()
@@ -252,16 +267,45 @@ def fl_get_device_token(device_codes):
 	return result
 
 def fl_refresh_token():
-	"""FlickList tokens are long-lived. Check validity and re-auth if needed."""
+	"""Call POST /auth/refresh to rotate the session token. Returns True on success."""
 	try:
+		kodi_utils.set_property('fenlightfl.refreshing_token', 'true')
 		token = get_setting('fenlightfl.flicklist.token')
 		if not token or token in ('0', 'empty_setting', ''):
-			return
-		response = call_flicklist('/auth/me', with_auth=True)
-		if response is None:
-			kodi_utils.logger('FlickList', 'Token validation failed - may need re-auth')
-	except:
-		pass
+			return False
+		headers = {
+			'Content-Type': 'application/json',
+			'User-Agent': 'FenLightFL/2.1 Kodi',
+			'Authorization': 'Bearer %s' % token
+		}
+		resp = requests.post('%s/auth/refresh' % API_BASE, headers=headers, timeout=15)
+		if resp.status_code == 200:
+			data = resp.json()
+			new_token = data.get('token', '')
+			if new_token:
+				set_setting('fenlightfl.flicklist.token', new_token)
+				expires_at = data.get('expires_at', '')
+				if expires_at:
+					try:
+						import calendar
+						from time import strptime
+						clean = expires_at.replace('Z', '+00:00').split('+')[0].split('.')[0]
+						ts = calendar.timegm(strptime(clean, '%Y-%m-%dT%H:%M:%S'))
+						set_setting('fenlightfl.flicklist.expires_at', str(ts))
+					except:
+						pass
+				user = data.get('user')
+				if user:
+					set_setting('fenlightfl.flicklist.user', str(user.get('username', user.get('display_name', ''))))
+				kodi_utils.logger('FlickList', 'Token refreshed successfully')
+				return True
+		kodi_utils.logger('FlickList', 'Token refresh failed (HTTP %d)' % resp.status_code)
+		return False
+	except Exception as e:
+		kodi_utils.logger('FlickList', 'Token refresh error: %s' % str(e))
+		return False
+	finally:
+		kodi_utils.clear_property('fenlightfl.refreshing_token')
 
 def fl_authenticate(dummy=''):
 	"""Run the full FlickList device authorization flow."""
@@ -272,6 +316,16 @@ def fl_authenticate(dummy=''):
 	token = fl_get_device_token(code)
 	if token:
 		set_setting('fenlightfl.flicklist.token', token.get('access_token', ''))
+		expires_at = token.get('expires_at', '')
+		if expires_at:
+			try:
+				import calendar
+				from time import strptime
+				clean = expires_at.replace('Z', '+00:00').split('+')[0].split('.')[0]
+				ts = calendar.timegm(strptime(clean, '%Y-%m-%dT%H:%M:%S'))
+				set_setting('fenlightfl.flicklist.expires_at', str(ts))
+			except:
+				pass
 		set_setting('watched_indicators', '1')
 		kodi_utils.sleep(1000)
 		try:
@@ -290,6 +344,7 @@ def fl_revoke_authentication(dummy=''):
 	"""Clear FlickList authorization."""
 	set_setting('fenlightfl.flicklist.user', 'empty_setting')
 	set_setting('fenlightfl.flicklist.token', '0')
+	set_setting('fenlightfl.flicklist.expires_at', '0')
 	set_setting('fenlightfl.flicklist.next_daily_clear', '0')
 	set_setting('watched_indicators', '0')
 	flicklist_cache.clear_all_fl_cache_data(silent=True, refresh=False)
