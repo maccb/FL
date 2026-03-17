@@ -989,6 +989,8 @@ def fl_indicators_movies():
 	def _process(item):
 		if not isinstance(item, dict):
 			return
+		if item.get('progress', 1.0) < 0.90:
+			return
 		tmdb_id = item.get('tmdb_id')
 		if not tmdb_id:
 			return
@@ -1000,7 +1002,7 @@ def fl_indicators_movies():
 	page = 1
 	per_page = 500
 	while True:
-		data = call_flicklist('/scrobble/history', params={'media_type': 'movie', 'matched_only': 'true', 'per_page': per_page, 'page': page}, with_auth=True)
+		data = call_flicklist('/scrobble/history', params={'media_type': 'movie', 'matched_only': 'true', 'watch_status': 'watched', 'per_page': per_page, 'page': page}, with_auth=True)
 		if not data:
 			break
 		items = data.get('results', data.get('items', [])) if isinstance(data, dict) else data
@@ -1019,6 +1021,8 @@ def fl_indicators_tv():
 	def _process(item):
 		if not isinstance(item, dict):
 			return
+		if item.get('progress', 1.0) < 0.90:
+			return
 		tmdb_id = item.get('tmdb_id')
 		if not tmdb_id:
 			return
@@ -1033,7 +1037,7 @@ def fl_indicators_tv():
 	page = 1
 	per_page = 500
 	while True:
-		data = call_flicklist('/scrobble/history', params={'media_type': 'tv', 'matched_only': 'true', 'per_page': per_page, 'page': page}, with_auth=True)
+		data = call_flicklist('/scrobble/history', params={'media_type': 'tv', 'matched_only': 'true', 'watch_status': 'watched', 'per_page': per_page, 'page': page}, with_auth=True)
 		if not data:
 			break
 		items = data.get('results', data.get('items', [])) if isinstance(data, dict) else data
