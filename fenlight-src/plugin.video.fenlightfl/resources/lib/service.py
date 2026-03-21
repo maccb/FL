@@ -1,6 +1,14 @@
 # -*- coding: utf-8 -*-
+import os, shutil
+_lib = os.path.dirname(os.path.abspath(__file__))
+for _root, _dirs, _ in os.walk(_lib):
+	for _d in _dirs:
+		if _d == '__pycache__':
+			try: shutil.rmtree(os.path.join(_root, _d))
+			except: pass
+del _lib, _root, _dirs, _, _d
+
 from xbmc import Monitor
-import os
 import json
 import inspect
 from time import time

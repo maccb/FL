@@ -93,7 +93,7 @@ class SourcesResults(BaseDialog):
 			if not filtered_list: return ok_dialog(text='No Results')
 			self.set_filter(filtered_list)
 
-	defonAction(self, action):
+	def onAction(self, action):
 		if self.get_visibility('Control.HasFocus(%s)' % self.filter_window_id): return self.filter_action(action)
 		chosen_listitem = self.get_listitem(self.window_id)
 		if action in self.closing_actions:
