@@ -2,11 +2,6 @@
 [I]Built on the shoulders of TikiPeter & AnonyMouse. True legends.[/I]
 
 
-[COLOR dodgerblue][B]Version 2.1.110[/B][/COLOR]
-[I]Pause is not a weakness. It's strategy.[/I]
-[B]Needed:[/B]
-- Pause and resume events now sync to FlickList in real time.
-
 [COLOR dodgerblue][B]Version 2.1.112[/B][/COLOR]
 [I]Pause is not a weakness. It's strategy.[/I]
 [B]Needed:[/B]
