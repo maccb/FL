@@ -12,6 +12,7 @@ from modules.kodi_utils import get_icon, kodi_dialog, hide_busy_dialog, addon_fa
 class SourcesResults(BaseDialog):
 	def __init__(self, *args, **kwargs):
 		BaseDialog.__init__(self, *args)
+		self.selected = (None, '')
 		self.window_format = kwargs.get('window_format', 'list')
 		self.window_id = kwargs.get('window_id', 2000)
 		self.filter_window_id = 2100
@@ -92,7 +93,7 @@ class SourcesResults(BaseDialog):
 			if not filtered_list: return ok_dialog(text='No Results')
 			self.set_filter(filtered_list)
 
-	def onAction(self, action):
+	defonAction(self, action):
 		if self.get_visibility('Control.HasFocus(%s)' % self.filter_window_id): return self.filter_action(action)
 		chosen_listitem = self.get_listitem(self.window_id)
 		if action in self.closing_actions:

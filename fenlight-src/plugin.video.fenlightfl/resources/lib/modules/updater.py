@@ -97,6 +97,10 @@ def rollback_check():
 
 def update_addon(new_version, action, show_after_action=True):
 	kodi_utils.close_all_dialog()
+	player = kodi_utils.kodi_player()
+	if player.isPlaying():
+		player.stop()
+		kodi_utils.sleep(2000)
 	kodi_utils.execute_builtin('ActivateWindow(Home)', True)
 	kodi_utils.notification('FL Performing Rollback' if action == 5 else 'FL Performing Update', icon=kodi_utils.get_icon('downloads'))
 	zip_name = 'plugin.video.fenlightfl-%s.zip' % new_version

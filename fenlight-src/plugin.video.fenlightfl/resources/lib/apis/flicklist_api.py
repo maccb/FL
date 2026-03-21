@@ -122,9 +122,13 @@ def call_flicklist(path, params=None, data=None, is_delete=False, with_auth=True
 		try: expires_at = float(get_setting('fenlightfl.flicklist.expires_at'))
 		except: expires_at = 0.0
 		if not expires_at or time.time() > expires_at:
-			token = get_setting('fenlightfl.flicklist.token')
-			if token and token not in ('0', 'empty_setting', ''):
-				fl_refresh_token()
+			if kodi_utils.get_property('fenlightfl.refreshing_token') != 'true':
+				token = get_setting('fenlightfl.flicklist.token')
+				if token and token not in ('0', 'empty_setting', ''):
+					fl_refresh_token()
+			else:
+				while kodi_utils.get_property('fenlightfl.refreshing_token') == 'true':
+					kodi_utils.sleep(250)
 		token = get_setting('fenlightfl.flicklist.token')
 		if token and token not in ('0', 'empty_setting', ''):
 			headers['Authorization'] = 'Bearer %s' % token
@@ -157,6 +161,8 @@ def call_flicklist(path, params=None, data=None, is_delete=False, with_auth=True
 	if resp.status_code == 401:
 		if with_auth:
 			fl_refresh_token()
+			return call_flicklist(path, params=params, data=data, is_delete=is_delete,
+								with_auth=False, method=method, pagination=pagination, page_no=page_no)
 		kodi_utils.logger('FlickList', 'Unauthorized - token expired, re-auth needed')
 		if pagination:
 			return (None, page_no)

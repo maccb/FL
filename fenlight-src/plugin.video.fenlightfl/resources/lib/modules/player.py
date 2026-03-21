@@ -2,7 +2,7 @@
 import xbmc
 import json
 from threading import Thread
-from apis.flicklist_api import make_fl_slug, scrobble_start, scrobble_stop, scrobble_heartbeat
+from apis.flicklist_api import make_fl_slug, scrobble_start, scrobble_stop, scrobble_pause, scrobble_heartbeat
 from caches.settings_cache import get_setting
 from modules import kodi_utils as ku, settings as st, watched_status as ws
 # logger = ku.logger
@@ -10,6 +10,26 @@ from modules import kodi_utils as ku, settings as st, watched_status as ws
 class FenLightPlayer(xbmc.Player):
 	def __init__ (self):
 		xbmc.Player.__init__(self)
+
+	def onPlayBackPaused(self):
+		if not hasattr(self, 'tmdb_id') or not self.tmdb_id: return
+		if st.watched_indicators() != 1: return
+		try:
+			self.total_time, self.curr_time = self.getTotalTime(), self.getTime()
+			self.current_point = round(float(self.curr_time / self.total_time * 100), 1)
+		except: return
+		try: Thread(target=scrobble_pause, args=(self.media_type, self.tmdb_id, self.current_point, self.season, self.episode)).start()
+		except: pass
+
+	def onPlayBackResumed(self):
+		if not hasattr(self, 'tmdb_id') or not self.tmdb_id: return
+		if st.watched_indicators() != 1: return
+		try:
+			self.total_time, self.curr_time = self.getTotalTime(), self.getTime()
+			self.current_point = round(float(self.curr_time / self.total_time * 100), 1)
+		except: return
+		try: Thread(target=scrobble_heartbeat, args=(self.media_type, self.tmdb_id, self.current_point, self.curr_time, self.total_time, self.season, self.episode)).start()
+		except: pass
 
 	def run(self, url=None, obj=None):
 		ku.hide_busy_dialog()
