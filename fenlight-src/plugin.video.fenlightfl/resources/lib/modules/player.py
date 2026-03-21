@@ -12,6 +12,7 @@ class FenLightPlayer(xbmc.Player):
 		xbmc.Player.__init__(self)
 
 	def onPlayBackPaused(self):
+		self._fl_paused = True
 		if not hasattr(self, 'tmdb_id') or not self.tmdb_id: return
 		if st.watched_indicators() != 1: return
 		try:
@@ -22,6 +23,7 @@ class FenLightPlayer(xbmc.Player):
 		except: pass
 
 	def onPlayBackResumed(self):
+		self._fl_paused = False
 		if not hasattr(self, 'tmdb_id') or not self.tmdb_id: return
 		if st.watched_indicators() != 1: return
 		try:
@@ -113,6 +115,7 @@ class FenLightPlayer(xbmc.Player):
 				try: Thread(target=scrobble_start, args=(self.media_type, self.tmdb_id, self.season, self.episode, self.total_time if hasattr(self, 'total_time') else None)).start()
 				except: pass
 			self._last_heartbeat_progress = -1
+			self._fl_paused = False
 			while self.isPlayingVideo():
 				try:
 					if not ensure_dialog_dead:
@@ -123,7 +126,7 @@ class FenLightPlayer(xbmc.Player):
 					except: ku.sleep(250); continue
 					self.current_point = round(float(self.curr_time/self.total_time * 100), 1)
 					heartbeat_counter += 1
-					if heartbeat_counter % 30 == 0 and st.watched_indicators() == 1 and self.current_point != self._last_heartbeat_progress:
+					if heartbeat_counter % 30 == 0 and st.watched_indicators() == 1 and self.current_point != self._last_heartbeat_progress and not self._fl_paused:
 						self._last_heartbeat_progress = self.current_point
 						try: Thread(target=scrobble_heartbeat, args=(self.media_type, self.tmdb_id, self.current_point, self.curr_time, self.total_time, self.season, self.episode)).start()
 						except: pass
