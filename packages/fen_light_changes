@@ -1,3 +1,13 @@
+[COLOR red][B]Version 2.1.114[/B][/COLOR]
+[I]Consistency is king.[/I]
+[B]Critical:[/B]
+- Fixed shows disappearing from Next Episodes after watching.
+- Fixed resume progress not showing for paused episodes.
+[B]Moderate:[/B]
+- Pause and resume tracking is now more accurate during episode transitions.
+[B]Needed:[/B]
+- Sync performance improved. Removed unnecessary database compaction that ran on every sync.
+
 [COLOR red][B]Version 2.1.113[/B][/COLOR]
 [I]Pause is not a weakness. It's strategy.[/I]
 [B]Needed:[/B]
