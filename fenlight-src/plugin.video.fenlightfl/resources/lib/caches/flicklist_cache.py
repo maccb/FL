@@ -36,37 +36,35 @@ fl_cache = FlCache()
 
 class FlWatched():
 	def set_bulk_tvshow_status(self, insert_list):
-		self._delete('DELETE FROM watched_status', ())
-		self._executemany('INSERT INTO watched_status VALUES (?, ?, ?)', insert_list)
+		self._atomic_replace('DELETE FROM watched_status', (), 'INSERT INTO watched_status VALUES (?, ?, ?)', insert_list)
 
 	def set_tvshow_status(self, insert_dict):
 		dbcon = connect_database('fl_db')
 		dbcon.execute('INSERT OR REPLACE INTO fl_data (id, data) VALUES (?, ?)', ('fl_tvshow_status', repr(insert_dict),))
 
 	def set_bulk_movie_watched(self, insert_list):
-		self._delete('DELETE FROM watched WHERE db_type = ?', ('movie',))
-		self._executemany('INSERT OR IGNORE INTO watched VALUES (?, ?, ?, ?, ?, ?)', insert_list)
+		self._atomic_replace('DELETE FROM watched WHERE db_type = ?', ('movie',), 'INSERT OR IGNORE INTO watched VALUES (?, ?, ?, ?, ?, ?)', insert_list)
 
 	def set_bulk_tvshow_watched(self, insert_list):
-		self._delete('DELETE FROM watched WHERE db_type = ?', ('episode',))
-		self._executemany('INSERT OR IGNORE INTO watched VALUES (?, ?, ?, ?, ?, ?)', insert_list)
+		self._atomic_replace('DELETE FROM watched WHERE db_type = ?', ('episode',), 'INSERT OR IGNORE INTO watched VALUES (?, ?, ?, ?, ?, ?)', insert_list)
 
 	def set_bulk_movie_progress(self, insert_list):
-		self._delete('DELETE FROM progress WHERE db_type = ?', ('movie',))
-		self._executemany('INSERT OR IGNORE INTO progress VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', insert_list)
+		self._atomic_replace('DELETE FROM progress WHERE db_type = ?', ('movie',), 'INSERT OR IGNORE INTO progress VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', insert_list)
 
 	def set_bulk_tvshow_progress(self, insert_list):
-		self._delete('DELETE FROM progress WHERE db_type = ?', ('episode',))
-		self._executemany('INSERT OR IGNORE INTO progress VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', insert_list)
+		self._atomic_replace('DELETE FROM progress WHERE db_type = ?', ('episode',), 'INSERT OR IGNORE INTO progress VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', insert_list)
 
-	def _executemany(self, command, insert_list):
+	def _atomic_replace(self, delete_cmd, delete_args, insert_cmd, insert_list):
 		dbcon = connect_database('fl_db')
-		dbcon.executemany(command, insert_list)
-
-	def _delete(self, command, args):
-		dbcon = connect_database('fl_db')
-		dbcon.execute(command, args)
-		dbcon.execute('VACUUM')
+		dbcon.execute('BEGIN')
+		try:
+			dbcon.execute(delete_cmd, delete_args)
+			if insert_list:
+				dbcon.executemany(insert_cmd, insert_list)
+			dbcon.execute('COMMIT')
+		except:
+			try: dbcon.execute('ROLLBACK')
+			except: pass
 
 fl_watched_cache = FlWatched()
 
@@ -190,9 +188,10 @@ def clear_all_fl_cache_data(silent=False, refresh=True):
 			except: pass
 		main_cache.clean_database()
 		dbcon = connect_database('fl_db')
+		dbcon.execute('BEGIN')
 		for table in ('progress', 'watched', 'watched_status'): dbcon.execute('DELETE FROM %s' % table)
 		dbcon.execute('DELETE FROM fl_data WHERE id NOT LIKE %s' % "'fl_list_custom_sort_%'")
-		dbcon.execute('VACUUM')
+		dbcon.execute('COMMIT')
 		if refresh:
 			from apis.flicklist_api import fl_sync_activities
 			Thread(target=fl_sync_activities).start()

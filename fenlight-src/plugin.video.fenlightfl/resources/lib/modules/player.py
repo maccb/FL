@@ -16,7 +16,6 @@ class FenLightPlayer(xbmc.Player):
 		if not hasattr(self, 'tmdb_id') or not self.tmdb_id: return
 		if st.watched_indicators() != 1: return
 		try:
-			self.total_time, self.curr_time = self.getTotalTime(), self.getTime()
 			self.current_point = round(float(self.curr_time / self.total_time * 100), 1)
 		except: return
 		try: Thread(target=scrobble_pause, args=(self.media_type, self.tmdb_id, self.current_point, self.season, self.episode)).start()
@@ -27,10 +26,9 @@ class FenLightPlayer(xbmc.Player):
 		if not hasattr(self, 'tmdb_id') or not self.tmdb_id: return
 		if st.watched_indicators() != 1: return
 		try:
-			self.total_time, self.curr_time = self.getTotalTime(), self.getTime()
 			self.current_point = round(float(self.curr_time / self.total_time * 100), 1)
 		except: return
-		try: Thread(target=scrobble_heartbeat, args=(self.media_type, self.tmdb_id, self.current_point, self.curr_time, self.total_time, self.season, self.episode)).start()
+		try: Thread(target=scrobble_start, args=(self.media_type, self.tmdb_id, self.season, self.episode, self.total_time if hasattr(self, 'total_time') else None)).start()
 		except: pass
 
 	def run(self, url=None, obj=None):

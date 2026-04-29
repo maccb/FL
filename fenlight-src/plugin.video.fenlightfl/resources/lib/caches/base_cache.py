@@ -79,8 +79,12 @@ def make_databases():
 
 def connect_database(database_name):
 	dbcon = database.connect(database_locations(database_name), timeout=20, isolation_level=None, check_same_thread=False)
-	dbcon.execute('PRAGMA synchronous = OFF')
-	dbcon.execute('PRAGMA journal_mode = OFF')
+	if database_name == 'fl_db':
+		dbcon.execute('PRAGMA synchronous = NORMAL')
+		dbcon.execute('PRAGMA journal_mode = WAL')
+	else:
+		dbcon.execute('PRAGMA synchronous = OFF')
+		dbcon.execute('PRAGMA journal_mode = OFF')
 	return dbcon
 
 def get_timestamp(offset=0):
