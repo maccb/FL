@@ -2,6 +2,11 @@
 [I]Built on the shoulders of TikiPeter & AnonyMouse. True legends.[/I]
 
 
+[COLOR dodgerblue][B]Version 2.1.115[/B][/COLOR]
+[I]Some things just work better when you don't have to think about them.[/I]
+[B]Critical:[/B]
+- Metadata now loads automatically without needing to configure a TMDB key. No more blank lists or missing search results.
+
 [COLOR dodgerblue][B]Version 2.1.114[/B][/COLOR]
 [I]Consistency is king.[/I]
 [B]Critical:[/B]
