@@ -151,6 +151,13 @@ class OnUpdateChanges:
 		from caches.settings_cache import set_setting
 		set_setting('nextep.limit_history', 'true')
 
+	def replace_tmdb_api_key_01(self):
+		# Active for 2.1.115. Old key expired.
+		from caches.settings_cache import get_setting, set_setting
+		old_key = get_setting('fenlightfl.tmdb_api', '')
+		if old_key == 'b370b60447737762ca38457bd77579b3':
+			set_setting('tmdb_api', 'b14c2656f72e5bab233def36928a202b')
+
 class CustomFonts:
 	def run(self):
 		kodi_utils.logger('FL', 'CustomFonts Service Starting')
