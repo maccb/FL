@@ -128,12 +128,13 @@ class ImportSetupConfig:
 class OnUpdateChanges:
 	def run(self):
 		kodi_utils.logger('FL', 'OnUpdateChanges Service Starting')
-		try:
-			for method in list(filter(lambda x: x[0] != 'run', inspect.getmembers(OnUpdateChanges, predicate=inspect.isfunction))):
+		for method in list(filter(lambda x: x[0] != 'run', inspect.getmembers(OnUpdateChanges, predicate=inspect.isfunction))):
+			try:
 				if not get_setting('fenlightfl.updatechecks.%s' % method[0], 'false') == 'true':
 					method[1](self)
 					set_setting('updatechecks.%s' % method[0], 'true')
-		except: pass
+			except Exception as e:
+				kodi_utils.logger('FL', 'OnUpdateChanges %s failed: %s' % (method[0], str(e)))
 		return kodi_utils.logger('FL', 'OnUpdateChanges Service Finished')
 
 	def clear_context_menu_order_01(self):
