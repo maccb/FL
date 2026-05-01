@@ -4,7 +4,10 @@ from modules.kodi_utils import translate_path, get_property, addon_installed
 # from modules.kodi_utils import logger
 
 def tmdb_api_key():
-	return get_setting('fenlightfl.tmdb_api', '')
+	key = get_setting('fenlightfl.tmdb_api', '')
+	if key in (None, '', 'empty_setting'):
+		key = 'b14c2656f72e5bab233def36928a202b'
+	return key
 
 def fl_user_active():
 	return flicklist_user_active()
