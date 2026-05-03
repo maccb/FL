@@ -2,6 +2,13 @@
 [I]Built on the shoulders of TikiPeter & AnonyMouse. True legends.[/I]
 
 
+[COLOR dodgerblue][B]Version 2.1.116[/B][/COLOR]
+[I]One player to rule them all.[/I]
+[B]Critical:[/B]
+- Fixed ghost playback entries appearing when switching between movies or episodes. Only the active video now sends progress updates.
+[B]Needed:[/B]
+- Playback tracking is cleaner during back-to-back viewing sessions.
+
 [COLOR dodgerblue][B]Version 2.1.115[/B][/COLOR]
 [I]Some things just work better when you don't have to think about them.[/I]
 [B]Critical:[/B]

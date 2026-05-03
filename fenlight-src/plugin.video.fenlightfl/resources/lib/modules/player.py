@@ -112,10 +112,13 @@ class FenLightPlayer(xbmc.Player):
 			if st.watched_indicators() == 1:
 				try: Thread(target=scrobble_start, args=(self.media_type, self.tmdb_id, self.season, self.episode, self.total_time if hasattr(self, 'total_time') else None)).start()
 				except: pass
+			self._player_instance_id = str(id(self))
+			ku.set_property('fenlightfl.active_player_id', self._player_instance_id)
 			self._last_heartbeat_progress = -1
 			self._fl_paused = False
 			while self.isPlayingVideo():
 				try:
+					if ku.get_property('fenlightfl.active_player_id') != self._player_instance_id: break
 					if not ensure_dialog_dead:
 						ensure_dialog_dead = True
 						self.playback_close_dialogs()
