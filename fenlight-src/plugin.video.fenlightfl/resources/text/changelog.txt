@@ -2,6 +2,17 @@
 [I]Built on the shoulders of TikiPeter & AnonyMouse. True legends.[/I]
 
 
+[COLOR dodgerblue][B]Version 2.1.117[/B][/COLOR]
+[I]Cut out the middleman.[/I]
+[B]Moderate:[/B]
+- All movie, TV, and people data now comes directly from FlickList. No more third-party API key needed.
+- Your FlickList session handles all metadata requests. Sessions refresh automatically for active users.
+[B]Needed:[/B]
+- Airing Today, On the Air, and Upcoming sections now return TV results correctly.
+- Popular People no longer shows results from adult content.
+- Discover, genres, providers, networks, years, and decades all working in browse menus.
+- Clear error messages when your session expires or you hit a rate limit.
+
 [COLOR dodgerblue][B]Version 2.1.116[/B][/COLOR]
 [I]One player to rule them all.[/I]
 [B]Critical:[/B]
