@@ -2,6 +2,15 @@
 [I]Built on the shoulders of TikiPeter & AnonyMouse. True legends.[/I]
 
 
+[COLOR dodgerblue][B]Version 2.1.118[/B][/COLOR]
+[I]Posters speak louder than words.[/I]
+[B]Critical:[/B]
+- Fixed movies not loading. Movie lists would spin forever and never display results.
+- Fixed anime movie lists with the same issue.
+[B]Moderate:[/B]
+- All metadata for movies, TV shows, and anime now flows entirely through your FlickList account. No external API keys, no third-party calls. One connection handles everything.
+- Movie posters, artwork, and full details load correctly for all titles, including ones sourced from non-standard providers.
+
 [COLOR dodgerblue][B]Version 2.1.117[/B][/COLOR]
 [I]Cut out the middleman.[/I]
 [B]Moderate:[/B]
