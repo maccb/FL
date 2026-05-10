@@ -354,6 +354,15 @@ def fl_revoke_authentication(dummy=''):
 # ── Discovery: Movies ────────────────────────────────────────────────────
 #
 
+def _fl_trending_browse(api_path, media_kind, cache_prefix, page_no, extra_query):
+	q = {'page': page_no, 'per_page': 20}
+	q.update(extra_query or {})
+	def _process(_):
+		data = call_flicklist(api_path, params=q, with_auth=False)
+		items, _ = _media_to_fl_list(data, media_kind)
+		return items
+	return lists_cache_object(_process, '%s_%s' % (cache_prefix, page_no), {})
+
 def fl_movies_related(imdb_id):
 	def _process(params):
 		data = call_flicklist('/movies/%s/similar' % imdb_id, with_auth=False)
@@ -363,21 +372,11 @@ def fl_movies_related(imdb_id):
 	return lists_cache_object(_process, string, {})
 
 def fl_movies_trending(page_no):
-	def _process(params):
-		data = call_flicklist('/movies/trending', params={'page': page_no, 'per_page': 20}, with_auth=False)
-		items, _ = _media_to_fl_list(data, 'movie')
-		return items
-	string = 'fl_movies_trending_%s' % page_no
-	return lists_cache_object(_process, string, {})
+	return _fl_trending_browse('/movies/trending', 'movie', 'fl_movies_trending', page_no, {})
 
 def fl_movies_trending_recent(page_no):
-	current_year = get_datetime().year
-	def _process(params):
-		data = call_flicklist('/movies/trending', params={'page': page_no, 'per_page': 20, 'year_min': current_year - 1, 'year_max': current_year}, with_auth=False)
-		items, _ = _media_to_fl_list(data, 'movie')
-		return items
-	string = 'fl_movies_trending_recent_%s' % page_no
-	return lists_cache_object(_process, string, {})
+	y = get_datetime().year
+	return _fl_trending_browse('/movies/trending', 'movie', 'fl_movies_trending_recent', page_no, {'year_min': y - 1, 'year_max': y})
 
 def fl_movies_top10_boxoffice(page_no):
 	def _process(params):
@@ -388,12 +387,7 @@ def fl_movies_top10_boxoffice(page_no):
 	return lists_cache_object(_process, string, {})
 
 def fl_movies_most_watched(page_no):
-	def _process(params):
-		data = call_flicklist('/movies/trending', params={'page': page_no, 'per_page': 20, 'sort': 'popularity'}, with_auth=False)
-		items, _ = _media_to_fl_list(data, 'movie')
-		return items
-	string = 'fl_movies_most_watched_%s' % page_no
-	return lists_cache_object(_process, string, {})
+	return _fl_trending_browse('/movies/trending', 'movie', 'fl_movies_most_watched', page_no, {'sort': 'popularity'})
 
 def fl_movies_most_favorited(page_no):
 	def _process(params):
@@ -416,29 +410,14 @@ def fl_tv_related(imdb_id):
 	return lists_cache_object(_process, string, {})
 
 def fl_tv_trending(page_no):
-	def _process(params):
-		data = call_flicklist('/shows/trending', params={'page': page_no, 'per_page': 20}, with_auth=False)
-		items, _ = _media_to_fl_list(data, 'tv')
-		return items
-	string = 'fl_tv_trending_%s' % page_no
-	return lists_cache_object(_process, string, {})
+	return _fl_trending_browse('/shows/trending', 'tv', 'fl_tv_trending', page_no, {})
 
 def fl_tv_trending_recent(page_no):
-	current_year = get_datetime().year
-	def _process(params):
-		data = call_flicklist('/shows/trending', params={'page': page_no, 'per_page': 20, 'year_min': current_year - 1, 'year_max': current_year}, with_auth=False)
-		items, _ = _media_to_fl_list(data, 'tv')
-		return items
-	string = 'fl_tv_trending_recent_%s' % page_no
-	return lists_cache_object(_process, string, {})
+	y = get_datetime().year
+	return _fl_trending_browse('/shows/trending', 'tv', 'fl_tv_trending_recent', page_no, {'year_min': y - 1, 'year_max': y})
 
 def fl_tv_most_watched(page_no):
-	def _process(params):
-		data = call_flicklist('/shows/trending', params={'page': page_no, 'per_page': 20, 'sort': 'popularity'}, with_auth=False)
-		items, _ = _media_to_fl_list(data, 'tv')
-		return items
-	string = 'fl_tv_most_watched_%s' % page_no
-	return lists_cache_object(_process, string, {})
+	return _fl_trending_browse('/shows/trending', 'tv', 'fl_tv_most_watched', page_no, {'sort': 'popularity'})
 
 def fl_tv_most_favorited(page_no):
 	def _process(params):
@@ -474,29 +453,22 @@ def fl_tv_search(query, page_no):
 # ── Discovery: Anime ─────────────────────────────────────────────────────
 #
 
-def fl_anime_trending(page_no):
-	def _process(params):
-		data = call_flicklist('/anime/browse', params={'page': page_no, 'per_page': 20, 'sort': 'popularity'}, with_auth=False)
+def _fl_anime_browse_list(cache_prefix, page_no, sort_key):
+	q = {'page': page_no, 'per_page': 20, 'sort': sort_key}
+	def _process(_):
+		data = call_flicklist('/anime/browse', params=q, with_auth=False)
 		items, _ = _media_to_fl_list(data, 'tv')
 		return items
-	string = 'fl_anime_trending_%s' % page_no
-	return lists_cache_object(_process, string, {})
+	return lists_cache_object(_process, '%s_%s' % (cache_prefix, page_no), {})
+
+def fl_anime_trending(page_no):
+	return _fl_anime_browse_list('fl_anime_trending', page_no, 'popularity')
 
 def fl_anime_trending_recent(page_no):
-	def _process(params):
-		data = call_flicklist('/anime/browse', params={'page': page_no, 'per_page': 20, 'sort': 'year'}, with_auth=False)
-		items, _ = _media_to_fl_list(data, 'tv')
-		return items
-	string = 'fl_anime_trending_recent_%s' % page_no
-	return lists_cache_object(_process, string, {})
+	return _fl_anime_browse_list('fl_anime_trending_recent', page_no, 'year')
 
 def fl_anime_most_watched(page_no):
-	def _process(params):
-		data = call_flicklist('/anime/browse', params={'page': page_no, 'per_page': 20, 'sort': 'rating'}, with_auth=False)
-		items, _ = _media_to_fl_list(data, 'tv')
-		return items
-	string = 'fl_anime_most_watched_%s' % page_no
-	return lists_cache_object(_process, string, {})
+	return _fl_anime_browse_list('fl_anime_most_watched', page_no, 'rating')
 
 def fl_anime_most_favorited(page_no):
 	def _process(params):

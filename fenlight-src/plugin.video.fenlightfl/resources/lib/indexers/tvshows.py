@@ -18,7 +18,7 @@ class TVShows:
 	'favorites_tvshows': ('modules.favorites', 'get_favorites'),
 	'favorites_anime': ('modules.favorites', 'get_favorites')}
 	fl_main = ('fl_tv_trending', 'fl_tv_trending_recent', 'fl_tv_most_watched', 'fl_tv_most_favorited',
-	'fl_anime_trending', 'fl_anime_trending_recent', 'fl_anime_most_watched', 'fl_anime_most_favorited')
+		'fl_anime_trending', 'fl_anime_trending_recent', 'fl_anime_most_watched', 'fl_anime_most_favorited')
 	fl_special = ('fl_tv_certifications', 'fl_anime_certifications')
 	fl_personal = ('fl_collection', 'fl_watchlist', 'fl_collection_lists', 'fl_watchlist_lists', 'fl_favorites')
 	fl_search = ('fl_tv_search', 'fl_anime_search')

@@ -22,11 +22,9 @@ class NavigatorCache:
 	movie_list = [
 	{'name': 'Trending', 'mode': 'build_movie_list', 'action': 'fl_movies_trending', 'random_support': 'true', 'iconImage': 'trending'},
 	{'name': 'Trending Recent', 'mode': 'build_movie_list', 'action': 'fl_movies_trending_recent', 'random_support': 'true', 'iconImage': 'trending_recent'},
-	{'name': 'Popular', 'mode': 'build_movie_list', 'action': 'tmdb_movies_popular', 'random_support': 'true', 'iconImage': 'popular'},
-	{'name': 'Popular Today', 'mode': 'build_movie_list', 'action': 'tmdb_movies_popular_today', 'random_support': 'true', 'iconImage': 'popular_today'},
+	{'name': 'Popular', 'mode': 'build_movie_list', 'action': 'fl_movies_most_watched', 'random_support': 'true', 'iconImage': 'popular'},
 	{'name': 'Premieres', 'mode': 'build_movie_list', 'action': 'tmdb_movies_premieres', 'random_support': 'true', 'iconImage': 'fresh'},
 	{'name': 'Latest Releases', 'mode': 'build_movie_list', 'action': 'tmdb_movies_latest_releases', 'random_support': 'true', 'iconImage': 'dvd'},
-	{'name': 'Most Watched', 'mode': 'build_movie_list', 'action': 'fl_movies_most_watched', 'random_support': 'true', 'iconImage': 'most_watched'},
 	{'name': 'Most Favorited', 'mode': 'build_movie_list', 'action': 'fl_movies_most_favorited', 'random_support': 'true', 'iconImage': 'favorites'},
 	{'name': 'Top 10 Box Office', 'mode': 'build_movie_list', 'action': 'fl_movies_top10_boxoffice', 'iconImage': 'box_office'},
 	{'name': 'Blockbusters', 'mode': 'build_movie_list', 'action': 'tmdb_movies_blockbusters', 'random_support': 'true', 'iconImage': 'most_voted'},
@@ -47,10 +45,8 @@ class NavigatorCache:
 	tvshow_list = [
 	{'name': 'Trending', 'mode': 'build_tvshow_list', 'action': 'fl_tv_trending', 'random_support': 'true', 'iconImage': 'trending'},
 	{'name': 'Trending Recent', 'mode': 'build_tvshow_list', 'action': 'fl_tv_trending_recent', 'random_support': 'true', 'iconImage': 'trending_recent'},
-	{'name': 'Popular', 'mode': 'build_tvshow_list', 'action': 'tmdb_tv_popular', 'random_support': 'true', 'iconImage': 'popular'},
-	{'name': 'Popular Today', 'mode': 'build_tvshow_list', 'action': 'tmdb_tv_popular_today', 'random_support': 'true', 'iconImage': 'popular_today'},
+	{'name': 'Popular', 'mode': 'build_tvshow_list', 'action': 'fl_tv_most_watched', 'random_support': 'true', 'iconImage': 'popular'},
 	{'name': 'Premieres', 'mode': 'build_tvshow_list', 'action': 'tmdb_tv_premieres', 'random_support': 'true', 'iconImage': 'fresh'},
-	{'name': 'Most Watched', 'mode': 'build_tvshow_list', 'action': 'fl_tv_most_watched', 'random_support': 'true', 'iconImage': 'most_watched'},
 	{'name': 'Most Favorited', 'mode': 'build_tvshow_list', 'action': 'fl_tv_most_favorited', 'random_support': 'true', 'iconImage': 'favorites'},
 	{'name': 'Airing Today', 'mode': 'build_tvshow_list', 'action': 'tmdb_tv_airing_today', 'random_support': 'true', 'iconImage': 'live'},
 	{'name': 'On the Air', 'mode': 'build_tvshow_list', 'action': 'tmdb_tv_on_the_air', 'random_support': 'true', 'iconImage': 'ontheair'},
@@ -73,8 +69,6 @@ class NavigatorCache:
 	anime_list = [
 	{'name': 'Anime Trending', 'mode': 'build_tvshow_list', 'action': 'fl_anime_trending', 'random_support': 'true', 'iconImage': 'trending'},
 	{'name': 'Anime Trending Recent', 'mode': 'build_tvshow_list', 'action': 'fl_anime_trending_recent', 'random_support': 'true', 'iconImage': 'trending_recent'},
-	{'name': 'Anime Popular', 'mode': 'build_tvshow_list', 'action': 'tmdb_anime_popular', 'random_support': 'true', 'iconImage': 'popular'},
-	{'name': 'Anime Popular Recent', 'mode': 'build_tvshow_list', 'action': 'tmdb_anime_popular_recent', 'random_support': 'true', 'iconImage': 'popular_today'},
 	{'name': 'Anime Premieres', 'mode': 'build_tvshow_list', 'action': 'tmdb_anime_premieres', 'random_support': 'true', 'iconImage': 'fresh'},
 	{'name': 'Anime Most Watched', 'mode': 'build_tvshow_list', 'action': 'fl_anime_most_watched', 'random_support': 'true', 'iconImage': 'most_watched'},
 	{'name': 'Anime Most Favorited', 'mode': 'build_tvshow_list', 'action': 'fl_anime_most_favorited', 'random_support': 'true', 'iconImage': 'favorites'},

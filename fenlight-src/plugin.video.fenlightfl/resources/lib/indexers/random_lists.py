@@ -27,14 +27,15 @@ def set_persistent_content(database, key, data):
 class RandomLists():
 	movie_main = ('tmdb_movies_popular', 'tmdb_movies_popular_today','tmdb_movies_blockbusters','tmdb_movies_in_theaters', 'tmdb_movies_upcoming', 'tmdb_movies_latest_releases',
 	'tmdb_movies_premieres', 'tmdb_movies_oscar_winners')
-	movie_fl_main = ('fl_movies_trending', 'fl_movies_trending_recent', 'fl_movies_most_watched', 'fl_movies_most_favorited',
-	'fl_movies_top10_boxoffice', 'fl_recommendations')
+	movie_fl_main = ('fl_movies_trending', 'fl_movies_trending_recent',
+		'fl_movies_most_watched', 'fl_movies_most_favorited',
+		'fl_movies_top10_boxoffice', 'fl_recommendations')
 	movie_special_main = {'tmdb_movies_languages': meta_lists.languages, 'tmdb_movies_providers': meta_lists.watch_providers_movies, 'tmdb_movies_year': meta_lists.years_movies,
 	'tmdb_movies_decade': meta_lists.decades_movies, 'tmdb_movies_certifications': meta_lists.movie_certifications, 'tmdb_movies_genres': meta_lists.movie_genres}
 	tvshow_main = ('tmdb_tv_popular', 'tmdb_tv_popular_today', 'tmdb_tv_premieres', 'tmdb_tv_airing_today','tmdb_tv_on_the_air','tmdb_tv_upcoming',
 	'tmdb_anime_popular', 'tmdb_anime_popular_recent', 'tmdb_anime_premieres', 'tmdb_anime_upcoming', 'tmdb_anime_on_the_air')
 	tvshow_fl_main = ('fl_tv_trending', 'fl_tv_trending_recent', 'fl_recommendations', 'fl_tv_most_watched', 'fl_tv_most_favorited',
-	'fl_anime_trending', 'fl_anime_trending_recent', 'fl_anime_most_watched', 'fl_anime_most_favorited')
+		'fl_anime_trending', 'fl_anime_trending_recent', 'fl_anime_most_watched', 'fl_anime_most_favorited')
 	tvshow_special_main = {'tmdb_tv_languages': meta_lists.languages, 'tmdb_tv_networks': meta_lists.networks, 'tmdb_tv_providers': meta_lists.watch_providers_tvshows,
 	'tmdb_tv_year': meta_lists.years_tvshows, 'tmdb_tv_decade': meta_lists.decades_tvshows, 'tmdb_tv_genres': meta_lists.tvshow_genres,
 	'fl_tv_certifications': meta_lists.tvshow_certifications, 'tmdb_anime_year': meta_lists.years_tvshows, 'tmdb_anime_decade': meta_lists.decades_tvshows,

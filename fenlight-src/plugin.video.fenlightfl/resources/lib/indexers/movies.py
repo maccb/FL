@@ -13,7 +13,8 @@ class Movies:
 	'tmdb_movies_genres', 'tmdb_movies_search', 'tmdb_movie_keyword_results', 'tmdb_movie_keyword_results_direct', 'ai_similar')
 	personal = {'in_progress_movies': ('modules.watched_status', 'get_in_progress_movies'), 'favorites_movies': ('modules.favorites', 'get_favorites'),
 	'watched_movies': ('modules.watched_status', 'get_watched_items'), 'recent_watched_movies': ('modules.watched_status', 'get_recently_watched')}
-	fl_main = ('fl_movies_trending', 'fl_movies_trending_recent', 'fl_movies_most_watched', 'fl_movies_most_favorited', 'fl_movies_top10_boxoffice')
+	fl_main = ('fl_movies_trending', 'fl_movies_trending_recent',
+		'fl_movies_most_watched', 'fl_movies_most_favorited', 'fl_movies_top10_boxoffice')
 	fl_personal = ('fl_collection', 'fl_watchlist', 'fl_collection_lists', 'fl_watchlist_lists', 'fl_favorites')
 
 	def __init__(self, params):
