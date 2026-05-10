@@ -4,13 +4,103 @@ from caches.meta_cache import meta_cache
 from apis.tmdb_api import movie_details, tvshow_details, season_episodes_details, movie_set_details, movie_external_id, tvshow_external_id, \
 								episode_groups_data, episode_group_details
 from modules.utils import jsondate_to_datetime, subtract_dates
+
+def _fl_id_truthy(val):
+	return val not in (None, '', 0)
+
+def _fl_unpack_card(media_id):
+	"""FL row is either legacy ``ids`` only, or a full card dict with nested ``ids``."""
+	if not isinstance(media_id, dict):
+		return {}, None, None, None, None
+	if 'ids' in media_id:
+		return media_id['ids'], media_id.get('title'), media_id.get('year'), media_id.get('poster_url'), media_id.get('backdrop_url')
+	return media_id, None, None, None, None
+
+def _flicklist_catalog_movie_meta(ids, card_title, card_year, poster_url, backdrop_url, mpaa_region, current_date):
+	"""Minimal movie meta using FlickList artwork URLs — no TMDB round-trip."""
+	imdb_id = ''
+	if isinstance(ids, dict):
+		im = ids.get('imdb')
+		if im not in (None, '', 0):
+			s = str(im).strip()
+			if s:
+				if s.startswith('tt'):
+					imdb_id = s
+				elif s.isdigit():
+					imdb_id = 'tt%s' % s
+				else:
+					imdb_id = s
+	title = card_title or 'Unknown'
+	ys = ''
+	if card_year not in (None, ''):
+		try:
+			ys = str(int(card_year))
+		except Exception:
+			ys = str(card_year)
+	poster = (poster_url or '').strip()
+	fanart = (backdrop_url or '').strip()
+	rpdb_poster = 'https://api.ratingposterdb.com/%s/tmdb/poster-default/movie-0.jpg?fallback=true' % ('%s',)
+	extra_info = {'status': 'N/A', 'budget': '$0', 'revenue': '$0', 'homepage': 'N/A', 'collection_name': None, 'collection_id': None}
+	return {
+		'tmdb_id': '0', 'imdb_id': imdb_id or 'tt0000000', 'rating': '', 'tagline': '', 'votes': '', 'premiered': '', 'imdbnumber': imdb_id or 'tt0000000', 'trailer': '',
+		'poster': poster, 'fanart': fanart, 'genre': [], 'title': title, 'original_title': title, 'english_title': None, 'year': ys, 'cast': [], 'duration': 0,
+		'rootname': '%s (%s)' % (title, ys or '?'), 'country': [], 'mpaa': '', 'writer': [], 'all_trailers': [], 'director': [], 'alternative_titles': [], 'plot': '', 'studio': (),
+		'extra_info': extra_info, 'mediatype': 'movie', 'tvdb_id': 'None', 'clearlogo': '', 'landscape': '', 'keywords': [], 'rpdb_poster': rpdb_poster, 'short_cast': [],
+		'stinger_keys': [], 'country_codes': [],
+	}
+
+def _flicklist_catalog_tvshow_meta(ids, card_title, card_year, poster_url, backdrop_url):
+	imdb_id = ''
+	tvdb_id = 'None'
+	if isinstance(ids, dict):
+		im = ids.get('imdb')
+		if im not in (None, '', 0):
+			s = str(im).strip()
+			if s:
+				if s.startswith('tt'):
+					imdb_id = s
+				elif s.isdigit():
+					imdb_id = 'tt%s' % s
+				else:
+					imdb_id = s
+		tvr = ids.get('tvdb')
+		if tvr not in (None, '', 0):
+			try:
+				tvdb_id = str(int(tvr))
+			except Exception:
+				tvdb_id = str(tvr)
+	title = card_title or 'Unknown'
+	ys = ''
+	if card_year not in (None, ''):
+		try:
+			ys = str(int(card_year))
+		except Exception:
+			ys = str(card_year)
+	poster = (poster_url or '').strip()
+	fanart = (backdrop_url or '').strip()
+	rpdb_poster = 'https://api.ratingposterdb.com/%s/tmdb/poster-default/series-0.jpg?fallback=true' % ('%s',)
+	extra_info = {'status': 'Unknown', 'type': 'Scripted', 'homepage': 'N/A', 'created_by': 'N/A', 'next_episode_to_air': None, 'last_episode_to_air': None}
+	return {
+		'tmdb_id': '0', 'tvdb_id': tvdb_id, 'imdb_id': imdb_id or 'tt0000000', 'rating': '', 'plot': '', 'tagline': '', 'votes': '', 'premiered': '', 'year': ys,
+		'poster': poster, 'fanart': fanart, 'genre': [], 'title': title, 'original_title': title, 'english_title': None, 'season_data': [],
+		'alternative_titles': [], 'duration': 0, 'rootname': '%s (%s)' % (title, ys or '?'), 'imdbnumber': imdb_id or 'tt0000000', 'country': [], 'mpaa': '', 'trailer': '',
+		'country_codes': [], 'writer': [], 'director': [], 'all_trailers': [], 'cast': [], 'studio': (), 'extra_info': extra_info,
+		'total_aired_eps': 1, 'mediatype': 'tvshow', 'total_seasons': 1, 'tvshowtitle': title, 'status': 'Unknown', 'clearlogo': '', 'landscape': '',
+		'keywords': {'results': []}, 'rpdb_poster': rpdb_poster, 'short_cast': [],
+	}
 # from modules.kodi_utils import logger
 
 def movie_meta(id_type, media_id, api_key, mpaa_region, current_date, current_time=None):
 	if id_type == 'fl_dict':
-		if media_id.get('tmdb', None): id_type, media_id = 'tmdb_id', media_id['tmdb']
-		elif media_id.get('imdb', None): id_type, media_id = 'imdb_id', media_id['imdb']
-		else: id_type, media_id = None, None
+		ids_payload, fl_title, fl_year, fl_poster, fl_backdrop = _fl_unpack_card(media_id)
+		if _fl_id_truthy(ids_payload.get('tmdb')):
+			id_type, media_id = 'tmdb_id', ids_payload['tmdb']
+		elif _fl_id_truthy(ids_payload.get('imdb')):
+			id_type, media_id = 'imdb_id', ids_payload['imdb']
+		elif fl_poster or fl_title:
+			return _flicklist_catalog_movie_meta(ids_payload, fl_title, fl_year, fl_poster, fl_backdrop, mpaa_region, current_date)
+		else:
+			id_type, media_id = None, None
 	if media_id == None: return None
 	meta = meta_cache.get('movie', id_type, media_id, current_time)
 	if meta: return meta
@@ -140,10 +230,17 @@ def movie_meta(id_type, media_id, api_key, mpaa_region, current_date, current_ti
 
 def tvshow_meta(id_type, media_id, api_key, mpaa_region, current_date, current_time=None, is_anime_list=None):
 	if id_type == 'fl_dict':
-		if media_id.get('tmdb', None): id_type, media_id = 'tmdb_id', media_id['tmdb']
-		elif media_id.get('imdb', None): id_type, media_id = 'imdb_id', media_id['imdb']
-		elif media_id.get('tvdb', None): id_type, media_id = 'tvdb_id', media_id['tvdb']
-		else: id_type, media_id = None, None
+		ids_payload, fl_title, fl_year, fl_poster, fl_backdrop = _fl_unpack_card(media_id)
+		if _fl_id_truthy(ids_payload.get('tmdb')):
+			id_type, media_id = 'tmdb_id', ids_payload['tmdb']
+		elif _fl_id_truthy(ids_payload.get('imdb')):
+			id_type, media_id = 'imdb_id', ids_payload['imdb']
+		elif _fl_id_truthy(ids_payload.get('tvdb')):
+			id_type, media_id = 'tvdb_id', ids_payload['tvdb']
+		elif fl_poster or fl_title:
+			return _flicklist_catalog_tvshow_meta(ids_payload, fl_title, fl_year, fl_poster, fl_backdrop)
+		else:
+			id_type, media_id = None, None
 	if media_id == None: return None
 	meta = meta_cache.get('tvshow', id_type, media_id, current_time)
 	if meta: return meta_valid_check(meta, is_anime_list)

@@ -81,7 +81,7 @@ class TVShows:
 				self.id_type = 'fl_dict'
 				data = function(page_no)
 				if not data: return
-				try: self.list = [i['show']['ids'] for i in data]
+				try: self.list = [i['show'] for i in data]
 				except: self.list = [i['ids'] for i in data]
 				if not is_random and self.action != 'fl_recommendations' and len(data) >= 20: self.new_page = {'new_page': str(page_no + 1)}
 			elif self.action in self.fl_special:
@@ -90,7 +90,7 @@ class TVShows:
 				self.id_type = 'fl_dict'
 				data = function(key_id, page_no)
 				if not data: return
-				self.list = [i['show']['ids'] for i in data]
+				self.list = [i['show'] for i in data]
 				if not is_random and len(data) >= 20: self.new_page = {'new_page': str(page_no + 1), 'key_id': key_id}
 			elif self.action in self.fl_personal:
 				self.id_type = 'fl_dict'
@@ -109,7 +109,7 @@ class TVShows:
 				self.id_type = 'fl_dict'
 				data, total_pages = function(key_id, page_no)
 				if not data: return
-				self.list = [i['show']['ids'] for i in data]
+				self.list = [i['show'] for i in data]
 				if int(total_pages) > page_no: self.new_page = {'new_page': str(page_no + 1), 'key_id': key_id}
 			elif self.action == 'fl_recommendations':
 				self.id_type = 'fl_dict'

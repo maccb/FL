@@ -5,7 +5,7 @@ FlickList API Client - Drop-in replacement for fl_api.py
 All function signatures match fl_api.py for seamless import swap.
 Internally calls FlickList API instead of the original API.
 
-FlickList API returns MediaCard: {id, tmdb_id, media_type, title, year, poster_path, ...}
+FlickList API returns MediaCard: {id, tmdb_id, imdb_id, media_type, title, ...}
 Paginated: {results: [...], page, total_pages, total_results}
 This module transforms responses to legacy-compatible shapes for the rest of the addon.
 """
@@ -48,15 +48,57 @@ def _reset_cf_blocks():
 # makes the api responses work with the existing kodi list builders
 #
 
+def _ids_from_mediacard(item):
+	"""TMDB-aligned id from MediaCard ``tmdb_id`` only — never reuse internal PK as TMDB."""
+	tmdb_use = ''
+	tmdb_raw = item.get('tmdb_id')
+	if tmdb_raw is not None and tmdb_raw != '':
+		try:
+			v = int(tmdb_raw)
+			if v > 0:
+				tmdb_use = v
+		except (TypeError, ValueError):
+			pass
+
+	imdb_use = ''
+	imdb_raw = item.get('imdb_id')
+	if imdb_raw is not None and imdb_raw != '':
+		s = str(imdb_raw).strip()
+		if s and s.lower() != 'none':
+			if s.startswith('tt'):
+				imdb_use = s
+			elif s.isdigit():
+				imdb_use = 'tt%s' % s
+			else:
+				imdb_use = s
+
+	tvdb = 0
+
+	tvr = item.get('tvdb_id')
+	if tvr is not None and tvr != '':
+		try:
+			vb = int(tvr)
+			if vb > 0:
+				tvdb = vb
+		except (TypeError, ValueError):
+			pass
+	return tmdb_use, imdb_use, tvdb
+
+
 def _to_fl_movie(item):
 	"""Transform a FlickList MediaCard to standard movie dict."""
+	tmdb_use, imdb_use, _ = _ids_from_mediacard(item)
+	pu = item.get('poster_url') or ''
+	bu = item.get('backdrop_url') or ''
 	return {
 		'movie': {
 			'title': item.get('title', ''),
 			'year': item.get('year'),
+			'poster_url': pu,
+			'backdrop_url': bu,
 			'ids': {
-				'tmdb': item.get('tmdb_id') or item.get('id'),
-				'imdb': item.get('imdb_id', ''),
+				'tmdb': tmdb_use,
+				'imdb': imdb_use,
 				'tvdb': 0,
 				'slug': item.get('slug', '')
 			}
@@ -65,14 +107,19 @@ def _to_fl_movie(item):
 
 def _to_fl_show(item):
 	"""Transform a FlickList MediaCard to standard show dict."""
+	tmdb_use, imdb_use, tvdb_use = _ids_from_mediacard(item)
+	pu = item.get('poster_url') or ''
+	bu = item.get('backdrop_url') or ''
 	return {
 		'show': {
 			'title': item.get('title', ''),
 			'year': item.get('year'),
+			'poster_url': pu,
+			'backdrop_url': bu,
 			'ids': {
-				'tmdb': item.get('tmdb_id') or item.get('id'),
-				'imdb': item.get('imdb_id', ''),
-				'tvdb': item.get('tvdb_id', 0),
+				'tmdb': tmdb_use,
+				'imdb': imdb_use,
+				'tvdb': tvdb_use,
 				'slug': item.get('slug', '')
 			}
 		}

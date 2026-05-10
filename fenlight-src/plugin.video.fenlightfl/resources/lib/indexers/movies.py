@@ -70,7 +70,7 @@ class Movies:
 				self.id_type = 'fl_dict'
 				data = function(page_no)
 				if not data: return
-				try: self.list = [i['movie']['ids'] for i in data]
+				try: self.list = [i['movie'] for i in data]
 				except: self.list = [i['ids'] for i in data]
 				if self.action not in ('fl_movies_top10_boxoffice', 'fl_recommendations') and len(data) >= 20: self.new_page = {'new_page': str(page_no + 1)}
 			elif self.action in self.fl_personal:
