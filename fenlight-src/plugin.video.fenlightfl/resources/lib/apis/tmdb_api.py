@@ -606,5 +606,10 @@ def get_tmdb(url):
 				response = session.get(url, timeout=20.0)
 		else:
 			response = session.get(url, timeout=20.0)
-	except: response = None
+		from modules.kodi_utils import logger
+		logger('###TMDB_DEBUG###', 'url=%s status=%s len=%s' % (url[:80], response.status_code if response else 'None', len(response.content) if response else 0))
+	except Exception as e:
+		from modules.kodi_utils import logger
+		logger('###TMDB_DEBUG###', 'EXCEPTION url=%s err=%s' % (url[:80], str(e)))
+		response = None
 	return response
