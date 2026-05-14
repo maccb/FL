@@ -32,7 +32,8 @@ def extras_items():
 			'More from Year', 'More from Genres', 'More from Networks', 'More from Collection')
 
 def context_menu_items():
-	return {'extras': 'Extras', 'options': 'Options', 'playback_options': 'Play Options', 'browse_movie_set': 'Browse Movie Set', 'browse_seasons': 'Browse TV Seasons',
+	return {'extras': 'Extras', 'options': 'Options', 'playback_options': 'Play Options', 'custom_season_search': 'Search Custom Season',
+			'custom_episode_search': 'Search Custom Episode', 'browse_movie_set': 'Browse Movie Set', 'browse_seasons': 'Browse TV Seasons',
 			'browse_episodes': 'Browse Season Episodes', 'recommended': 'Browse Recommended', 'related': 'Browse Related', 'more_like_this': 'Browse More Like This',
 			'similar': 'Browse Similar', 'in_fl_list': 'In FL Lists', 'fl_manager':'FL Lists Manager', 'personal_manager': 'Personal Lists Manager',
 			'tmdb_manager': 'TMDb Lists Manager', 'favorites_manager': 'Favorites Manager', 'mark_watched': 'Mark Watched/Unwatched',

@@ -48,7 +48,7 @@ def build_season_list(params):
 				cm_append(['options', ('[B]Options[/B]', 'RunPlugin(%s)' % options_params)])
 				if not unaired and not season_special:
 					custom_season_params = build_url({'mode': 'custom_season_search_choice', 'media_type': 'episode', 'tmdb_id': tmdb_id, 'season': season_number})
-					cm_append(['playback_options', ('[B]Search Custom Season[/B]', 'RunPlugin(%s)' % custom_season_params)])
+					cm_append(['custom_season_search', ('[B]Search Custom Season[/B]', 'RunPlugin(%s)' % custom_season_params)])
 				if playcount:
 					if hide_watched: continue
 				elif not unaired and not season_special:

@@ -159,6 +159,25 @@ class OnUpdateChanges:
 		if old_key == 'b370b60447737762ca38457bd77579b3':
 			set_setting('tmdb_api', 'b14c2656f72e5bab233def36928a202b')
 
+	def append_custom_search_cm_keys_01(self):
+		# Custom search items use dedicated cm keys. Users with a customized context_menu.order
+		# only keep keys present in that list, so new keys must be merged in once.
+		from caches.settings_cache import get_setting, set_setting
+		raw = get_setting('fenlightfl.context_menu.order', '')
+		current = [x.strip() for x in raw.split(',') if x.strip()]
+		if not current:
+			return
+		missing = [k for k in ('custom_season_search', 'custom_episode_search') if k not in current]
+		if not missing:
+			return
+		try:
+			base = current.index('playback_options') + 1
+		except ValueError:
+			base = len(current)
+		for offset, key in enumerate(missing):
+			current.insert(base + offset, key)
+		set_setting('context_menu.order', ','.join(current))
+
 class CustomFonts:
 	def run(self):
 		kodi_utils.logger('FL', 'CustomFonts Service Starting')

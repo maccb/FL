@@ -49,7 +49,10 @@ def build_episode_list(params):
 				if not season_special and season:
 					custom_season_params = build_url({'mode': 'custom_season_search_choice', 'media_type': 'episode', 'tmdb_id': tmdb_id,
 												'season': season, 'episode': episode, 'episode_id': episode_id, 'playcount': playcount})
-					cm_append(['playback_options', ('[B]Search Custom Season[/B]', 'RunPlugin(%s)' % custom_season_params)])
+					cm_append(['custom_season_search', ('[B]Search Custom Season[/B]', 'RunPlugin(%s)' % custom_season_params)])
+					custom_episode_params = build_url({'mode': 'custom_episode_search_choice', 'media_type': 'episode', 'tmdb_id': tmdb_id,
+												'season': season, 'episode': episode, 'episode_id': episode_id, 'playcount': playcount})
+					cm_append(['custom_episode_search', ('[B]Search Custom Episode[/B]', 'RunPlugin(%s)' % custom_episode_params)])
 				if not unaired and not season_special:
 					if playcount:
 						cm_append(['mark_watched', ('[B]Mark Unwatched[/B]', 'RunPlugin(%s)' % build_url({'mode': 'watched_status.mark_episode', 'action': 'mark_as_unwatched',

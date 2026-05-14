@@ -1042,6 +1042,24 @@ def custom_season_search_choice(params):
 	from modules.sources import Sources
 	Sources().playback_prep(play_params)
 
+def custom_episode_search_choice(params):
+	tmdb_id = params.get('tmdb_id')
+	season = params.get('season', '')
+	episode = params.get('episode', '')
+	custom_episode = kodi_utils.kodi_dialog().input('Enter Episode Number', type=1, defaultt=str(episode))
+	if not custom_episode: return kodi_utils.notification('Cancelled', 2500)
+	try: custom_episode = int(custom_episode)
+	except: return kodi_utils.notification('Invalid episode number', 2500)
+	if str(custom_episode) == str(episode): return kodi_utils.notification('Same as current episode', 2500)
+	playback_key = settings.playback_key()
+	play_mode = 'playback.%s' % playback_key
+	play_params = {'mode': play_mode, 'media_type': 'episode', 'tmdb_id': tmdb_id, 'season': season, 'episode': episode,
+				'custom_episode': custom_episode, 'prescrape': 'false', 'autoplay': 'false',
+				'playcount': params.get('playcount', '0'), playback_key: playback_key}
+	if settings.autoplay_next_episode(): play_params['disable_autoplay_next_episode'] = 'true'
+	from modules.sources import Sources
+	Sources().playback_prep(play_params)
+
 def discover_choice(params):
 	from windows.base_window import open_window
 	open_window(('windows.discover', 'Discover'), 'discover.xml', media_type=params['media_type'])
