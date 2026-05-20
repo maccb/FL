@@ -115,6 +115,7 @@ class FenLightPlayer(xbmc.Player):
 			self._player_instance_id = str(id(self))
 			ku.set_property('fenlightfl.active_player_id', self._player_instance_id)
 			self._last_heartbeat_progress = -1
+			self._last_good_time = None       # (curr_time, total_time) at last successful heartbeat
 			self._fl_paused = False
 			while self.isPlayingVideo():
 				try:
@@ -129,6 +130,7 @@ class FenLightPlayer(xbmc.Player):
 					heartbeat_counter += 1
 					if heartbeat_counter % 30 == 0 and st.watched_indicators() == 1 and self.current_point != self._last_heartbeat_progress and not self._fl_paused:
 						self._last_heartbeat_progress = self.current_point
+						self._last_good_time = (self.curr_time, self.total_time)
 						try: Thread(target=scrobble_heartbeat, args=(self.media_type, self.tmdb_id, self.current_point, self.curr_time, self.total_time, self.season, self.episode)).start()
 						except: pass
 					if heartbeat_counter % 30 == 0 and self.current_point >= 5 and not self.media_marked:
@@ -148,7 +150,16 @@ class FenLightPlayer(xbmc.Player):
 			ku.hide_busy_dialog()
 			if not self.media_marked: self.media_watched_marker()
 			if st.watched_indicators() == 1:
-				try: Thread(target=scrobble_stop, args=(self.media_type, self.tmdb_id, self.current_point if hasattr(self, 'current_point') else 0, self.season, self.episode)).start()
+				try:
+					# Use last-heartbeat progress if current_point is 0 and we have a better cached value.
+					# This prevents sending a 0% stop when Kodi already switched to the next episode
+					# and getTime() is returning ep2's position instead of ep1's final position.
+					stop_progress = self.current_point if hasattr(self, 'current_point') else 0
+					if stop_progress == 0 and hasattr(self, '_last_good_time') and self._last_good_time:
+						cached_curr, cached_total = self._last_good_time
+						if cached_total and cached_total > 0:
+							stop_progress = round(float(cached_curr / cached_total * 100), 1)
+					Thread(target=scrobble_stop, args=(self.media_type, self.tmdb_id, stop_progress, self.season, self.episode)).start()
 				except: pass
 			self.clear_playback_properties()
 		except:
