@@ -1,3 +1,16 @@
+[COLOR red][B]Version 2.1.120[/B][/COLOR]
+[I]What's next, the way it should be.[/I]
+[B]Critical:[/B]
+- Next Episodes now shows your in-progress shows correctly. Some shows were vanishing from the list or marked as fully watched while episodes were still left.
+- Watched checkmarks reflect everything you actually watched, including shows that previously slipped through.
+[B]Moderate:[/B]
+- Sync is faster and uses fewer connections to the server.
+- If your connection drops mid-sync, your local watched list stays put instead of getting wiped.
+- Streams no longer leave the video decoder locked between episodes on certain devices. Fewer black-screen-with-audio situations after a stream fails.
+- Scrobble stops now report real progress even when Kodi has already jumped to the next episode.
+[B]Heads up (experimental):[/B]
+- The big change in this version is how Next Episodes, In Progress Episodes, Recently Watched Episodes, the TV Progress Manager, and watched checkmarks pull their data. If anything looks off in those areas, you can roll back to 2.1.118 from Settings, Tools, Rollback. Movies, playback, login, scrobbling, watchlist, favorites, search, and calendar are unchanged and unaffected.
+
 [COLOR red][B]Version 2.1.118[/B][/COLOR]
 [I]Posters speak louder than words.[/I]
 [B]Critical:[/B]

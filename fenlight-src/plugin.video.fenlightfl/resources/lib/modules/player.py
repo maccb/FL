@@ -40,6 +40,9 @@ class FenLightPlayer(xbmc.Player):
 
 	def play_video(self, url, obj):
 		self.set_constants(url, obj)
+		if self.isPlayingVideo():
+			self.stop()
+			ku.sleep(1500)
 		ku.volume_checker()
 		self.play(self.url, self.make_listing())
 		if not self.is_generic:

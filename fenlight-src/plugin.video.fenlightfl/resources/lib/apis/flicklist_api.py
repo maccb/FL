@@ -1037,37 +1037,29 @@ def fl_indicators_movies():
 
 def fl_indicators_tv():
 	"""Fetch watched TV episodes from FlickList and store in local cache."""
-	def _process(item):
-		if not isinstance(item, dict):
-			return
-		if item.get('progress', 1.0) < 0.90:
-			return
-		tmdb_id = item.get('tmdb_id')
-		if not tmdb_id:
-			return
-		title = item.get('title', '')
-		season = item.get('season_number')
-		episode = item.get('episode_number', 0)
-		watched_at = item.get('watched_at', item.get('created_at', ''))
-		if season is not None and season >= 0:
-			insert_append(('episode', str(tmdb_id), season, episode, watched_at, title))
+	# Source: /v3/sync/watched/shows — pre-aggregated per show, no client-side
+	# filtering. On API failure we return early so the existing local mirror is
+	# preserved (the old paginated path would wipe it on transient failure).
+	data = call_flicklist('/v3/sync/watched/shows', with_auth=True)
+	if not isinstance(data, list):
+		return
 	insert_list = []
-	insert_append = insert_list.append
-	page = 1
-	per_page = 500
-	while True:
-		data = call_flicklist('/scrobble/history', params={'media_type': 'tv', 'matched_only': 'true', 'watch_status': 'watched', 'per_page': per_page, 'page': page}, with_auth=True)
-		if not data:
-			break
-		items = data.get('results', data.get('items', [])) if isinstance(data, dict) else data
-		if not isinstance(items, list) or not items:
-			break
-		threads = list(make_thread_list(_process, items))
-		[i.join() for i in threads]
-		total_pages = data.get('total_pages', 1) if isinstance(data, dict) else 1
-		if page >= total_pages:
-			break
-		page += 1
+	for show in data:
+		show_obj = show.get('show', {})
+		tmdb_id = show_obj.get('ids', {}).get('tmdb')
+		if not tmdb_id:
+			continue
+		title = show_obj.get('title', '')
+		for season in show.get('seasons', []):
+			season_no = season.get('number')
+			if season_no is None:
+				continue
+			for episode in season.get('episodes', []):
+				ep_no = episode.get('number')
+				if ep_no is None:
+					continue
+				insert_list.append(('episode', str(tmdb_id), season_no, ep_no,
+						episode.get('last_watched_at', ''), title))
 	flicklist_cache.fl_watched_cache.set_bulk_tvshow_watched(insert_list)
 
 #
