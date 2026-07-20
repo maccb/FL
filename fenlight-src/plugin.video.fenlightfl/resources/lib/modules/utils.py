@@ -322,6 +322,7 @@ def paginate_list(item_list, page, limit=20, paginate_start=0):
 		pages = list(chunks(item_list, limit))
 		pages.insert(0, [])
 	else: pages = list(chunks(item_list, limit))
+	if not pages: return [], 1
 	result = (pages[page - 1], len(pages))
 	return result
 

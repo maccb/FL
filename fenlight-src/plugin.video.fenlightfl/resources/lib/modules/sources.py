@@ -692,15 +692,20 @@ class Sources():
 		elif any((self.random, self.random_continual)): return 0.0
 		else: percent = watched_status.get_progress_status_episode(watched_status.get_bookmarks_episode(self.tmdb_id, self.season), self.episode)
 		if not percent or float(percent) < 3: return 0.0
-		# If item is already marked as watched, never offer resume
+		# Already watched: resume only if the bookmark is newer than the last watched entry
+		# (rewatch in progress gets the same resume flow as unwatched). An older/equal
+		# bookmark is a stale leftover from the completed watch - erase it and start over.
 		try:
 			watched_db = watched_status.get_database()
 			if self.media_type == 'movie':
-				is_watched = watched_db.execute('SELECT 1 FROM watched WHERE db_type = ? AND media_id = ?', ('movie', str(self.tmdb_id))).fetchone()
+				watched_row = watched_db.execute('SELECT last_played FROM watched WHERE db_type = ? AND media_id = ?', ('movie', str(self.tmdb_id))).fetchone()
+				bookmark_row = watched_db.execute('SELECT last_played FROM progress WHERE db_type = ? AND media_id = ?', ('movie', str(self.tmdb_id))).fetchone()
 			else:
-				is_watched = watched_db.execute('SELECT 1 FROM watched WHERE db_type = ? AND media_id = ? AND season = ? AND episode = ?',
+				watched_row = watched_db.execute('SELECT last_played FROM watched WHERE db_type = ? AND media_id = ? AND season = ? AND episode = ?',
 					('episode', str(self.tmdb_id), int(self.season), int(self.episode))).fetchone()
-			if is_watched:
+				bookmark_row = watched_db.execute('SELECT last_played FROM progress WHERE db_type = ? AND media_id = ? AND season = ? AND episode = ?',
+					('episode', str(self.tmdb_id), int(self.season), int(self.episode))).fetchone()
+			if watched_row and not watched_status.bookmark_newer_than_watched(bookmark_row[0] if bookmark_row else None, watched_row[0]):
 				watched_status.erase_bookmark(self.media_type, self.tmdb_id, self.season, self.episode)
 				return 0.0
 		except: pass

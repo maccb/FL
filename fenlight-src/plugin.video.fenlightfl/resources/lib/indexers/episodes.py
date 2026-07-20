@@ -145,6 +145,16 @@ def build_episode_list(params):
 	kodi_utils.set_view_mode('view.episodes', 'episodes', is_external)
 
 def build_single_episode(list_type, params={}):
+	# Directory-mode safety net: if the build crashes, still end the directory so
+	# Kodi's busy spinner cannot spin forever. Inline callers (list params) re-raise.
+	try: return _build_single_episode(list_type, params)
+	except:
+		if isinstance(params, dict):
+			try: kodi_utils.end_directory(int(sys.argv[1]), cacheToDisc=False)
+			except: pass
+		else: raise
+
+def _build_single_episode(list_type, params={}):
 	def _get_category_name():
 		try:
 			cat_name = {'episode.progress': 'In Progress Episodes',
@@ -170,9 +180,17 @@ def build_single_episode(list_type, params={}):
 			tmdb_id, tvdb_id, imdb_id, title, show_year = meta_get('tmdb_id'), meta_get('tvdb_id'), meta_get('imdb_id'), meta_get('title'), meta_get('year') or '2050'
 			season_data = meta_get('season_data')
 			watched_info = ws.watched_info_episode(meta_get('tmdb_id'), watched_db)
+			rewatch = False
 			if list_type_starts_with('next'):
-				orig_season, orig_episode = ws.get_next(orig_season, orig_episode, watched_info, season_data, nextep_content)
-				if not orig_season or not orig_episode: return
+				next_season, next_episode = ws.get_next(orig_season, orig_episode, watched_info, season_data, nextep_content)
+				if not next_season or not next_episode \
+				or not next((i for i in season_data if i['season_number'] == next_season and i['episode_count'] >= next_episode), None):
+					# Fully watched show with recent activity: offer the episode after the most
+					# recently played one and flag it as a rewatch.
+					next_season, next_episode = ws.get_next_rewatch(ep_data_get('recent_season', orig_season), ep_data_get('recent_episode', orig_episode), season_data)
+					if not next_season or not next_episode: return
+					rewatch = ws.get_watched_status_episode(watched_info, (next_season, next_episode)) == 1
+				orig_season, orig_episode = next_season, next_episode
 			episodes_data = episodes_meta(orig_season, meta)
 			if not episodes_data: return
 			item = next((i for i in episodes_data if i['episode'] == orig_episode), None)
@@ -223,12 +241,13 @@ def build_single_episode(list_type, params={}):
 				elif unaired: highlight_start, highlight_end = '[COLOR red]', '[/COLOR]'
 				else: highlight_start, highlight_end = '', ''
 				display = '%s%s%s%s%s%s' % (display_premiered, title_str, highlight_start, seas_ep, ep_name, highlight_end)
+				if rewatch: display += ' [COLOR cadetblue](Rewatch)[/COLOR]'
 			elif list_type_compare == 'fl_calendar':
 				if episode_date: display_premiered = make_day(current_date, episode_date)
 				else: display_premiered = 'UNKNOWN'
 				display = '[%s] %s%s%s' % (display_premiered, title_str, seas_ep, ep_name)
 			else: display = '%s%s%s' % (title_str, seas_ep, ep_name)
-			if no_spoilers and not playcount: thumb, plot = show_landscape or show_fanart, tvshow_plot or '* Hidden to Prevent Spoilers *'
+			if no_spoilers and not playcount and not rewatch: thumb, plot = show_landscape or show_fanart, tvshow_plot or '* Hidden to Prevent Spoilers *'
 			else: thumb, plot = item_get('thumb', None) or show_landscape or show_fanart, item_get('plot') or tvshow_plot
 			duration = item_get('duration')
 			if not duration:

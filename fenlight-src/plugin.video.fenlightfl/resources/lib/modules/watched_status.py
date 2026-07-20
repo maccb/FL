@@ -194,6 +194,16 @@ def get_progress_status_all_episode(progress_info, season, episode):
 def get_resume_seconds(progress, duration):
 	return float(int(float(progress)/100 * duration))
 
+def bookmark_newer_than_watched(bookmark_ts, watched_ts):
+	# Timestamps may be FlickList ISO UTC ('%Y-%m-%dT%H:%M:%S.000Z') or local ('%Y-%m-%d %H:%M:%S').
+	# Compare digits only (YYYYMMDDHHMMSS) so both formats order correctly.
+	if not bookmark_ts: return False
+	if not watched_ts: return True
+	try:
+		def _digits(value): return ''.join([c for c in str(value) if c.isdigit()])[:14].ljust(14, '0')
+		return _digits(bookmark_ts) > _digits(watched_ts)
+	except: return False
+
 def clear_local_bookmarks():
 	try:
 		dbcon = database.connect(get_video_database_path())
@@ -385,10 +395,19 @@ def get_next_episodes(nextep_content):
 	if nextep_content == 0:
 		data = watched_db.execute('''WITH cte AS (SELECT *, ROW_NUMBER() OVER (PARTITION BY media_id ORDER BY season DESC, episode DESC) rn FROM watched WHERE db_type == ?)
 									SELECT media_id, season, episode, title, last_played FROM cte WHERE rn = 1''', ('episode',)).fetchall()
+		# Most recently played episode per show. Drives the rewatch fallback and sorts
+		# actively rewatched shows by real activity instead of the highest episode's timestamp.
+		recent = watched_db.execute('SELECT media_id, season, episode, MAX(last_played) FROM watched WHERE db_type = ? GROUP BY media_id', ('episode',)).fetchall()
+		recent_map = dict([(i[0], (int(i[1]), int(i[2]), i[3])) for i in recent])
+		data = [{'media_ids': {'tmdb': int(i[0])}, 'season': int(i[1]), 'episode': int(i[2]), 'title': i[3],
+				'last_played': recent_map.get(i[0], (0, 0, i[4]))[2],
+				'recent_season': recent_map.get(i[0], (int(i[1]), int(i[2])))[0],
+				'recent_episode': recent_map.get(i[0], (int(i[1]), int(i[2])))[1]} for i in data]
 	else:
 		data = watched_db.execute('SELECT media_id, season, episode, title, MAX(last_played), COUNT(*) AS COUNTER FROM watched WHERE db_type = ? GROUP BY media_id',
 								('episode',)).fetchall()
-	data = [{'media_ids': {'tmdb': int(i[0])}, 'season': int(i[1]), 'episode': int(i[2]), 'title': i[3], 'last_played': i[4]} for i in data]
+		data = [{'media_ids': {'tmdb': int(i[0])}, 'season': int(i[1]), 'episode': int(i[2]), 'title': i[3], 'last_played': i[4],
+				'recent_season': int(i[1]), 'recent_episode': int(i[2])} for i in data]
 	data.sort(key=lambda x: (x['last_played']), reverse=True)
 	return data
 	
@@ -418,6 +437,18 @@ def get_next(season, episode, watched_info, season_data, nextep_content):
 			season, episode = item_season, next_episode
 		except: pass
 	return season, episode
+
+def get_next_rewatch(season, episode, season_data):
+	# Rewatch fallback: the episode after the most recently played one, rolling into
+	# the next season. Returns (None, None) at series end or on missing season data.
+	try:
+		season, episode = int(season), int(episode)
+		episode_count = next((i['episode_count'] for i in season_data if i['season_number'] == season), None)
+		if not episode_count: return None, None
+		if episode < episode_count: return season, episode + 1
+		if next((i for i in season_data if i['season_number'] == season + 1 and i['episode_count'] > 0), None): return season + 1, 1
+		return None, None
+	except: return None, None
 
 def get_in_progress_movies(dummy_arg, page_no):
 	dbcon = get_database()

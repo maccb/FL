@@ -1,3 +1,15 @@
+[COLOR red][B]Version 2.1.121[/B][/COLOR]
+[I]Some shows are worth a second run. Now we keep up.[/I]
+[B]Critical:[/B]
+- Fixed lists spinning forever when they have nothing in them, like an empty watchlist, a search with no results, or a brand new account. They now open right away.
+[B]Moderate:[/B]
+- Resume now works on movies and episodes you have already watched. If a rewatch gets interrupted, it picks up right where you left off, just like a first watch.
+- Next Episodes now includes shows you are rewatching. These carry a (Rewatch) tag and follow along from the episode you most recently played.
+- Shows you are rewatching now stay in your In Progress lists until you finish them instead of disappearing.
+[B]Needed:[/B]
+- Next Episodes now sorts by your latest watch activity, so the show you are actually watching sits at the top.
+- Episode descriptions are no longer hidden on episodes you have already seen when spoiler protection is on.
+
 [COLOR red][B]Version 2.1.120[/B][/COLOR]
 [I]What's next, the way it should be.[/I]
 [B]Critical:[/B]

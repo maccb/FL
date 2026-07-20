@@ -151,9 +151,12 @@ class TVShows:
 				if self.is_anime_list is not None: self.new_page['is_anime_list'] = {True: 'true', False: 'false'}[self.is_anime_list]
 				kodi_utils.add_dir(handle, self.new_page, 'Next Page (%s) >>' % self.new_page['new_page'], 'nextpage', kodi_utils.get_icon('nextpage_landscape'))
 		except: pass
-		kodi_utils.set_content(handle, 'tvshows')
-		kodi_utils.set_category(handle, self.category_name)
-		kodi_utils.end_directory(handle, cacheToDisc=False if self.is_external else True)
+		finally:
+			# Always close the directory - the early returns above (empty FL lists,
+			# missing key_id) otherwise leave Kodi's busy spinner up forever.
+			kodi_utils.set_content(handle, 'tvshows')
+			kodi_utils.set_category(handle, self.category_name)
+			kodi_utils.end_directory(handle, cacheToDisc=False if self.is_external else True)
 		if not self.is_external:
 			if self.params_get('refreshed') == 'true': kodi_utils.sleep(1000)
 			kodi_utils.set_view_mode('view.tvshows', 'tvshows', self.is_external)
